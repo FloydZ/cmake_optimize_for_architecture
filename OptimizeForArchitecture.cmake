@@ -422,6 +422,8 @@ Other supported values are: \"none\", \"generic\", \"core\", \"merom\" (65nm Cor
       message(FATAL_ERROR "Unknown target architecture: \"${TARGET_ARCHITECTURE}\". Please set TARGET_ARCHITECTURE to a supported value.")
    endif(TARGET_ARCHITECTURE STREQUAL "core")
 
+   message(STATUS "Detected SIMD extensions: ${_available_vector_units_list}")
+
    if(NOT TARGET_ARCHITECTURE STREQUAL "none")
       set(_disable_vector_unit_list)
       set(_enable_vector_unit_list)
