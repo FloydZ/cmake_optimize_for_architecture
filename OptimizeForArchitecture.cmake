@@ -16,6 +16,14 @@
 # Vc_AVX2_INTRINSICS_BROKEN is defined and set, the OptimizeForArchitecture
 # macro will consequently disable the relevant features via compiler flags.
 
+# Sources for Intel/AMD:
+# - https://github.com/animetosho/ParPar/blob/master/gf16/gf16mul.cpp
+# - https://en.wikichip.org/wiki/amd/cpuid
+# - https://en.wikichip.org/wiki/intel/cpuid
+
+# Sources for ARM:
+# - https://en.wikichip.org/wiki/arm_holdings/microarchitectures/cortex-a55
+
 #=============================================================================
 # Copyright 2010-2016 Matthias Kretz <kretz@kde.org>
 #
@@ -45,8 +53,31 @@
 #=============================================================================
 
 get_filename_component(_currentDir "${CMAKE_CURRENT_LIST_FILE}" PATH)
-#include("${_currentDir}/AddCompilerFlag.cmake")
-#include(CheckIncludeFileCXX)
+
+# maps the current processor to a variable which is easy checkable
+message(STATUS "Detected processor: ${CMAKE_SYSTEM_PROCESSOR}")
+if(OPENCV_SKIP_SYSTEM_PROCESSOR_DETECTION)
+elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "amd64.*|x86_64.*|AMD64.*")
+  set(X86_64 1)
+elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "i686.*|i386.*|x86.*")
+  set(X86 1)
+elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "^(aarch64.*|AARCH64.*|arm64.*|ARM64.*)")
+  set(AARCH64 1)
+elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "^(arm.*|ARM.*)")
+  set(ARM 1)
+elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "^(powerpc|ppc)64le")
+  set(PPC64LE 1)
+elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "^(powerpc|ppc)64")
+  set(PPC64 1)
+elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "^(mips.*|MIPS.*)")
+  set(MIPS 1)
+elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "^(riscv.*|RISCV.*)")
+  set(RISCV 1)
+elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "^(loongarch64.*|LOONGARCH64.*)")
+  set(LOONGARCH64 1)
+else()
+  message(WARNING "unrecognized target processor configuration")
+endif()
 
 macro(_my_find _list _value _ret)
    list(FIND ${_list} "${_value}" _found)
@@ -57,18 +88,25 @@ macro(_my_find _list _value _ret)
    endif(_found EQUAL -1)
 endmacro(_my_find)
 
-macro(AutodetectHostArchitecture)
+macro(AutodetectHostArchitectureX86)
    set(TARGET_ARCHITECTURE "generic")
    set(Vc_ARCHITECTURE_FLAGS)
    set(_vendor_id)
    set(_cpu_family)
    set(_cpu_model)
+   set(_cpu_flags)
+   set(_cpu_features)
+
    if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
       file(READ "/proc/cpuinfo" _cpuinfo)
       string(REGEX REPLACE ".*vendor_id[ \t]*:[ \t]+([a-zA-Z0-9_-]+).*" "\\1" _vendor_id "${_cpuinfo}")
       string(REGEX REPLACE ".*cpu family[ \t]*:[ \t]+([a-zA-Z0-9_-]+).*" "\\1" _cpu_family "${_cpuinfo}")
       string(REGEX REPLACE ".*model[ \t]*:[ \t]+([a-zA-Z0-9_-]+).*" "\\1" _cpu_model "${_cpuinfo}")
+
+	  # apparently flags and features are the same. On my `ryzen` its called `flags`
+	  # and on my small arm machine its called `Features`. Note the capitalization.
       string(REGEX REPLACE ".*flags[ \t]*:[ \t]+([^\n]+).*" "\\1" _cpu_flags "${_cpuinfo}")
+	  string(REGEX REPLACE ".*Features[ \t]*:[ \t]+([^\n]+).*" "\\1" _cpu_flags "${_cpuinfo}")
    elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
       exec_program("/usr/sbin/sysctl -n machdep.cpu.vendor machdep.cpu.model machdep.cpu.family machdep.cpu.features" OUTPUT_VARIABLE _sysctl_output_string)
       string(REPLACE "\n" ";" _sysctl_output ${_sysctl_output_string})
@@ -86,12 +124,16 @@ macro(AutodetectHostArchitecture)
       string(REGEX REPLACE ".* Family ([0-9]+) .*" "\\1" _cpu_family "${_cpu_id}")
       string(REGEX REPLACE ".* Model ([0-9]+) .*" "\\1" _cpu_model "${_cpu_id}")
    endif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+
    if(_vendor_id STREQUAL "GenuineIntel")
       if(_cpu_family EQUAL 6)
          # taken from the Intel ORM
          # http://www.intel.com/content/www/us/en/processors/architectures-software-developer-manuals.html
          # CPUID Signature Values of Of Recent Intel Microarchitectures
+		 # and https://en.wikichip.org/wiki/intel/cpuid
          # 4E 5E       | Skylake microarchitecture
+		 #		4E client 
+		 #		5E server 
          # 3D 47 56    | Broadwell microarchitecture
          # 3C 45 46 3F | Haswell microarchitecture
          # 3A 3E       | Ivy Bridge microarchitecture
@@ -103,9 +145,10 @@ macro(AutodetectHostArchitecture)
          #
          # Intel SDM Vol. 3C 35-1 / December 2016:
          # 57          | Xeon Phi 3200, 5200, 7200  [Knights Landing]
-         # 85          | Future Xeon Phi
-         # 8E 9E       | 7th gen. Core              [Kaby Lake]
-         # 55          | Future Xeon                [Skylake w/ AVX512]
+		 # 85          | [Knights Mill]
+		 # 8E 9E       | 7th gen. Core              [Kaby Lake]/[Coffee Lake]/[Whiskey Lake]
+		 # 		9E 
+         # 55          | Future Xeon                [Skylake w/ AVX512] aka skylake-server
          # 4E 5E       | 6th gen. Core / E3 v5      [Skylake w/o AVX512]
          # 56          | Xeon D-1500                [Broadwell]
          # 4F          | Xeon E5 v4, E7 v4, i7-69xx [Broadwell]
@@ -121,37 +164,88 @@ macro(AutodetectHostArchitecture)
          # 2E          | Xeon 7500, 6500 series
          # 25 2C       | Xeon 3600, 5600 series, Core i7, i5 and i3
          #
-         # Values from the Intel SDE:
-         # 5C | Goldmont
-         # 5A | Silvermont
-         # 57 | Knights Landing
-         # 66 | Cannonlake
-         # 55 | Skylake Server
-         # 4E | Skylake Client
-         # 3C | Broadwell (likely a bug in the SDE)
-         # 3C | Haswell
+		 # Values from the Intel SDE: and WikiChip
+		 # 9E 8E  		| Kaby Kake akaCoffee Lake aka Kaby Lake
+         # 5C 			| Goldmont
+         # 5A 			| Silvermont
+         # 57 			| Knights Landing
+         # 66 			| Cannonlake
+         # 55 			| Skylake Server
+         # 4E 			| Skylake Client
+         # 3C 			| Broadwell (likely a bug in the SDE)
+         # 3C 			| Haswell
+		 # 7E 			| Icelake client
+		 # 6C 6A 		| Icelake server
+		 # 8D 8C 		| Tigerlake
+		 # A7 			| Rocketlake
+		 # 97 			| AlderLake
+		 # B7 BA 		| raptorlake
          if(_cpu_model EQUAL 87) # 57
             set(TARGET_ARCHITECTURE "knl")  # Knights Landing
+         elseif(_cpu_model EQUAL 133)
+            set(TARGET_ARCHITECTURE "knm")
+
+		 #small cores
+
+	 	elseif(_cpu_model EQUAL 156 OR _cpu_model EQUAL 150 OR _cpu_model EQUAL 138)
+            set(TARGET_ARCHITECTURE "treemont")
+         elseif(_cpu_model EQUAL 122)
+            set(TARGET_ARCHITECTURE "goldmontplus")
          elseif(_cpu_model EQUAL 92)
             set(TARGET_ARCHITECTURE "goldmont")
+         elseif(_cpu_model EQUAL 74)
+            set(TARGET_ARCHITECTURE "airmont")
+         elseif(_cpu_model EQUAL 90 OR _cpu_model EQUAL 76 OR _cpu_model EQUAL 93 OR _cpu_model EQUAL 77 OR _cpu_model EQUAL 55)
+            set(TARGET_ARCHITECTURE "silvermont")
+		 elseif(_cpu_model EQUAL 53 _cpu_model EQUAL 52 _cpu_model EQUAL 39)
+            set(TARGET_ARCHITECTURE "saltwell")
+		 elseif(_cpu_model EQUAL 38 _cpu_model EQUAL 28)
+            set(TARGET_ARCHITECTURE "bonnwell")
+
+		 # server cores
+		 #elseif(_cpu_model EQUAL XXX) # TODO not published
+         #    set(TARGET_ARCHITECTURE "diamond-rapids-server")
+		 #elseif(_cpu_model EQUAL XXX) # TODO not published
+         #    set(TARGET_ARCHITECTURE "granite-rapids-server")
+	 	 elseif(_cpu_model EQUAL 143)
+             set(TARGET_ARCHITECTURE "sapphire-rapids-server")
+	 	 elseif(_cpu_model EQUAL 106 OR _cpu_model EQUAL 108) # 6A 6C
+             set(TARGET_ARCHITECTURE "icelake-server")
+		 elseif(_cpu_model EQUAL 85) # 55 aka cacade lake aka cooper lake
+             set(TARGET_ARCHITECTURE "skylake-server")
+		 elseif(_cpu_model EQUAL 79 OR _cpu_model EQUAL 86)
+             set(TARGET_ARCHITECTURE "broadwell-server")
+		 elseif(_cpu_model EQUAL 63)
+             set(TARGET_ARCHITECTURE "haswell-server")
+		 elseif(_cpu_model EQUAL 62)
+             set(TARGET_ARCHITECTURE "ivybridge-server")
+		 elseif(_cpu_model EQUAL 45)
+             set(TARGET_ARCHITECTURE "sandybridge-server")
+		 elseif(_cpu_model EQUAL 44 or _cpu_model EQUAL 47)
+             set(TARGET_ARCHITECTURE "westmere-server")
+		 elseif(_cpu_model EQUAL 46  or _cpu_model EQUAL 30 or _cpu_model EQUAL 26)
+             set(TARGET_ARCHITECTURE "nehalem-server")
+		 elseif(_cpu_model EQUAL 20 or _cpu_model EQUAL 23)
+            set(TARGET_ARCHITECTURE "penryn-server")
+
+
+		 # client cores
+		 elseif(_cpu_model EQUAL 183 OR _cpu_model EQUAL 187)
+            set(TARGET_ARCHITECTURE "raptorlake")
          elseif(_cpu_model EQUAL 154)
             set(TARGET_ARCHITECTURE "alderlake")
          elseif(_cpu_model EQUAL 138)
             set(TARGET_ARCHITECTURE "lakefield")
-         elseif(_cpu_model EQUAL 140 OR _cpu_model EQUAL 141 OR _cpu_model EQUAL 143)
-            set(TARGET_ARCHITECTURE "tigerlake")
          elseif(_cpu_model EQUAL 167)
             set(TARGET_ARCHITECTURE "rocketlake")
-         elseif(_cpu_model EQUAL 126 OR _cpu_model EQUAL 125 OR _cpu_model EQUAL 106 OR _cpu_model EQUAL 108)
+         elseif(_cpu_model EQUAL 140 OR _cpu_model EQUAL 141 OR _cpu_model EQUAL 143)
+            set(TARGET_ARCHITECTURE "tigerlake")
+		 elseif(_cpu_model EQUAL 126 OR _cpu_model EQUAL 125) # 7E
             set(TARGET_ARCHITECTURE "icelake")
-         elseif(_cpu_model EQUAL 90 OR _cpu_model EQUAL 76)
-            set(TARGET_ARCHITECTURE "silvermont")
-         elseif(_cpu_model EQUAL 102 OR _cpu_model EQUAL 103)
+         elseif(_cpu_model EQUAL 102 OR _cpu_model EQUAL 103) # 66, 67?
             set(TARGET_ARCHITECTURE "cannonlake")
          elseif(_cpu_model EQUAL 142 OR _cpu_model EQUAL 158) # 8E, 9E
-            set(TARGET_ARCHITECTURE "kaby-lake")
-         elseif(_cpu_model EQUAL 85) # 55
-            set(TARGET_ARCHITECTURE "skylake-avx512")
+            set(TARGET_ARCHITECTURE "kaby-lake") # aka coffee-lake aka whiskey-lake
          elseif(_cpu_model EQUAL 78 OR _cpu_model EQUAL 94) # 4E, 5E
             set(TARGET_ARCHITECTURE "skylake")
          elseif(_cpu_model EQUAL 61 OR _cpu_model EQUAL 71 OR _cpu_model EQUAL 79 OR _cpu_model EQUAL 86) # 3D, 47, 4F, 56
@@ -168,7 +262,7 @@ macro(AutodetectHostArchitecture)
             set(TARGET_ARCHITECTURE "nehalem")
          elseif(_cpu_model EQUAL 23 OR _cpu_model EQUAL 29)
             set(TARGET_ARCHITECTURE "penryn")
-         elseif(_cpu_model EQUAL 15)
+         elseif(_cpu_model equal 15)
             set(TARGET_ARCHITECTURE "merom")
          elseif(_cpu_model EQUAL 28)
             set(TARGET_ARCHITECTURE "atom")
@@ -188,21 +282,64 @@ macro(AutodetectHostArchitecture)
          if(_cpu_model GREATER 2) # Not sure whether this must be 3 or even 4 instead
             list(APPEND _available_vector_units_list "sse" "sse2" "sse3")
          endif(_cpu_model GREATER 2)
+	  else() # unknown cpu family 
+		message(WARNING "Unknown intel cpu family")
       endif(_cpu_family EQUAL 6)
    elseif(_vendor_id STREQUAL "AuthenticAMD")
-      if(_cpu_family EQUAL 25)
-         set(TARGET_ARCHITECTURE "zen4")
-      elseif(_cpu_family EQUAL 24)
-         set(TARGET_ARCHITECTURE "zen2")
-      elseif(_cpu_family EQUAL 23)
-         set(TARGET_ARCHITECTURE "zen")
+	   # Source: https://en.wikichip.org/wiki/amd/cpuid
+      if(_cpu_family EQUAL 25) # 19h
+		 if(_cpu_model EQUAL 0 OR _cpu_model EQUAL 1 OR _cpu_model EQUAL 8)
+            set(TARGET_ARCHITECTURE "zen3")
+		 elseif(_cpu_model EQUAL 33) # vermeer
+            set(TARGET_ARCHITECTURE "zen3")
+		 elseif(_cpu_model EQUAL 16) # enineering sample
+            set(TARGET_ARCHITECTURE "zen4")
+		elseif(_cpu_model EQUAL 80 OR _cpu_model EQUAL 64 OR _cpu_model EQUAL 65) # cezanne
+            set(TARGET_ARCHITECTURE "zen3")
+		elseif(_cpu_model EQUAL 112 OR _cpu_model EQUAL 97) # phoenix
+            set(TARGET_ARCHITECTURE "zen4")
+	     else()
+		    message(WARNING "No idea what AMD model in family 19h this is")
+		 endif()
+	  elseif(_cpu_family EQUAL 24) # 18h (only in china)
+		 if(_cpu_model EQUAL 0)
+            set(TARGET_ARCHITECTURE "zen_china")
+	     else()
+		    message(WARNING "No idea what AMD model in family 18h this is")
+		 endif()
+      elseif(_cpu_family EQUAL 23) # 17h the first zen generation
+		  # NOTE: zen and zen+ do share the model number 24. Probably an error
+		 if(_cpu_model EQUAL 0 OR _cpu_model EQUAL 17 OR _cpu_model EQUAL 24 OR _cpu_model EQUAL 32)
+            set(TARGET_ARCHITECTURE "zen")
+		 elseif(_cpu_model EQUAL 8 OR _cpu_model EQUAL 24)
+            set(TARGET_ARCHITECTURE "zenplus")
+		 elseif(_cpu_model EQUAL 49 OR _cpu_model EQUAL 96 OR _cpu_model EQUAL 71 OR _cpu_model EQUAL 104 OR _cpu_model EQUAL 144 OR _cpu_model EQUAL 113 OR _cpu_model EQUAL 160)
+            set(TARGET_ARCHITECTURE "zen2")
+	     else()
+			message(WARNING "No idea what AMD model in family 17h (zen/zen+/zen2) this is")
+		 endif()
       elseif(_cpu_family EQUAL 22) # 16h
-         set(TARGET_ARCHITECTURE "AMD 16h")
+		  # puma/jaguar
+		 if(_cpu_model EQUAL 0)
+            set(TARGET_ARCHITECTURE "jaguar")
+         elseif(_cpu_model EQUAL 48)
+            set(TARGET_ARCHITECTURE "puma")
+	     else()
+		    message(WARNING "No idea what AMD model in family 16h this is")
+		 endif()
       elseif(_cpu_family EQUAL 21) # 15h
-         if(_cpu_model LESS 2)
+		 if(_cpu_model EQUAL 1)
             set(TARGET_ARCHITECTURE "bulldozer")
-         else()
+         elseif(_cpu_model EQUAL 2)
             set(TARGET_ARCHITECTURE "piledriver")
+		 elseif(_cpu_model EQUAL 2 OR _cpu_model EQUAL 16 OR _cpu_model EQUAL 19)
+            set(TARGET_ARCHITECTURE "piledriver")
+         elseif(_cpu_model EQUAL 48 OR _cpu_model EQUAL 56)
+            set(TARGET_ARCHITECTURE "steamroller")
+         elseif(_cpu_model EQUAL 96 OR _cpu_model EQUAL 101 OR _cpu_model EQUAL 112)
+            set(TARGET_ARCHITECTURE "piledriver")
+	     else()
+		    message(WARNING "No idea what AMD model in family 15h this is")
          endif()
       elseif(_cpu_family EQUAL 20) # 14h
          set(TARGET_ARCHITECTURE "AMD 14h")
@@ -211,9 +348,12 @@ macro(AutodetectHostArchitecture)
          set(TARGET_ARCHITECTURE "barcelona")
       elseif(_cpu_family EQUAL 15)
          set(TARGET_ARCHITECTURE "k8")
-         if(_cpu_model GREATER 64) # I don't know the right number to put here. This is just a guess from the hardware I have access to
+         if(_cpu_model GREATER 64) 
+			 # I don't know the right number to put here. This is just a guess from the hardware I have access to
             set(TARGET_ARCHITECTURE "k8-sse3")
          endif(_cpu_model GREATER 64)
+	  else()
+		  message(WARNING "No idea what AMD family this is")
       endif()
    endif(_vendor_id STREQUAL "GenuineIntel")
 endmacro()
@@ -250,7 +390,7 @@ Other supported values are: \"none\", \"generic\", \"core\", \"merom\" (65nm Cor
    set(_available_vector_units_list)
 
    if(TARGET_ARCHITECTURE STREQUAL "auto")
-      AutodetectHostArchitecture()
+      AutodetectHostArchitectureX86()
       message(STATUS "Detected CPU: ${TARGET_ARCHITECTURE}")
    endif(TARGET_ARCHITECTURE STREQUAL "auto")
 
@@ -290,8 +430,8 @@ Other supported values are: \"none\", \"generic\", \"core\", \"merom\" (65nm Cor
       list(APPEND _march_flag_list "skylake")
       _broadwell()
    endmacro()
-   macro(_skylake_avx512)
-      list(APPEND _march_flag_list "skylake-avx512")
+   macro(_skylake_server)
+      list(APPEND _march_flag_list "skylake-server")
       _skylake()
       list(APPEND _available_vector_units_list "avx512f" "avx512cd" "avx512dq" "avx512bw" "avx512vl")
    endmacro()
@@ -347,8 +487,8 @@ Other supported values are: \"none\", \"generic\", \"core\", \"merom\" (65nm Cor
       _cannonlake()
    elseif(TARGET_ARCHITECTURE STREQUAL "kaby-lake")
       _skylake()
-   elseif(TARGET_ARCHITECTURE STREQUAL "skylake-xeon" OR TARGET_ARCHITECTURE STREQUAL "skylake-avx512")
-      _skylake_avx512()
+   elseif(TARGET_ARCHITECTURE STREQUAL "skylake-xeon" OR TARGET_ARCHITECTURE STREQUAL "skylake-server")
+      _skylake_server()
    elseif(TARGET_ARCHITECTURE STREQUAL "skylake")
       _skylake()
    elseif(TARGET_ARCHITECTURE STREQUAL "broadwell")
@@ -399,7 +539,7 @@ Other supported values are: \"none\", \"generic\", \"core\", \"merom\" (65nm Cor
       list(APPEND _available_vector_units_list "sse4a")
    elseif(TARGET_ARCHITECTURE STREQUAL "zen4")
       list(APPEND _march_flag_list "znver4")
-      _skylake_avx512()
+      _skylake_server()
       list(APPEND _available_vector_units_list "sse4a")
    elseif(TARGET_ARCHITECTURE STREQUAL "piledriver")
       list(APPEND _march_flag_list "bdver2")
@@ -487,6 +627,7 @@ Other supported values are: \"none\", \"generic\", \"core\", \"merom\" (65nm Cor
             list(APPEND _disable_vector_unit_list "${_flag}")
          endif()
       endmacro()
+
       _enable_or_disable(SSE2 "sse2" "Use SSE2. If SSE2 instructions are not enabled the SSE implementation will be disabled." false)
       _enable_or_disable(SSE3 "sse3" "Use SSE3. If SSE3 instructions are not enabled they will be emulated." false)
       _enable_or_disable(SSSE3 "ssse3" "Use SSSE3. If SSSE3 instructions are not enabled they will be emulated." false)
