@@ -53,6 +53,7 @@
 #=============================================================================
 
 get_filename_component(_currentDir "${CMAKE_CURRENT_LIST_FILE}" PATH)
+include(${CMAKE_CURRENT_LIST_DIR}/cache.cmake)
 
 # maps the current processor to a variable which is easy checkable
 message(STATUS "Detected processor: ${CMAKE_SYSTEM_PROCESSOR}")
