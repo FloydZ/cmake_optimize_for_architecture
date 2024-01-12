@@ -1,4 +1,4 @@
-# Determine the host CPU feature set and determine the best set of compiler
+# Determine the HOST CPU feature set and determine the best set of compiler
 # flags to enable all supported SIMD relevant features. Alternatively, the
 # target CPU can be explicitly selected (for generating more generic binaries
 # or for targeting a different system).
@@ -54,6 +54,7 @@
 
 get_filename_component(_currentDir "${CMAKE_CURRENT_LIST_FILE}" PATH)
 include(${CMAKE_CURRENT_LIST_DIR}/cache.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/CompilerOptimizations.cmake)
 
 # maps the current processor to a variable which is easy checkable
 message(STATUS "Detected processor: ${CMAKE_SYSTEM_PROCESSOR}")

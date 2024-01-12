@@ -3,7 +3,7 @@ project(test LANGUAGES C)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
-include("../OptimizeForArchitecture.cmake")
+include("../HostOptimizations.cmake")
 OptimizeForArchitecture()
 
 set(AVX2_FLAGS)
