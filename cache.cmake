@@ -22,10 +22,14 @@ execute_process(COMMAND bash -c "find /sys/devices/system/cpu/cpu0/cache -type d
 # we need to subtract 1 because the directory `.` is counted too.
 # and we need to subtract another 1, because loops in `cmake` are inclusive
 # the upper bound, wtf?.
+MATH(EXPR NR_CACHES "${INTERNAL_NR_CACHES} - 1")
 MATH(EXPR INTERNAL_NR_CACHES "${INTERNAL_NR_CACHES} - 2")
-message(STATUS "#caches: ${INTERNAL_NR_CACHES}")
+message(STATUS "#caches: ${NR_CACHES}")
 	
-
+# reads from: /sys/devices/system/cpu/cpu0/cache/index{NR}/..
+# sets the variables: (just examples)
+# 	# INTERNAL_CACHE${CACHE_NR}_SIZE
+# 	# INTERNAL_CACHE${CACHE_NR}_ID
 function(ReadCacheInformation cpu_number cache_number information)
 	set(_cacheinfo)
 	file(READ "/sys/devices/system/cpu/cpu${cpu_number}/cache/index${cache_number}/${information}" _cacheinfo)
@@ -33,7 +37,7 @@ function(ReadCacheInformation cpu_number cache_number information)
 	string(REPLACE "\n" "" _cacheinfo "${_cacheinfo}")
 
 	# just some helper logging
-	message(STATUS "INTERNAL CPU: ${cpu_number} Cache lvl: ${cache_number} ${information}:${_cacheinfo}")
+	#message(STATUS "INTERNAL CPU: ${cpu_number} Cache lvl: ${cache_number} ${information}:${_cacheinfo}")
 
 	string(TOUPPER information information_upper)
 	set("INTERNAL_CACHE${cache_number}_${information_upper}" _cacheinfo)

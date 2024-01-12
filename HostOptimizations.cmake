@@ -53,33 +53,13 @@
 #=============================================================================
 
 get_filename_component(_currentDir "${CMAKE_CURRENT_LIST_FILE}" PATH)
+
+# NOTE: the order is important
+include(${CMAKE_CURRENT_LIST_DIR}/architecture.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/compiler.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/cache.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/CompilerOptimizations.cmake)
 
-# maps the current processor to a variable which is easy checkable
-message(STATUS "Detected processor: ${CMAKE_SYSTEM_PROCESSOR}")
-if(OPENCV_SKIP_SYSTEM_PROCESSOR_DETECTION)
-elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "amd64.*|x86_64.*|AMD64.*")
-  set(X86_64 1)
-elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "i686.*|i386.*|x86.*")
-  set(X86 1)
-elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "^(aarch64.*|AARCH64.*|arm64.*|ARM64.*)")
-  set(AARCH64 1)
-elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "^(arm.*|ARM.*)")
-  set(ARM 1)
-elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "^(powerpc|ppc)64le")
-  set(PPC64LE 1)
-elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "^(powerpc|ppc)64")
-  set(PPC64 1)
-elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "^(mips.*|MIPS.*)")
-  set(MIPS 1)
-elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "^(riscv.*|RISCV.*)")
-  set(RISCV 1)
-elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "^(loongarch64.*|LOONGARCH64.*)")
-  set(LOONGARCH64 1)
-else()
-  message(WARNING "unrecognized target processor configuration")
-endif()
 
 macro(_my_find _list _value _ret)
    list(FIND ${_list} "${_value}" _found)

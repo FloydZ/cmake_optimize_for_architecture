@@ -1,7 +1,7 @@
 [
 {
   "directory": "/home/duda/Downloads/programming/cmake_optimized_for_arch/test",
-  "command": "/usr/bin/cc   -g -DUSE_AVX2 -DUSE_AVX512 -DUSE_AVX2 -DUSE_AVX512 -o CMakeFiles/test.dir/test.c.o -c /home/duda/Downloads/programming/cmake_optimized_for_arch/test/test.c",
+  "command": "/home/duda/.nix-profile/bin/cc   -g -DUSE_AVX2 -DUSE_AVX512 -DUSE_AVX2 -DUSE_AVX512 -o CMakeFiles/test.dir/test.c.o -c /home/duda/Downloads/programming/cmake_optimized_for_arch/test/test.c",
   "file": "/home/duda/Downloads/programming/cmake_optimized_for_arch/test/test.c",
   "output": "CMakeFiles/test.dir/test.c.o"
 }

@@ -1,3 +1,4 @@
+# This checks what flags the compiler supports.
 # x86/x86-64 arch:
 # SSE / SSE2 (always available on 64-bit CPUs)
 # SSE3 / SSSE3
@@ -15,8 +16,30 @@
 # AVX512_CNL (Cannon Lake with AVX-512F/CD/BW/DQ/VL/IFMA/VBMI)
 # AVX512_CLX (Cascade Lake with AVX-512F/CD/BW/DQ/VL/VNNI)
 # AVX512_ICL (Ice Lake with AVX-512F/CD/BW/DQ/VL/IFMA/VBMI/VNNI/VBMI2/BITALG/VPOPCNTDQ/VPCLMULQDQ*/GFNI*/VAES*)
+# AVX512_ZEN4 (AMD ZEN4 with: AVX-512F/CD/BW/DQ/VL/IFMA/VBMI/VNNI/VBMI2/BITALG/VPOPCNTDQ/VPCLMULQDQ/GFNI/VAES)
 
-
+# INTEL CPU AVX512 features: (all off them can be enables/disabled)
+# AVX512F
+# AVX512CD
+# AVX512ER
+# AVX512PF
+# AVX512VL
+# AVX512DQ
+# AVX512BW
+# AVX512IFMA52
+# AVX512VBMI
+# AVX5124NNIW
+# AVX5124FMAPS
+# AVX512VPOPCNTDQ
+# AVX512VNNI
+# AVX512BF16
+# AVX512VBMI2
+# AVX512BITALG
+# AVX512VP2INTERSECT
+# AVX512FP16
+# GFNI
+# VAES
+# VPCLMULQDQ
 
 # ppc64le arch:
 # VSX  (always available on Power8)
@@ -24,6 +47,11 @@
 
 # RISC-V arch:
 # RVV
+
+# aarch64 arch: (TODO)
+# NEON
+# SVE
+# SVE2
 
 # CPU_{opt}_SUPPORTED=ON/OFF - compiler support (possibly with additional flag)
 # CPU_{opt}_IMPLIES=<list>
@@ -49,6 +77,10 @@
 #
 # CPU_{opt}_ENABLED_DEFAULT=ON/OFF - has compiler support without additional flag (CPU_BASELINE_DETECT=ON only)
 
+
+set(OpenCV_SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR})
+
+
 set(CPU_ALL_OPTIMIZATIONS "SSE;SSE2;SSE3;SSSE3;SSE4_1;SSE4_2;POPCNT;AVX;FP16;AVX2;FMA3;AVX_512F")
 list(APPEND CPU_ALL_OPTIMIZATIONS "AVX512_COMMON;AVX512_KNL;AVX512_KNM;AVX512_SKX;AVX512_CNL;AVX512_CLX;AVX512_ICL")
 list(APPEND CPU_ALL_OPTIMIZATIONS NEON VFPV3 FP16 NEON_DOTPROD)
@@ -59,14 +91,25 @@ list(APPEND CPU_ALL_OPTIMIZATIONS LSX)
 list(APPEND CPU_ALL_OPTIMIZATIONS LASX)
 list(REMOVE_DUPLICATES CPU_ALL_OPTIMIZATIONS)
 
-ocv_update(CPU_VFPV3_FEATURE_ALIAS "")
-
 
 set(HELP_CPU_BASELINE "Specify list of enabled baseline CPU optimizations")
 set(HELP_CPU_BASELINE_REQUIRE "Specify list of required baseline CPU optimizations")
 set(HELP_CPU_BASELINE_DISABLE "Specify list of forbidden baseline CPU optimizations")
 set(HELP_CPU_DISPATCH "Specify list of dispatched CPU optimizations")
 set(HELP_CPU_DISPATCH_REQUIRE "Specify list of required dispatched CPU optimizations")
+
+# 
+macro(ocv_update VAR)
+  if(NOT DEFINED ${VAR})
+    if("x${ARGN}" STREQUAL "x")
+      set(${VAR} "")
+    else()
+      set(${VAR} ${ARGN})
+    endif()
+  else()
+	  message(DEBUG "Preserve old value for ${VAR}: ${${VAR}}")
+  endif()
+endmacro()
 
 foreach(var CPU_BASELINE CPU_BASELINE_REQUIRE CPU_BASELINE_DISABLE CPU_DISPATCH CPU_DISPATCH_REQUIRE)
   if(DEFINED ${var})
@@ -75,40 +118,6 @@ foreach(var CPU_BASELINE CPU_BASELINE_REQUIRE CPU_BASELINE_DISABLE CPU_DISPATCH 
   endif()
 endforeach()
 
-# process legacy flags
-macro(ocv_optimization_process_obsolete_option legacy_flag OPT legacy_warn)
-  if(DEFINED "${legacy_flag}")
-    if("${legacy_warn}")
-      message(STATUS "WARNING: Option ${legacy_flag}='${${legacy_flag}}' is deprecated and should not be used anymore")
-      message(STATUS "         Behaviour of this option is not backward compatible")
-      message(STATUS "         Refer to 'CPU_BASELINE'/'CPU_DISPATCH' CMake options documentation")
-    endif()
-    if("${${legacy_flag}}")
-      if(NOT ";${CPU_BASELINE_REQUIRE};" MATCHES ";${OPT};")
-        set(CPU_BASELINE_REQUIRE "${CPU_BASELINE_REQUIRE};${OPT}" CACHE STRING "${HELP_CPU_BASELINE_REQUIRE}" FORCE)
-      endif()
-    else()
-      if(NOT ";${CPU_BASELINE_DISABLE};" MATCHES ";${OPT};")
-        set(CPU_BASELINE_DISABLE "${CPU_BASELINE_DISABLE};${OPT}" CACHE STRING "${HELP_CPU_BASELINE_DISABLE}" FORCE)
-      endif()
-    endif()
-  endif()
-endmacro()
-ocv_optimization_process_obsolete_option(ENABLE_SSE SSE ON)
-ocv_optimization_process_obsolete_option(ENABLE_SSE2 SSE2 ON)
-ocv_optimization_process_obsolete_option(ENABLE_SSE3 SSE3 ON)
-ocv_optimization_process_obsolete_option(ENABLE_SSSE3 SSSE3 ON)
-ocv_optimization_process_obsolete_option(ENABLE_SSE41 SSE4_1 ON)
-ocv_optimization_process_obsolete_option(ENABLE_SSE42 SSE4_2 ON)
-ocv_optimization_process_obsolete_option(ENABLE_POPCNT POPCNT ON)
-ocv_optimization_process_obsolete_option(ENABLE_AVX AVX ON)
-ocv_optimization_process_obsolete_option(ENABLE_AVX2 AVX2 ON)
-ocv_optimization_process_obsolete_option(ENABLE_FMA3 FMA3 ON)
-
-ocv_optimization_process_obsolete_option(ENABLE_VFPV3 VFPV3 OFF)
-ocv_optimization_process_obsolete_option(ENABLE_NEON NEON OFF)
-
-ocv_optimization_process_obsolete_option(ENABLE_VSX VSX ON)
 
 macro(ocv_is_optimization_in_list resultvar check_opt)
   set(__checked "")
@@ -158,6 +167,214 @@ macro(ocv_append_optimization_flag var OPT)
   set(${var} "${${var}} ${CPU_${OPT}_FLAGS_ON}")
 endmacro()
 
+
+set(OCV_COMPILER_FAIL_REGEX
+    "argument .* is not valid"                  # GCC 9+ (including support of unicode quotes)
+    "command[- ]line option .* is valid for .* but not for C\\+\\+" # GNU
+    "command[- ]line option .* is valid for .* but not for C" # GNU
+    "unrecognized .*option"                     # GNU
+    "unknown .*option"                          # Clang
+    "ignoring unknown option"                   # MSVC
+    "warning D9002"                             # MSVC, any lang
+    "option .*not supported"                    # Intel
+    "[Uu]nknown option"                         # HP
+    "[Ww]arning: [Oo]ption"                     # SunPro
+    "command option .* is not recognized"       # XL
+    "not supported in this configuration, ignored"       # AIX (';' is replaced with ',')
+    "File with unknown suffix passed to linker" # PGI
+    "WARNING: unknown flag:"                    # Open64
+  )
+
+# TODO explain:
+# this files actually compiles the test files
+# sets ${RESULT} to 1 if the flags is supported 0 if not
+# obays the following internal CMake variables:
+#	- CMAKE_REQUIRED_LIBRARIES, CMAKE_EXE_LINKER_FLAGS, CMAKE_CXX_STANDARD, 
+#	- CMAKE_CXX_STANDARD_REQUIRED, CMAKE_CXX_EXTENSIONS
+#
+# Parameters:
+# 	- LANG: C or CXX
+# 	- FLAG:
+# 	- RESULT: 
+MACRO(ocv_check_compiler_flag LANG FLAG RESULT)
+  set(_fname "${ARGN}")
+
+  if(NOT DEFINED ${RESULT})
+    if(_fname)
+      # nothing
+    elseif("_${LANG}_" MATCHES "_CXX_")
+      set(_fname "${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/CMakeTmp/src.cxx")
+      if("${CMAKE_CXX_FLAGS} ${FLAG} " MATCHES "-Werror " OR "${CMAKE_CXX_FLAGS} ${FLAG} " MATCHES "-Werror=unknown-pragmas ")
+        FILE(WRITE "${_fname}" "int main() { return 0; }\n")
+      else()
+        FILE(WRITE "${_fname}" "#pragma\nint main() { return 0; }\n")
+      endif()
+    elseif("_${LANG}_" MATCHES "_C_")
+      set(_fname "${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/CMakeTmp/src.c")
+      if("${CMAKE_C_FLAGS} ${FLAG} " MATCHES "-Werror " OR "${CMAKE_C_FLAGS} ${FLAG} " MATCHES "-Werror=unknown-pragmas ")
+        FILE(WRITE "${_fname}" "int main(void) { return 0; }\n")
+      else()
+        FILE(WRITE "${_fname}" "#pragma\nint main(void) { return 0; }\n")
+      endif()
+    elseif("_${LANG}_" MATCHES "_OBJCXX_")
+      set(_fname "${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/CMakeTmp/src.mm")
+      if("${CMAKE_CXX_FLAGS} ${FLAG} " MATCHES "-Werror " OR "${CMAKE_CXX_FLAGS} ${FLAG} " MATCHES "-Werror=unknown-pragmas ")
+        FILE(WRITE "${_fname}" "int main() { return 0; }\n")
+      else()
+        FILE(WRITE "${_fname}" "#pragma\nint main() { return 0; }\n")
+      endif()
+    else()
+      unset(_fname)
+    endif()
+	
+    if(_fname)
+      if(NOT "x${ARGN}" STREQUAL "x")
+        file(RELATIVE_PATH __msg "${CMAKE_SOURCE_DIR}" "${ARGN}")
+        set(__msg " (compile file: ${__msg})")
+      else()
+        set(__msg "")
+      endif()
+
+      if(CMAKE_REQUIRED_LIBRARIES)
+        set(__link_libs LINK_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES})
+      else()
+        set(__link_libs)
+      endif()
+
+      set(__cmake_flags "")
+      if(CMAKE_EXE_LINKER_FLAGS)  # CMP0056 do this on new CMake
+        list(APPEND __cmake_flags "-DCMAKE_EXE_LINKER_FLAGS=${CMAKE_EXE_LINKER_FLAGS}")
+      endif()
+
+      # CMP0067 do this on new CMake
+      if(DEFINED CMAKE_CXX_STANDARD)
+        list(APPEND __cmake_flags "-DCMAKE_CXX_STANDARD=${CMAKE_CXX_STANDARD}")
+      endif()
+      if(DEFINED CMAKE_CXX_STANDARD_REQUIRED)
+        list(APPEND __cmake_flags "-DCMAKE_CXX_STANDARD_REQUIRED=${CMAKE_CXX_STANDARD_REQUIRED}")
+      endif()
+      if(DEFINED CMAKE_CXX_EXTENSIONS)
+        list(APPEND __cmake_flags "-DCMAKE_CXX_EXTENSIONS=${CMAKE_CXX_EXTENSIONS}")
+      endif()
+
+      MESSAGE(STATUS "Performing Test ${RESULT}${__msg}")
+      TRY_COMPILE(${RESULT}
+        "${CMAKE_BINARY_DIR}"
+        "${_fname}"
+        CMAKE_FLAGS ${__cmake_flags}
+        COMPILE_DEFINITIONS "${FLAG}"
+        ${__link_libs}
+        OUTPUT_VARIABLE OUTPUT)
+
+      if(${RESULT})
+        string(REPLACE ";" "," OUTPUT_LINES "${OUTPUT}")
+        string(REPLACE "\n" ";" OUTPUT_LINES "${OUTPUT_LINES}")
+
+        foreach(_regex ${OCV_COMPILER_FAIL_REGEX})
+		  # Error:
+          if(NOT ${RESULT})
+            break()
+          endif()
+          foreach(_line ${OUTPUT_LINES})
+            if("${_line}" MATCHES "${_regex}")
+              file(APPEND ${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/CMakeError.log
+                  "Build output check failed:\n"
+                  "    Regex: '${_regex}'\n"
+                  "    Output line: '${_line}'\n")
+              set(${RESULT} 0)
+              break()
+            endif()
+          endforeach()
+        endforeach()
+      endif()
+
+      IF(${RESULT})
+        SET(${RESULT} 1 CACHE INTERNAL "Test ${RESULT}")
+        MESSAGE(STATUS "Performing Test ${RESULT} - Success")
+      ELSE(${RESULT})
+        MESSAGE(STATUS "Performing Test ${RESULT} - Failed")
+        SET(${RESULT} "" CACHE INTERNAL "Test ${RESULT}")
+        file(APPEND ${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/CMakeError.log
+            "Compilation failed:\n"
+            "    source file: '${_fname}'\n"
+            "    check option: '${FLAG}'\n"
+            "===== BUILD LOG =====\n"
+            "${OUTPUT}\n"
+            "===== END =====\n\n")
+      ENDIF(${RESULT})
+    else()
+      SET(${RESULT} 0)
+    endif()
+  endif()
+ENDMACRO()
+
+# 
+macro(ocv_check_flag_support lang flag varname base_options)
+  if(CMAKE_BUILD_TYPE)
+    set(CMAKE_TRY_COMPILE_CONFIGURATION ${CMAKE_BUILD_TYPE})
+  endif()
+
+  if("_${lang}_" MATCHES "_CXX_")
+    set(_lang CXX)
+  elseif("_${lang}_" MATCHES "_C_")
+    set(_lang C)
+  elseif("_${lang}_" MATCHES "_OBJCXX_")
+    if(DEFINED CMAKE_OBJCXX_COMPILER)  # CMake 3.16+ and enable_language(OBJCXX) call are required
+      set(_lang OBJCXX)
+    else()
+      set(_lang CXX)
+    endif()
+  else()
+    set(_lang ${lang})
+  endif()
+
+  string(TOUPPER "${flag}" ${varname})
+  string(REGEX REPLACE "^(/|-)" "HAVE_${_lang}_" ${varname} "${${varname}}")
+  string(REGEX REPLACE " -|-|=| |\\.|," "_" ${varname} "${${varname}}")
+
+  if(DEFINED CMAKE_${_lang}_COMPILER)
+    ocv_check_compiler_flag("${_lang}" "${base_options} ${flag}" ${${varname}} ${ARGN})
+  endif()
+endmacro()
+
+macro(ocv_check_runtime_flag flag result)
+  set(_fname "${ARGN}")
+  if(NOT DEFINED ${result})
+    file(RELATIVE_PATH _rname "${CMAKE_SOURCE_DIR}" "${_fname}")
+    message(STATUS "Performing Runtime Test ${result} (check file: ${_rname})")
+    try_run(exec_return compile_result
+      "${CMAKE_BINARY_DIR}"
+      "${_fname}"
+      CMAKE_FLAGS "-DCMAKE_EXE_LINKER_FLAGS=${CMAKE_EXE_LINKER_FLAGS}" # CMP0056 do this on new CMake
+      COMPILE_DEFINITIONS "${flag}"
+      OUTPUT_VARIABLE OUTPUT)
+
+    if(${compile_result})
+      if(exec_return EQUAL 0)
+        set(${result} 1 CACHE INTERNAL "Runtime Test ${result}")
+        message(STATUS "Performing Runtime Test ${result} - Success")
+      else()
+        message(STATUS "Performing Runtime Test ${result} - Failed(${exec_return})")
+        set(${result} 0 CACHE INTERNAL "Runtime Test ${result}")
+      endif()
+    else()
+      set(${result} 0 CACHE INTERNAL "Runtime Test ${result}")
+      message(STATUS "Performing Runtime Test ${result} - Compiling Failed")
+    endif()
+
+    if(NOT ${result})
+      file(APPEND ${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/CMakeError.log
+        "Runtime Test failed:\n"
+        "    source file: '${_fname}'\n"
+        "    check option: '${flag}'\n"
+        "    exec return: ${exec_return}\n"
+        "===== BUILD AND RUNTIME LOG =====\n"
+        "${OUTPUT}\n"
+        "===== END =====\n\n")
+    endif()
+  endif()
+endmacro()
+
 # Support GCC -march=native or Intel Compiler -xHost flags
 if(";${CPU_BASELINE};" MATCHES ";NATIVE;" OR ";${CPU_BASELINE};" MATCHES ";HOST;")
   set(CPU_BASELINE_DETECT ON)
@@ -182,25 +399,48 @@ if(X86 OR X86_64)
   ocv_update(CPU_AVX512_CNL_GROUP "AVX512_SKX;AVX_512IFMA;AVX_512VBMI")
   ocv_update(CPU_AVX512_CLX_GROUP "AVX512_SKX;AVX_512VNNI")
   ocv_update(CPU_AVX512_ICL_GROUP "AVX512_SKX;AVX_512IFMA;AVX_512VBMI;AVX_512VNNI;AVX_512VBMI2;AVX_512BITALG;AVX_512VPOPCNTDQ") # ? VPCLMULQDQ, GFNI, VAES
+  ocv_update(CPU_AVX512_ZEN4_GROUP "AVX512_SKX;AVX_512IFMA;AVX_512VBMI;AVX_512VNNI;AVX_512VBMI2;AVX_512BITALG;AVX_512VPOPCNTDQ;VPCLMULQDQ;GFNI;VAES")
 
-  ocv_update(CPU_SSE_TEST_FILE "${OpenCV_SOURCE_DIR}/cmake/checks/cpu_sse.cpp")
-  ocv_update(CPU_SSE2_TEST_FILE "${OpenCV_SOURCE_DIR}/cmake/checks/cpu_sse2.cpp")
-  ocv_update(CPU_SSE3_TEST_FILE "${OpenCV_SOURCE_DIR}/cmake/checks/cpu_sse3.cpp")
-  ocv_update(CPU_SSSE3_TEST_FILE "${OpenCV_SOURCE_DIR}/cmake/checks/cpu_ssse3.cpp")
-  ocv_update(CPU_SSE4_1_TEST_FILE "${OpenCV_SOURCE_DIR}/cmake/checks/cpu_sse41.cpp")
-  ocv_update(CPU_SSE4_2_TEST_FILE "${OpenCV_SOURCE_DIR}/cmake/checks/cpu_sse42.cpp")
-  ocv_update(CPU_POPCNT_TEST_FILE "${OpenCV_SOURCE_DIR}/cmake/checks/cpu_popcnt.cpp")
-  ocv_update(CPU_AVX_TEST_FILE "${OpenCV_SOURCE_DIR}/cmake/checks/cpu_avx.cpp")
-  ocv_update(CPU_AVX2_TEST_FILE "${OpenCV_SOURCE_DIR}/cmake/checks/cpu_avx2.cpp")
-  ocv_update(CPU_FP16_TEST_FILE "${OpenCV_SOURCE_DIR}/cmake/checks/cpu_fp16.cpp")
-  ocv_update(CPU_AVX_512F_TEST_FILE "${OpenCV_SOURCE_DIR}/cmake/checks/cpu_avx512.cpp")
-  ocv_update(CPU_AVX512_COMMON_TEST_FILE "${OpenCV_SOURCE_DIR}/cmake/checks/cpu_avx512common.cpp")
-  ocv_update(CPU_AVX512_KNL_TEST_FILE "${OpenCV_SOURCE_DIR}/cmake/checks/cpu_avx512knl.cpp")
-  ocv_update(CPU_AVX512_KNM_TEST_FILE "${OpenCV_SOURCE_DIR}/cmake/checks/cpu_avx512knm.cpp")
-  ocv_update(CPU_AVX512_SKX_TEST_FILE "${OpenCV_SOURCE_DIR}/cmake/checks/cpu_avx512skx.cpp")
-  ocv_update(CPU_AVX512_CNL_TEST_FILE "${OpenCV_SOURCE_DIR}/cmake/checks/cpu_avx512cnl.cpp")
-  ocv_update(CPU_AVX512_CLX_TEST_FILE "${OpenCV_SOURCE_DIR}/cmake/checks/cpu_avx512clx.cpp")
-  ocv_update(CPU_AVX512_ICL_TEST_FILE "${OpenCV_SOURCE_DIR}/cmake/checks/cpu_avx512icl.cpp")
+  ocv_update(CPU_SSE_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_sse.cpp")
+  ocv_update(CPU_SSE2_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_sse2.cpp")
+  ocv_update(CPU_SSE3_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_sse3.cpp")
+  ocv_update(CPU_SSSE3_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_ssse3.cpp")
+  ocv_update(CPU_SSE4_1_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_sse41.cpp")
+  ocv_update(CPU_SSE4_2_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_sse42.cpp")
+  ocv_update(CPU_POPCNT_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_popcnt.cpp")
+  ocv_update(CPU_AVX_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_avx.cpp")
+  ocv_update(CPU_AVX2_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_avx2.cpp")
+  ocv_update(CPU_FP16_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_fp16.cpp")
+  ocv_update(CPU_AVX_512F_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_avx512.cpp")
+  ocv_update(CPU_AVX512_COMMON_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_avx512common.cpp")
+  ocv_update(CPU_AVX512_KNL_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_avx512knl.cpp")
+  ocv_update(CPU_AVX512_KNM_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_avx512knm.cpp")
+  ocv_update(CPU_AVX512_SKX_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_avx512skx.cpp")
+  ocv_update(CPU_AVX512_CNL_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_avx512cnl.cpp")
+  ocv_update(CPU_AVX512_CLX_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_avx512clx.cpp")
+  ocv_update(CPU_AVX512_ICL_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_avx512icl.cpp")
+  
+  ocv_update(CPU_AVX512F_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_avx512f.cpp")
+  ocv_update(CPU_AVX512CD_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_avx512cd.cpp")
+  ocv_update(CPU_AVX512ER_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_avx512er.cpp")
+  ocv_update(CPU_AVX512PF_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_avx512pf.cpp")
+  ocv_update(CPU_AVX512VL_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_avx512vl.cpp")
+  ocv_update(CPU_AVX512DQ_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_avx512dq.cpp")
+  ocv_update(CPU_AVX512BW_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_avx512bw.cpp")
+  ocv_update(CPU_AVX512IFMA52_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_avx512ifma52.cpp")
+  ocv_update(CPU_AVX512VBMI_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_avx512vbmi.cpp")
+  ocv_update(CPU_AVX5124VNNIW_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_avx5124vnni.cpp")
+  ocv_update(CPU_AVX5124FMAPS_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_avx5124fmaps.cpp")
+  ocv_update(CPU_AVX512VPOPCNTDQ_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_avx512vpopcntdq.cpp")
+  ocv_update(CPU_AVX512VNNI_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_avx512vnni.cpp")
+  ocv_update(CPU_AVX512BF16_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_avx512bf16.cpp")
+  ocv_update(CPU_AVX512VBMI2_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_avx512vbmi2.cpp")
+  ocv_update(CPU_AVX512BITALG_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_avx512bitalg.cpp")
+  ocv_update(CPU_AVX512VP2INTERSECT_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_avx512vp2intersect.cpp")
+  ocv_update(CPU_AVX512FP16_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_avx512fp16.cpp")
+  ocv_update(CPU_GFNI_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_gfni.cpp")
+  ocv_update(CPU_VAES_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_vaes.cpp")
+  ocv_update(CPU_VPCLMULQDQ_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_vpclmulqdq.cpp")
 
   if(NOT OPENCV_CPU_OPT_IMPLIES_IGNORE)
     ocv_update(CPU_AVX512_ICL_IMPLIES "AVX512_SKX")
@@ -242,6 +482,7 @@ if(X86 OR X86_64)
         ocv_update(CPU_${name}_FLAGS_CONFLICT "${flags_conflict}")
       endif()
     endmacro()
+
     ocv_intel_compiler_optimization_option(AVX2 "-march=core-avx2" "/arch:CORE-AVX2")
     ocv_intel_compiler_optimization_option(FP16 "-mavx" "/arch:AVX")
     ocv_intel_compiler_optimization_option(AVX "-mavx" "/arch:AVX")
@@ -249,7 +490,7 @@ if(X86 OR X86_64)
     ocv_intel_compiler_optimization_option(POPCNT "-mpopcnt" "")  # -mpopcnt is available since ICC 19.0.0
     ocv_intel_compiler_optimization_option(SSE4_2 "-msse4.2" "/arch:SSE4.2")
     ocv_intel_compiler_optimization_option(SSE4_1 "-msse4.1" "/arch:SSE4.1")
-    ocv_intel_compiler_optimization_option(SSE3 "-msse3" "/arch:SSE3")
+    ocv_intel_compiler_opOpenCV_SOURCE_DIRtimization_option(SSE3 "-msse3" "/arch:SSE3")
     ocv_intel_compiler_optimization_option(SSSE3 "-mssse3" "/arch:SSSE3")
     ocv_intel_compiler_optimization_option(SSE2 "-msse2" "/arch:SSE2")
     if(NOT X86_64) # x64 compiler doesn't support /arch:sse
@@ -332,11 +573,11 @@ if(X86 OR X86_64)
   endif()
 
 elseif(ARM OR AARCH64)
-  ocv_update(CPU_NEON_TEST_FILE "${OpenCV_SOURCE_DIR}/cmake/checks/cpu_neon.cpp")
-  ocv_update(CPU_FP16_TEST_FILE "${OpenCV_SOURCE_DIR}/cmake/checks/cpu_fp16.cpp")
-  ocv_update(CPU_NEON_FP16_TEST_FILE "${OpenCV_SOURCE_DIR}/cmake/checks/cpu_neon_fp16.cpp")
-  ocv_update(CPU_NEON_BF16_TEST_FILE "${OpenCV_SOURCE_DIR}/cmake/checks/cpu_neon_bf16.cpp")
-  ocv_update(CPU_NEON_DOTPROD_TEST_FILE "${OpenCV_SOURCE_DIR}/cmake/checks/cpu_neon_dotprod.cpp")
+  ocv_update(CPU_NEON_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_neon.cpp")
+  ocv_update(CPU_FP16_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_fp16.cpp")
+  ocv_update(CPU_NEON_FP16_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_neon_fp16.cpp")
+  ocv_update(CPU_NEON_BF16_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_neon_bf16.cpp")
+  ocv_update(CPU_NEON_DOTPROD_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_neon_dotprod.cpp")
   if(NOT AARCH64)
     ocv_update(CPU_KNOWN_OPTIMIZATIONS "VFPV3;NEON;FP16")
     if(NOT MSVC)
@@ -361,14 +602,14 @@ elseif(ARM OR AARCH64)
     set(CPU_DISPATCH "NEON_FP16;NEON_BF16;NEON_DOTPROD" CACHE STRING "${HELP_CPU_DISPATCH}")
   endif()
 elseif(MIPS)
-  ocv_update(CPU_MSA_TEST_FILE "${OpenCV_SOURCE_DIR}/cmake/checks/cpu_msa.cpp")
+  ocv_update(CPU_MSA_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_msa.cpp")
   ocv_update(CPU_KNOWN_OPTIMIZATIONS "MSA")
   ocv_update(CPU_MSA_FLAGS_ON "-mmsa")
   set(CPU_BASELINE "DETECT" CACHE STRING "${HELP_CPU_BASELINE}")
 elseif(PPC64LE)
   ocv_update(CPU_KNOWN_OPTIMIZATIONS "VSX;VSX3")
-  ocv_update(CPU_VSX_TEST_FILE "${OpenCV_SOURCE_DIR}/cmake/checks/cpu_vsx.cpp")
-  ocv_update(CPU_VSX3_TEST_FILE "${OpenCV_SOURCE_DIR}/cmake/checks/cpu_vsx3.cpp")
+  ocv_update(CPU_VSX_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_vsx.cpp")
+  ocv_update(CPU_VSX3_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_vsx3.cpp")
 
   if(NOT OPENCV_CPU_OPT_IMPLIES_IGNORE)
     ocv_update(CPU_VSX3_IMPLIES "VSX")
@@ -388,7 +629,7 @@ elseif(PPC64LE)
 elseif(RISCV)
   option(RISCV_RVV_SCALABLE "Use scalable RVV API on RISC-V" ON)
 
-  ocv_update(CPU_RVV_TEST_FILE "${OpenCV_SOURCE_DIR}/cmake/checks/cpu_rvv.cpp")
+  ocv_update(CPU_RVV_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_rvv.cpp")
   ocv_update(CPU_KNOWN_OPTIMIZATIONS "RVV")
   ocv_update(CPU_RVV_FLAGS_ON "-march=rv64gcv")
   if(RISCV_RVV_SCALABLE)
@@ -400,8 +641,8 @@ elseif(RISCV)
   set(CPU_BASELINE "DETECT" CACHE STRING "${HELP_CPU_BASELINE}")
 
 elseif(LOONGARCH64)
-  ocv_update(CPU_LSX_TEST_FILE "${OpenCV_SOURCE_DIR}/cmake/checks/cpu_lsx.cpp")
-  ocv_update(CPU_LASX_TEST_FILE "${OpenCV_SOURCE_DIR}/cmake/checks/cpu_lasx.cpp")
+  ocv_update(CPU_LSX_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_lsx.cpp")
+  ocv_update(CPU_LASX_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_lasx.cpp")
   ocv_update(CPU_KNOWN_OPTIMIZATIONS "LSX;LASX")
   ocv_update(CPU_LSX_FLAGS_ON "-mlsx")
   ocv_update(CPU_LASX_FLAGS_ON "-mlasx")
@@ -410,7 +651,8 @@ elseif(LOONGARCH64)
   else()
     set(CPU_BASELINE "LASX" CACHE STRING "${HELP_CPU_BASELINE}")
   endif()
-
+else()
+   message(WARNING "No architecture given")
 endif()
 
 # Helper values for cmake-gui
@@ -425,7 +667,6 @@ if(";${CPU_BASELINE};" MATCHES ";DETECT;")
 endif()
 
 set(CPU_BASELINE_FLAGS "")
-
 set(CPU_BASELINE_FINAL "")
 set(CPU_DISPATCH_FINAL "")
 
@@ -510,7 +751,7 @@ foreach(OPT ${CPU_KNOWN_OPTIMIZATIONS})
   if(NOT DEFINED CPU_${OPT}_FORCE)
     set(CPU_${OPT}_FORCE "${CPU_${OPT}_IMPLIES}")
   endif()
-  #message("${OPT}: CPU_${OPT}_FLAGS_ON=${CPU_${OPT}_FLAGS_ON}")
+  message("${OPT}: CPU_${OPT}_FLAGS_ON=${CPU_${OPT}_FLAGS_ON}")
 endforeach()
 
 if(_add_native_flag)
