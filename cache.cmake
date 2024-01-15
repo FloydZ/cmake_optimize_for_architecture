@@ -32,15 +32,20 @@ message(STATUS "#caches: ${NR_CACHES}")
 # 	# INTERNAL_CACHE${CACHE_NR}_ID
 function(ReadCacheInformation cpu_number cache_number information)
 	set(_cacheinfo)
-	file(READ "/sys/devices/system/cpu/cpu${cpu_number}/cache/index${cache_number}/${information}" _cacheinfo)
-	# remove the trailing `\n`
-	string(REPLACE "\n" "" _cacheinfo "${_cacheinfo}")
 
-	# just some helper logging
-	#message(STATUS "INTERNAL CPU: ${cpu_number} Cache lvl: ${cache_number} ${information}:${_cacheinfo}")
-
-	string(TOUPPER information information_upper)
-	set("INTERNAL_CACHE${cache_number}_${information_upper}" _cacheinfo)
+	# first check if the file exists.
+	# TODO support more paths
+	if(EXISTS "/sys/devices/system/cpu/cpu${cpu_number}/cache/index${cache_number}/${information}")
+		file(READ "/sys/devices/system/cpu/cpu${cpu_number}/cache/index${cache_number}/${information}" _cacheinfo)
+		# remove the trailing `\n`
+		string(REPLACE "\n" "" _cacheinfo "${_cacheinfo}")
+	
+		# just some helper logging
+		#message(STATUS "INTERNAL CPU: ${cpu_number} Cache lvl: ${cache_number} ${information}:${_cacheinfo}")
+	
+		string(TOUPPER information information_upper)
+		set("INTERNAL_CACHE${cache_number}_${information_upper}" _cacheinfo)
+	endif()
 endfunction()
 
 # otherwise the whole things makes no sense
