@@ -5,6 +5,15 @@
 # SSE4_1 / SSE4_2 / POPCNT
 # AVX / AVX2 / AVX_512F
 # FMA3
+# 
+# AVX2 details 
+# AVX_VNNI 
+# FMA
+# FP16C 
+# BMI1 
+# BMI2 
+# LZCNT
+# POPCNT
 #
 # AVX512 details: https://en.wikipedia.org/wiki/AVX-512#CPUs_with_AVX-512
 #
@@ -82,7 +91,7 @@ set(OpenCV_SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR})
 
 
 set(CPU_ALL_OPTIMIZATIONS "SSE;SSE2;SSE3;SSSE3;SSE4_1;SSE4_2;POPCNT;AVX;FP16;AVX2;FMA3;AVX_512F")
-list(APPEND CPU_ALL_OPTIMIZATIONS "AVX512_COMMON;AVX512_KNL;AVX512_KNM;AVX512_SKX;AVX512_CNL;AVX512_CLX;AVX512_ICL")
+list(APPEND CPU_ALL_OPTIMIZATIONS "AVX512_COMMON;AVX512_KNL;AVX512_KNM;AVX512_SKX;AVX512_CNL;AVX512_CLX;AVX512_ICL;AVX512_ZEN4")
 list(APPEND CPU_ALL_OPTIMIZATIONS NEON VFPV3 FP16 NEON_DOTPROD)
 list(APPEND CPU_ALL_OPTIMIZATIONS MSA)
 list(APPEND CPU_ALL_OPTIMIZATIONS VSX VSX3)
@@ -98,7 +107,8 @@ set(HELP_CPU_BASELINE_DISABLE "Specify list of forbidden baseline CPU optimizati
 set(HELP_CPU_DISPATCH "Specify list of dispatched CPU optimizations")
 set(HELP_CPU_DISPATCH_REQUIRE "Specify list of required dispatched CPU optimizations")
 
-# 
+# VAR
+# ARGN
 macro(ocv_update VAR)
   if(NOT DEFINED ${VAR})
     if("x${ARGN}" STREQUAL "x")
@@ -119,6 +129,8 @@ foreach(var CPU_BASELINE CPU_BASELINE_REQUIRE CPU_BASELINE_DISABLE CPU_DISPATCH 
 endforeach()
 
 
+# resultvar:
+# check_opt:
 macro(ocv_is_optimization_in_list resultvar check_opt)
   set(__checked "")
   set(__queue ${ARGN})
@@ -139,6 +151,8 @@ macro(ocv_is_optimization_in_list resultvar check_opt)
   endwhile()
 endmacro()
 
+
+#
 macro(ocv_is_optimization_in_force_list resultvar check_opt)
   set(__checked "")
   set(__queue ${ARGN})
@@ -271,7 +285,6 @@ MACRO(ocv_check_compiler_flag LANG FLAG RESULT)
         string(REPLACE "\n" ";" OUTPUT_LINES "${OUTPUT_LINES}")
 
         foreach(_regex ${OCV_COMPILER_FAIL_REGEX})
-		  # Error:
           if(NOT ${RESULT})
             break()
           endif()
@@ -308,35 +321,8 @@ MACRO(ocv_check_compiler_flag LANG FLAG RESULT)
   endif()
 ENDMACRO()
 
-# 
-macro(ocv_check_flag_support lang flag varname base_options)
-  if(CMAKE_BUILD_TYPE)
-    set(CMAKE_TRY_COMPILE_CONFIGURATION ${CMAKE_BUILD_TYPE})
-  endif()
-
-  if("_${lang}_" MATCHES "_CXX_")
-    set(_lang CXX)
-  elseif("_${lang}_" MATCHES "_C_")
-    set(_lang C)
-  elseif("_${lang}_" MATCHES "_OBJCXX_")
-    if(DEFINED CMAKE_OBJCXX_COMPILER)  # CMake 3.16+ and enable_language(OBJCXX) call are required
-      set(_lang OBJCXX)
-    else()
-      set(_lang CXX)
-    endif()
-  else()
-    set(_lang ${lang})
-  endif()
-
-  string(TOUPPER "${flag}" ${varname})
-  string(REGEX REPLACE "^(/|-)" "HAVE_${_lang}_" ${varname} "${${varname}}")
-  string(REGEX REPLACE " -|-|=| |\\.|," "_" ${varname} "${${varname}}")
-
-  if(DEFINED CMAKE_${_lang}_COMPILER)
-    ocv_check_compiler_flag("${_lang}" "${base_options} ${flag}" ${${varname}} ${ARGN})
-  endif()
-endmacro()
-
+# flag:
+# result:
 macro(ocv_check_runtime_flag flag result)
   set(_fname "${ARGN}")
   if(NOT DEFINED ${result})
@@ -375,6 +361,41 @@ macro(ocv_check_runtime_flag flag result)
   endif()
 endmacro()
 
+# lang:	either `C`, `CXX`, `OBJCXX`
+# flag:
+# varname:
+# base_options:
+macro(ocv_check_flag_support lang flag varname base_options)
+  if(CMAKE_BUILD_TYPE)
+    set(CMAKE_TRY_COMPILE_CONFIGURATION ${CMAKE_BUILD_TYPE})
+  endif()
+
+  if("_${lang}_" MATCHES "_CXX_")
+    set(_lang CXX)
+  elseif("_${lang}_" MATCHES "_C_")
+    set(_lang C)
+  elseif("_${lang}_" MATCHES "_OBJCXX_")
+	# CMake 3.16+ and enable_language(OBJCXX) call are required
+    if(DEFINED CMAKE_OBJCXX_COMPILER)  
+      set(_lang OBJCXX)
+    else()
+      set(_lang CXX)
+    endif()
+  else()
+    set(_lang ${lang})
+  endif()
+
+  string(TOUPPER "${flag}" ${varname})
+  string(REGEX REPLACE "^(/|-)" "HAVE_${_lang}_" ${varname} "${${varname}}")
+  string(REGEX REPLACE " -|-|=| |\\.|," "_" ${varname} "${${varname}}")
+
+  if(DEFINED CMAKE_${_lang}_COMPILER)
+    ocv_check_compiler_flag("${_lang}" "${base_options} ${flag}" ${${varname}} ${ARGN})
+  endif()
+endmacro()
+
+
+
 # Support GCC -march=native or Intel Compiler -xHost flags
 if(";${CPU_BASELINE};" MATCHES ";NATIVE;" OR ";${CPU_BASELINE};" MATCHES ";HOST;")
   set(CPU_BASELINE_DETECT ON)
@@ -389,17 +410,19 @@ elseif(" ${CMAKE_CXX_FLAGS} " MATCHES " -march=native | -xHost | /QxHost ")
   set(CPU_BASELINE_DETECT ON)
 endif()
 
-if(X86 OR X86_64)
-  ocv_update(CPU_KNOWN_OPTIMIZATIONS "SSE;SSE2;SSE3;SSSE3;SSE4_1;POPCNT;SSE4_2;FP16;FMA3;AVX;AVX2;AVX_512F;AVX512_COMMON;AVX512_KNL;AVX512_KNM;AVX512_SKX;AVX512_CNL;AVX512_CLX;AVX512_ICL")
 
-  ocv_update(CPU_AVX512_COMMON_GROUP "AVX_512F;AVX_512CD")
+if(X86 OR X86_64)
+	ocv_update(CPU_KNOWN_OPTIMIZATIONS "SSE;SSE2;SSE3;SSSE3;SSE4_1;POPCNT;SSE4_2;FP16;FMA3;AVX;AVX2;AVX512F;AVX512_COMMON;AVX512_KNL;AVX512_KNM;AVX512_SKX;AVX512_CNL;AVX512_CLX;AVX512_ICL;AVX512_ZEN4")
+	#;AVXVNNI;BMI;BMI2;FMA;FP16C;LZCNT;AVX512F;AVX512CD;AVX512ER;AVX512PF;AVX512VL;AVX512DQ;AVX512BW;AVX512IFMA52;AVX512VBMI;AVX5124VNNIW;AVX5124MAPS;AVX512VPOPCNTDQ;AVX512VNNI;AVX512BF16;AVX512VBMI2;AVX512BITALG;AVX512VP2INTERSECT;AVX512FP16;GFNI;VAES;VPCLMULQDQ")
+
+  ocv_update(CPU_AVX512_COMMON_GROUP "AVX512F;AVX512CD")
   ocv_update(CPU_AVX512_KNL_GROUP "AVX512_COMMON;AVX512_KNL_EXTRA")
-  ocv_update(CPU_AVX512_KNM_GROUP "AVX512_KNL;AVX512_KNM_EXTRA;AVX_512VPOPCNTDQ")
-  ocv_update(CPU_AVX512_SKX_GROUP "AVX512_COMMON;AVX_512VL;AVX_512BW;AVX_512DQ")
-  ocv_update(CPU_AVX512_CNL_GROUP "AVX512_SKX;AVX_512IFMA;AVX_512VBMI")
-  ocv_update(CPU_AVX512_CLX_GROUP "AVX512_SKX;AVX_512VNNI")
-  ocv_update(CPU_AVX512_ICL_GROUP "AVX512_SKX;AVX_512IFMA;AVX_512VBMI;AVX_512VNNI;AVX_512VBMI2;AVX_512BITALG;AVX_512VPOPCNTDQ") # ? VPCLMULQDQ, GFNI, VAES
-  ocv_update(CPU_AVX512_ZEN4_GROUP "AVX512_SKX;AVX_512IFMA;AVX_512VBMI;AVX_512VNNI;AVX_512VBMI2;AVX_512BITALG;AVX_512VPOPCNTDQ;VPCLMULQDQ;GFNI;VAES")
+  ocv_update(CPU_AVX512_KNM_GROUP "AVX512_KNL;AVX512KNM_EXTRA;AVX512VPOPCNTDQ")
+  ocv_update(CPU_AVX512_SKX_GROUP "AVX512_COMMON;AVX512VL;AVX512BW;AVX512DQ")
+  ocv_update(CPU_AVX512_CNL_GROUP "AVX512_SKX;AVX512IFMA;AVX512VBMI")
+  ocv_update(CPU_AVX512_CLX_GROUP "AVX512_SKX;AVX512VNNI")
+  ocv_update(CPU_AVX512_ICL_GROUP "AVX512_SKX;AVX512IFMA;AVX512VBMI;AVX512VNNI;AVX512VBMI2;AVX512BITALG;AVX512VPOPCNTDQ") # ? VPCLMULQDQ, GFNI, VAES
+  ocv_update(CPU_AVX512_ZEN4_GROUP "AVX512_SKX;AVX512IFMA;AVX512VBMI;AVX512VNNI;AVX512VBMI2;AVX512BITALG;AVX512VPOPCNTDQ;VPCLMULQDQ;GFNI;VAES")
 
   ocv_update(CPU_SSE_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_sse.cpp")
   ocv_update(CPU_SSE2_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_sse2.cpp")
@@ -411,7 +434,15 @@ if(X86 OR X86_64)
   ocv_update(CPU_AVX_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_avx.cpp")
   ocv_update(CPU_AVX2_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_avx2.cpp")
   ocv_update(CPU_FP16_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_fp16.cpp")
-  ocv_update(CPU_AVX_512F_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_avx512.cpp")
+
+  ocv_update(CPU_AVXVNNI_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_avxvnni.cpp")
+  ocv_update(CPU_BMI_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_bmi.cpp")
+  ocv_update(CPU_BMI2_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_bmi2.cpp")
+  ocv_update(CPU_FMA_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_fma.cpp")
+  ocv_update(CPU_FP16C_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_fp16c.cpp")
+  ocv_update(CPU_LZCNT_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_lzcnt.cpp")
+
+  ocv_update(CPU_AVX512F_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_avx512.cpp")
   ocv_update(CPU_AVX512_COMMON_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_avx512common.cpp")
   ocv_update(CPU_AVX512_KNL_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_avx512knl.cpp")
   ocv_update(CPU_AVX512_KNM_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_avx512knm.cpp")
@@ -420,7 +451,6 @@ if(X86 OR X86_64)
   ocv_update(CPU_AVX512_CLX_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_avx512clx.cpp")
   ocv_update(CPU_AVX512_ICL_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_avx512icl.cpp")
   
-  ocv_update(CPU_AVX512F_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_avx512f.cpp")
   ocv_update(CPU_AVX512CD_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_avx512cd.cpp")
   ocv_update(CPU_AVX512ER_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_avx512er.cpp")
   ocv_update(CPU_AVX512PF_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_avx512pf.cpp")
@@ -468,6 +498,7 @@ if(X86 OR X86_64)
   endif()
 
   if(CV_ICC OR CV_ICX)
+	# intel
     macro(ocv_intel_compiler_optimization_option name unix_flags msvc_flags)
       ocv_update(CPU_${name}_FLAGS_NAME "${name}")
       if(MSVC)
@@ -516,23 +547,43 @@ if(X86 OR X86_64)
     ocv_update(CPU_SSSE3_FLAGS_ON "-mssse3")
     ocv_update(CPU_SSE2_FLAGS_ON "-msse2")
     ocv_update(CPU_SSE_FLAGS_ON "-msse")
+
+	ocv_update(CPU_AVXVNNI_FLAGS_ON "-mavxvnni")
+	ocv_update(CPU_FMA_FLAGS_ON "-mfma")
+	ocv_update(CPU_FP16C_FLAGS_ON "-mf16c")
+	ocv_update(CPU_BMI_FLAGS_ON "-mbmi2")
+	ocv_update(CPU_BMI2_FLAGS_ON "-mbmi")
+	ocv_update(CPU_LZCNT_FLAGS_ON "-mlzcnt")
+
     if(NOT (CV_GCC AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS "5.0"))  # GCC >= 5.0
-      ocv_update(CPU_AVX_512F_FLAGS_ON "-mavx512f")
-      ocv_update(CPU_AVX_512CD_FLAGS_ON "-mavx512cd")
+      ocv_update(CPU_AVX512F_FLAGS_ON "-mavx512f")
+      ocv_update(CPU_AVX512CD_FLAGS_ON "-mavx512cd")
       ocv_update(CPU_AVX512_KNL_EXTRA_FLAGS_ON "-mavx512er -mavx512pf")
       ocv_update(CPU_AVX512_KNM_EXTRA_FLAGS_ON "-mavx5124fmaps -mavx5124vnniw")
-      ocv_update(CPU_AVX_512BW_FLAGS_ON "-mavx512bw")
-      ocv_update(CPU_AVX_512DQ_FLAGS_ON "-mavx512dq")
-      ocv_update(CPU_AVX_512VL_FLAGS_ON "-mavx512vl")
-      ocv_update(CPU_AVX_512IFMA_FLAGS_ON "-mavx512ifma")
-      ocv_update(CPU_AVX_512VBMI_FLAGS_ON "-mavx512vbmi")
-      ocv_update(CPU_AVX_512VNNI_FLAGS_ON "-mavx512vnni")
-      ocv_update(CPU_AVX_512VBMI2_FLAGS_ON "-mavx512vbmi2")
-      ocv_update(CPU_AVX_512BITALG_FLAGS_ON "-mavx512bitalg")
-      ocv_update(CPU_AVX_512VPOPCNTDQ_FLAGS_ON "-mavx512vpopcntdq")
+	  ocv_update(CPU_AVX512ER_FLAGS_ON "-mavx512er")
+	  ocv_update(CPU_AVX512PF_FLAGS_ON "-mavx512pf")
+      ocv_update(CPU_AVX512BW_FLAGS_ON "-mavx512bw")
+      ocv_update(CPU_AVX512DQ_FLAGS_ON "-mavx512dq")
+      ocv_update(CPU_AVX512VL_FLAGS_ON "-mavx512vl")
+      ocv_update(CPU_AVX512IFMA_FLAGS_ON "-mavx512ifma")
+      ocv_update(CPU_AVX512VBMI_FLAGS_ON "-mavx512vbmi")
+	  ocv_update(CPU_AVX512VNNI_FLAGS_ON "-mavx512vnni")
+	  ocv_update(CPU_AVX5124VNNIW_FLAGS_ON "-mavx512vnniw")
+      ocv_update(CPU_AVX512VBMI2_FLAGS_ON "-mavx512vbmi2")
+      ocv_update(CPU_AVX512BITALG_FLAGS_ON "-mavx512bitalg")
+      ocv_update(CPU_AVX512VPOPCNTDQ_FLAGS_ON "-mavx512vpopcntdq")
+	  ocv_update(CPU_AVX512VPCLMULQDQ_FLAGS_ON "-mavx512vpclmulqdq")
+      
+	  ocv_update(CPU_AVX5124MAPS_FLAGS_ON "-mavx5124maps")
+	  ocv_update(CPU_AVX512FP16_FLAGS_ON "-mavx512fp16")
+	  ocv_update(CPU_AVX512IFMA52_FLAGS_ON "-mavx512ifma52")
+	  ocv_update(CPU_AVX512VP2INTERSECT_FLAGS_ON "-mavx512cp2intersect")
+	  ocv_update(CPU_GFNI_FLAGS_ON "-mgfni")
+	  ocv_update(CPU_VAES_FLAGS_ON "-mvaes")
     else()
       ocv_update(CPU_AVX_512F_SUPPORTED OFF)
     endif()
+
   elseif(MSVC)
     ocv_update(CPU_AVX2_FLAGS_ON "/arch:AVX2")
     ocv_update(CPU_AVX_FLAGS_ON "/arch:AVX")
@@ -550,9 +601,10 @@ if(X86 OR X86_64)
     endif()
     # Other instruction sets are supported by default since MSVC 2008 at least
   else()
-    message(WARNING "TODO: Unsupported compiler")
+    message(WARNING "Unsupported compiler")
   endif()
 
+  # TODO was ist das?
   if(NOT DEFINED CPU_DISPATCH)
     if(X86_64)
       set(CPU_DISPATCH "SSE4_1;SSE4_2;AVX;FP16;AVX2;AVX512_SKX" CACHE STRING "${HELP_CPU_DISPATCH}")
@@ -601,11 +653,13 @@ elseif(ARM OR AARCH64)
     set(CPU_BASELINE "NEON;FP16" CACHE STRING "${HELP_CPU_BASELINE}")
     set(CPU_DISPATCH "NEON_FP16;NEON_BF16;NEON_DOTPROD" CACHE STRING "${HELP_CPU_DISPATCH}")
   endif()
+
 elseif(MIPS)
   ocv_update(CPU_MSA_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_msa.cpp")
   ocv_update(CPU_KNOWN_OPTIMIZATIONS "MSA")
   ocv_update(CPU_MSA_FLAGS_ON "-mmsa")
   set(CPU_BASELINE "DETECT" CACHE STRING "${HELP_CPU_BASELINE}")
+
 elseif(PPC64LE)
   ocv_update(CPU_KNOWN_OPTIMIZATIONS "VSX;VSX3")
   ocv_update(CPU_VSX_TEST_FILE "${OpenCV_SOURCE_DIR}/checks/cpu_vsx.cpp")
@@ -679,6 +733,8 @@ if("x${CPU_DISPATCH}" STREQUAL "xALL")
   set(CPU_DISPATCH "${CPU_KNOWN_OPTIMIZATIONS}")
 endif()
 
+# TODO
+# OPT 
 macro(ocv_check_compiler_optimization OPT)
   if(NOT DEFINED CPU_${OPT}_SUPPORTED)
     if((DEFINED CPU_${OPT}_FLAGS_ON AND NOT "x${CPU_${OPT}_FLAGS_ON}" STREQUAL "x") OR CPU_${OPT}_TEST_FILE)
@@ -725,6 +781,7 @@ endmacro()
 
 foreach(OPT ${CPU_KNOWN_OPTIMIZATIONS})
   set(CPU_${OPT}_USAGE_COUNT 0 CACHE INTERNAL "")
+
   if("${CPU_${OPT}_FLAGS_ON}" STREQUAL "disabled")
     set(CPU_${OPT}_SUPPORTED OFF)
   elseif(DEFINED CPU_${OPT}_GROUP)
@@ -751,6 +808,7 @@ foreach(OPT ${CPU_KNOWN_OPTIMIZATIONS})
   if(NOT DEFINED CPU_${OPT}_FORCE)
     set(CPU_${OPT}_FORCE "${CPU_${OPT}_IMPLIES}")
   endif()
+
   message("${OPT}: CPU_${OPT}_FLAGS_ON=${CPU_${OPT}_FLAGS_ON}")
 endforeach()
 
@@ -850,8 +908,8 @@ foreach(OPT ${CPU_DISPATCH})
   endif()
 endforeach()
 
-#message(STATUS "CPU_BASELINE_FINAL=${CPU_BASELINE_FINAL}")
-#message(STATUS "CPU_DISPATCH_FINAL=${CPU_DISPATCH_FINAL}")
+message(STATUS "CPU_BASELINE_FINAL=${CPU_BASELINE_FINAL}")
+message(STATUS "CPU_DISPATCH_FINAL=${CPU_DISPATCH_FINAL}")
 
 #if(CPU_DISPATCH_FINAL AND NOT PYTHON_DEFAULT_EXECUTABLE)
 #  message(FATAL_ERROR "Python is required for CPU dispatched optimization support")

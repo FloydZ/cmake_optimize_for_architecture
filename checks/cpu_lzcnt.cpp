@@ -1,12 +1,13 @@
-#if !defined __POPCNT__
-#error "__POPCNT__ define is missing"
+#if !defined __LZCNT__
+#error "__LZCNT__ define is missing"
 int main() { return 0; }
 #else
 #include "helper.h"
 #include <immintrin.h>
+#include <stdint.h>
 void test()
 {
-	const int out = _popcnt32(1);
+	const int out = __lzcnt64(1);
 	printf("%d\n", out);
 }
 int main() { test(); return 0; }
