@@ -1,4 +1,3 @@
-
 name: "Test"
 on:
   pull_request:
@@ -19,7 +18,7 @@ jobs:
     - name: Install Software
       run: |
         sudo apt-get update
-        sudo apt-get install -y qemu-user-static bash sh
+        sudo apt-get install -y qemu-user-static bash
     - run: nix-build -E 'with import <nixpkgs> {}; callPackage ./default.nix {}'
     - run: nix-build -E 'with import <nixpkgs> {system="aarch64-linux";}; callPackage ./default.nix {}'
     - run: nix-build -E 'with import <nixpkgs> {system="riscv64-linux";}; callPackage ./default.nix {}'
