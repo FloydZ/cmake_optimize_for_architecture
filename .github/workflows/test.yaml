@@ -19,6 +19,11 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y qemu-user-static bash
+
+    - name: symlinking
+      run: |
+        sudo ln -s /usr/bin/bash /bin/sh
+    
     - run: nix-build -E 'with import <nixpkgs> {}; callPackage ./default.nix {}'
     - run: nix-build -E 'with import <nixpkgs> {system="aarch64-linux";}; callPackage ./default.nix {}'
     - run: nix-build -E 'with import <nixpkgs> {system="riscv64-linux";}; callPackage ./default.nix {}'
