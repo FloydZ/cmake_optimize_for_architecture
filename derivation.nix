@@ -11,10 +11,6 @@ stdenv.mkDerivation {
     cmake
   ];
 
-  buildPhase = ''
-    echo "Building"
-  '';
-
   installPhase = ''
     mkdir -p $out/bin
   '';
