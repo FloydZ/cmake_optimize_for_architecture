@@ -18,6 +18,7 @@ jobs:
 
     - name: Install Software
       run: |
+        sudo apt-get update
         sudo apt-get install -y qemu-user-static
     - run: nix-build -E 'with import <nixpkgs> {}; callPackage ./default.nix {}'
     - run: nix-build -E 'with import <nixpkgs> {system="aarch64-linux";}; callPackage ./default.nix {}'
