@@ -4,7 +4,7 @@ project(test LANGUAGES C CXX)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
-include("../HostOptimizations.cmake")
+include("./HostOptimizations.cmake")
 OptimizeForArchitecture()
 
 set(AVX2_FLAGS)
@@ -17,8 +17,8 @@ if("avx512f" IN_LIST _available_vector_units_list)
     set(AVX512_FLAGS "-DUSE_AVX512")
 endif()
 
-message(${AVX2_FLAGS})
-message(${AVX512_FLAGS})
+message(STATUS ${AVX2_FLAGS})
+message(STATUS ${AVX512_FLAGS})
 
 set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} ${AVX2_FLAGS} ${AVX512_FLAGS}")
 set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} ${AVX2_FLAGS} ${AVX512_FLAGS}")
