@@ -1,6 +1,15 @@
 Usage:
 ======
 
+Exported Flags:
+==============
+
+exported cmake variables:
+```
+DATA_CACHE_LEVEL1_SIZE
+DATA_CACHE_LEVEL2_SIZE
+DATA_CACHE_LEVEL3_SIZE
+```
 Installation:
 =============
 
@@ -20,4 +29,4 @@ check different architectures run:k
 ```bash
 nix-build -E 'with import <nixpkgs> {system="aarch64-linux";}; callPackage ./default.nix {}'
 ```
-Note: this now compiles the test file on a `ARM aarch64-linux`. 
+Note: this now compiles the test file on a ARM `aarch64-linux`. 
