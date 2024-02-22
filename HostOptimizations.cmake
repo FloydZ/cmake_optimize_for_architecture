@@ -652,6 +652,7 @@ endmacro()
 # rather important
 OptimizeForArchitecture()
 
+message(STATUS "USE_${USE_AVX2} to file")
 
 if(NOT ${CMAKE_HOST_DO_NOT_ADD_TO_FLAGS})
 	FOREACH(FLAG ${_enable_vector_unit_list})
