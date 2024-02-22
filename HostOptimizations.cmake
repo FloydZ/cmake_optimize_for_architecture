@@ -54,11 +54,14 @@
 
 get_filename_component(_currentDir "${CMAKE_CURRENT_LIST_FILE}" PATH)
 
-# if this flag is set the cache sizes will not added to the compile arguments
+# if this flag is set, the cache sizes will not added to the compile arguments
 SET(CMAKE_CACHE_DO_NOT_ADD_TO_FLAGS 0)
 
+# it this flag is set, the host compiler optimizations/vectorization flags are
+# not added to the compile arguments
+SET(CMAKE_HOST_DO_NOT_ADD_TO_FLAGS 0)
 
-SET(WRITE_CONFIG_FILE 0)
+SET(WRITE_CONFIG_FILE 1)
 SET(CONFIG_FILE "config.h")
 
 # NOTE: the order is important
@@ -646,31 +649,28 @@ Other supported values are: \"none\", \"generic\", \"core\", \"merom\" (65nm Cor
    endif()
 endmacro()
 
-#TODO
-# if(NOT ${DONOTADDFLAGS})
-# 	message(STATUS "Adding Cache flags")
-# 	message(STATUS "L1D Size: ${DATA_CACHE_LEVEL1_SIZE} Bytes")
-# 	message(STATUS "L2 Size: ${DATA_CACHE_LEVEL2_SIZE} Bytes")
-# 	message(STATUS "L3 Size: ${DATA_CACHE_LEVEL3_SIZE} Bytes")
-# 
-# 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DDATA_CACHE_LEVEL1_SIZE=${DATA_CACHE_LEVEL1_SIZE}")
-# 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DDATA_CACHE_LEVEL2_SIZE=${DATA_CACHE_LEVEL2_SIZE}")
-# 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DDATA_CACHE_LEVEL3_SIZE=${DATA_CACHE_LEVEL3_SIZE}")
-# 
-# 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DDATA_CACHE_LEVEL1_SIZE=${DATA_CACHE_LEVEL1_SIZE}")
-# 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DDATA_CACHE_LEVEL2_SIZE=${DATA_CACHE_LEVEL2_SIZE}")
-# 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DDATA_CACHE_LEVEL3_SIZE=${DATA_CACHE_LEVEL3_SIZE}")
-# endif()
-# 
-# if(${WRITE_CONFIG_FILE})
-# 	set(CMAKE_CONFIG_STRING "#ifndef CMAKE_CACHE_CONFIG
-# #define CMAKE_CACHE_CONFIG
-# 
-# #define DATA_CACHE_LEVEL1_SIZE ${DATA_CACHE_LEVEL1_SIZE}
-# #define DATA_CACHE_LEVEL2_SIZE ${DATA_CACHE_LEVEL2_SIZE}
-# #define DATA_CACHE_LEVEL3_SIZE ${DATA_CACHE_LEVEL3_SIZE}
-# #endif
-# ")
-# 	#message(STATUS "${CMAKE_CONFIG_STRING}")
-# 	file(WRITE "${CONFIG_FILE}" "${CMAKE_CONFIG_STRING}")
-# endif()
+# rather important
+OptimizeForArchitecture()
+
+
+if(NOT ${CMAKE_HOST_DO_NOT_ADD_TO_FLAGS})
+	FOREACH(FLAG ${_enable_vector_unit_list})
+		message(STATUS "Adding compiler flag: -m${FLAG}")
+		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m${FLAG}")
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m${FLAG}")
+	ENDFOREACH()
+ endif()
+ 
+ if(${WRITE_CONFIG_FILE})
+	FOREACH(FLAG ${_enable_vector_unit_list})
+		string(REPLACE "." "" FLAG "${FLAG}")
+		string(TOUPPER ${FLAG} FLAG)
+
+		message(STATUS "Adding compiler flag: USE_${FLAG} to file")
+
+		set(CMAKE_CONFIG_STRING "${CMAKE_CONFIG_STRING}#define USE_${FLAG}\n")
+	ENDFOREACH()
+
+
+	file(WRITE "${CONFIG_FILE}" "${CMAKE_CONFIG_STRING}")
+ endif()
