@@ -345,7 +345,8 @@ macro(AutodetectHostArchitectureX86)
       elseif(_cpu_family EQUAL 15)
          set(TARGET_ARCHITECTURE "k8")
          if(_cpu_model GREATER 64) 
-			 # I don't know the right number to put here. This is just a guess from the hardware I have access to
+			 # I don't know the right number to put here. This is just a guess
+			 # from the hardware I have access to
             set(TARGET_ARCHITECTURE "k8-sse3")
          endif(_cpu_model GREATER 64)
 	  else()
