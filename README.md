@@ -2,6 +2,12 @@ Usage:
 ======
 
 
+Compilers:
+=========
+
+Depending on the compiler you are using ont of the following variables gets 
+defined: `GCC, CLANG,ICC,ICX`
+
 Cache:
 ======
 

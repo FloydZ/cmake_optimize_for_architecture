@@ -653,9 +653,6 @@ endmacro()
 # rather important
 OptimizeForArchitecture()
 
-message(STATUS "USE_${USE_HOST_AVX2} to file")
-message(STATUS "USE_${USE_HOST_AVX2_FLAG} to file")
-
 if(NOT ${CMAKE_HOST_DO_NOT_ADD_TO_FLAGS})
 	FOREACH(FLAG ${_enable_vector_unit_list})
 		message(STATUS "Adding compiler flag: -m${FLAG}")
