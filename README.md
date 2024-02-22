@@ -9,7 +9,7 @@ The script automatically generates information about the given caches and their
 sizes of the host system and passes them to the compile arguments. If you wish
 to not include them add: `set(CMAKE_CACHE_DO_NOT_ADD_TO_FLAGS 1)` befor you 
 include this project in your `CMakeLists.txt`
-
+Note: this feature is only available on linux.
 
 Host Optimzations:
 ================
@@ -18,6 +18,43 @@ The available cpu features of the host are automatically added to the cpu
 command. So if your cpu support the avx/avx2 instruction set, `-mavx/-mavx2`
 is automatically added to the compile command. `set(CMAKE_HOST_DO_NOT_ADD_TO_FLAGS 1)` 
 disables this feature. 
+
+If a certain cpu feature was found, additinally the flag `USE_HOST_${FLAG}` becomes
+available in cmake. The correspodning compiler flag can be accesed via `USE_HOST_${FLAG}_FLAG`.
+
+A list of x86-flags:
+
+```
+SSE2
+SSE3
+SSSE3
+SSE4_1
+SSS4_2
+SSE4a
+AVX
+FMA
+BMI2
+AVX2
+XOP
+FMA4
+AVX512F
+AVX512VL
+AVX512PF
+AVX512ER
+AVX512CD
+AVX512DQ
+AVX512BW
+AVX512IFMA
+AVX512VBMI
+```
+
+A list ARM flags:
+```
+TODO
+```
+
+
+If you want to disable certain feature you can
 
 
 Compiler Optimizations:

@@ -615,9 +615,10 @@ Other supported values are: \"none\", \"generic\", \"core\", \"merom\" (65nm Cor
          else()
             _my_find(_available_vector_units_list "${_flag}" _found)
          endif()
-         set(USE_${_name} ${_found} CACHE BOOL "${documentation}" ${_force})
-         mark_as_advanced(USE_${_name})
-         if(USE_${_name})
+		 set(USE_HOST_${_name} ${_found} CACHE BOOL "${documentation}" ${_force})
+		 set(USE_HOST_${_name}_FLAG "-m${_flag}" CACHE BOOL "${documentation}" ${_force})
+		 mark_as_advanced(USE_HOST_${_name})
+		 if(USE_HOST_${_name})
             list(APPEND _enable_vector_unit_list "${_flag}")
          else()
             list(APPEND _disable_vector_unit_list "${_flag}")
@@ -652,7 +653,8 @@ endmacro()
 # rather important
 OptimizeForArchitecture()
 
-message(STATUS "USE_${USE_AVX2} to file")
+message(STATUS "USE_${USE_HOST_AVX2} to file")
+message(STATUS "USE_${USE_HOST_AVX2_FLAG} to file")
 
 if(NOT ${CMAKE_HOST_DO_NOT_ADD_TO_FLAGS})
 	FOREACH(FLAG ${_enable_vector_unit_list})
