@@ -1,5 +1,4 @@
 # Finds information about the compiler
-
 if(NOT DEFINED CV_GCC AND CMAKE_CXX_COMPILER_ID MATCHES "GNU")
   set(CV_GCC 1)
 endif()

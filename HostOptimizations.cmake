@@ -15,15 +15,15 @@
 # If either of Vc_SSE_INTRINSICS_BROKEN, Vc_AVX_INTRINSICS_BROKEN,
 # Vc_AVX2_INTRINSICS_BROKEN is defined and set, the OptimizeForArchitecture
 # macro will consequently disable the relevant features via compiler flags.
-
+#
 # Sources for Intel/AMD:
 # - https://github.com/animetosho/ParPar/blob/master/gf16/gf16mul.cpp
 # - https://en.wikichip.org/wiki/amd/cpuid
 # - https://en.wikichip.org/wiki/intel/cpuid
-
+#
 # Sources for ARM:
 # - https://en.wikichip.org/wiki/arm_holdings/microarchitectures/cortex-a55
-
+#
 #=============================================================================
 # Copyright 2010-2016 Matthias Kretz <kretz@kde.org>
 #
@@ -54,9 +54,11 @@
 
 get_filename_component(_currentDir "${CMAKE_CURRENT_LIST_FILE}" PATH)
 
-# TODO better naming
-SET(DONOTADDFLAGS 0)
-SET(WRITE_CONFIG_FILE 1)
+# if this flag is set the cache sizes will not added to the compile arguments
+SET(CMAKE_CACHE_DO_NOT_ADD_TO_FLAGS 0)
+
+
+SET(WRITE_CONFIG_FILE 0)
 SET(CONFIG_FILE "config.h")
 
 # NOTE: the order is important

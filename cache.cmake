@@ -91,7 +91,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
 endif()
 
 # TODO: better logging, better flag name
-if(NOT ${DONOTADDFLAGS})
+if(NOT ${CMAKE_CACHE_DO_NOT_ADD_TO_FLAGS})
 	message(STATUS "Adding Cache flags")
 	message(STATUS "L1D Size: ${DATA_CACHE_LEVEL1_SIZE} Bytes")
 	message(STATUS "L2 Size: ${DATA_CACHE_LEVEL2_SIZE} Bytes")
@@ -115,6 +115,5 @@ if(${WRITE_CONFIG_FILE})
 #define DATA_CACHE_LEVEL3_SIZE ${DATA_CACHE_LEVEL3_SIZE}
 #endif
 ")
-	#message(STATUS "${CMAKE_CONFIG_STRING}")
 	file(WRITE "${CONFIG_FILE}" "${CMAKE_CONFIG_STRING}")
 endif()
