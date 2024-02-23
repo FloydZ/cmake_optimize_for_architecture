@@ -1,6 +1,7 @@
 Usage:
 ======
 
+TODO
 
 Compilers:
 =========
@@ -13,9 +14,9 @@ Cache:
 
 The script automatically generates information about the given caches and their
 sizes of the host system and passes them to the compile arguments. If you wish
-to not include them add: `set(CMAKE_CACHE_DO_NOT_ADD_TO_FLAGS 1)` befor you 
-include this project in your `CMakeLists.txt`
-Note: this feature is only available on linux.
+to not include them add: `set(CMAKE_CACHE_DO_NOT_ADD_TO_FLAGS 1)` before you 
+include this project in your `CMakeLists.txt`. Note: this feature is only 
+available on linux.
 
 Host Optimzations:
 ================
@@ -25,11 +26,11 @@ command. So if your cpu support the avx/avx2 instruction set, `-mavx/-mavx2`
 is automatically added to the compile command. `set(CMAKE_HOST_DO_NOT_ADD_TO_FLAGS 1)` 
 disables this feature. 
 
-If a certain cpu feature was found, additinally the flag `USE_HOST_${FLAG}` becomes
-available in cmake. The correspodning compiler flag can be accesed via `USE_HOST_${FLAG}_FLAG`.
+If a certain CPU feature was found, additionally the flag `USE_HOST_${FLAG}`
+becomes available in cmake. The corresponding compiler flag can be accessed via
+`USE_HOST_${FLAG}_FLAG`.
 
 A list of x86-flags:
-
 ```
 SSE2
 SSE3
@@ -75,6 +76,7 @@ A list of optimzations available by the compiler
 Installation:
 =============
 TODO
+
 Sources:
 ========
 - [X86 GCC Manual](https://gcc.gnu.org/onlinedocs/gcc/x86-Options.html): this contains
@@ -88,16 +90,18 @@ Exported `cmake` variables:
 DATA_CACHE_LEVEL1_SIZE
 DATA_CACHE_LEVEL2_SIZE
 DATA_CACHE_LEVEL3_SIZE
-USE_AVX    # only if available
-USE_AVX2    # only if available
-USE_AVX512F    # only if available
-
+# only if available
+USE_SSE
+USE_SSE2
+USE_SSSE3
+USE_AVX2
+USE_AVX512F
 ```
 
 
 Hack/Debug:
 ==========
-On nixos you can quickly debug the project by running:
+On `nixos` you can quickly debug the project by running:
 ```bash
 nix-build -E 'with import <nixpkgs> {}; callPackage ./default.nix {}'
 ```
@@ -106,11 +110,4 @@ check different architectures run:k
 ```bash
 nix-build -E 'with import <nixpkgs> {system="aarch64-linux";}; callPackage ./default.nix {}'
 ```
-Note: this now compiles the test file on a ARM `aarch64-linux`. 
-
-TODO:
-=====
-
-Support: 
-- TCMalloc 
-- Autovectorization
+This now compiles the test file on a ARM `aarch64-linux`. 
