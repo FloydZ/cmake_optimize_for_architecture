@@ -1,10 +1,16 @@
-# Finds information about the compiler
+# SETS one of the following variabels to one:
+#	GCC 
+#	CLANG 
+#	ICC 
+# 	ICX
 
-if(NOT DEFINED CV_GCC AND CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-  set(CV_GCC 1)
+
+# Finds information about the compiler
+if(NOT DEFINED GCC AND CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+  set(GCC 1)
 endif()
-if(NOT DEFINED CV_CLANG AND CMAKE_CXX_COMPILER_ID MATCHES "Clang")  # Clang or AppleClang (see CMP0025)
-  set(CV_CLANG 1)
+if(NOT DEFINED CLANG AND CMAKE_CXX_COMPILER_ID MATCHES "Clang")  # Clang or AppleClang (see CMP0025)
+  set(CLANG 1)
 endif()
 
 
@@ -13,22 +19,22 @@ endif()
 # ----------------------------------------------------------------------------
 if(UNIX)
   if(__ICL)
-    set(CV_ICC   __ICL)
+    set(ICC   __ICL)
   elseif(__ICC)
-    set(CV_ICC   __ICC)
+    set(ICC   __ICC)
   elseif(__ECL)
-    set(CV_ICC   __ECL)
+    set(ICC   __ECL)
   elseif(__ECC)
-    set(CV_ICC   __ECC)
+    set(ICC   __ECC)
   elseif(__INTEL_COMPILER)
-    set(CV_ICC   __INTEL_COMPILER)
+    set(ICC   __INTEL_COMPILER)
   elseif(CMAKE_C_COMPILER MATCHES "icc")
-    set(CV_ICC   icc_matches_c_compiler)
+    set(ICC   icc_matches_c_compiler)
   endif()
 endif()
 
 if(MSVC AND CMAKE_C_COMPILER MATCHES "icc|icl")
-  set(CV_ICC   __INTEL_COMPILER_FOR_WINDOWS)
+  set(ICC   __INTEL_COMPILER_FOR_WINDOWS)
 endif()
 
 # ----------------------------------------------------------------------------
@@ -36,20 +42,20 @@ endif()
 # ----------------------------------------------------------------------------
 if(UNIX)
   if(__INTEL_COMPILER)
-    set(CV_ICX   __INTEL_LLVM_COMPILER)
+    set(ICX   __INTEL_LLVM_COMPILER)
   elseif(CMAKE_C_COMPILER MATCHES "icx")
-    set(CV_ICX   icx_matches_c_compiler)
+    set(ICX   icx_matches_c_compiler)
   elseif(CMAKE_CXX_COMPILER MATCHES "icpx")
-    set(CV_ICX   icpx_matches_cxx_compiler)
+    set(ICX   icpx_matches_cxx_compiler)
   endif()
 endif()
 
 if(MSVC AND CMAKE_CXX_COMPILER MATCHES ".*(dpcpp-cl|dpcpp|icx-cl|icpx|icx)(.exe)?$")
-  set(CV_ICX   __INTEL_LLVM_COMPILER_WINDOWS)
+  set(ICX   __INTEL_LLVM_COMPILER_WINDOWS)
 endif()	
 
 if(NOT DEFINED CMAKE_CXX_COMPILER_VERSION
-    AND NOT OPENCV_SUPPRESS_MESSAGE_MISSING_COMPILER_VERSION)
+    AND NOT OPENSUPPRESS_MESSAGE_MISSING_COMPILER_VERSION)
   message(WARNING "OpenCV: Compiler version is not available: CMAKE_CXX_COMPILER_VERSION is not set")
 endif()
 if(NOT DEFINED CMAKE_SYSTEM_PROCESSOR OR CMAKE_SYSTEM_PROCESSOR STREQUAL "")
@@ -60,13 +66,13 @@ if(NOT DEFINED CMAKE_SIZEOF_VOID_P)
 endif()
 
 # TODO: ${CMAKE_CXX_COMPILER_VERSION} needs language CXX enables
-if(CV_GCC)
+if(GCC)
 	message(STATUS "Compiler: GCC ${CMAKE_CXX_COMPILER_VERSION}")
-elseif(CV_CLANG)
+elseif(CLANG)
 	message(STATUS "Compiler: clang ${CMAKE_CXX_COMPILER_VERSION}")
-elseif(CV_ICC)
+elseif(ICC)
 	message(STATUS "Compiler: icc ${CMAKE_CXX_COMPILER_VERSION}")
-elseif(CV_ICX)
+elseif(ICX)
 	message(STATUS "Compiler: icx ${CMAKE_CXX_COMPILER_VERSION}")
 else()
 	message(ERROR "Compiler not detected, the whole library makes no sense.")

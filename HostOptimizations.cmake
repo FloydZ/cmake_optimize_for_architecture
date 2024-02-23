@@ -15,15 +15,15 @@
 # If either of Vc_SSE_INTRINSICS_BROKEN, Vc_AVX_INTRINSICS_BROKEN,
 # Vc_AVX2_INTRINSICS_BROKEN is defined and set, the OptimizeForArchitecture
 # macro will consequently disable the relevant features via compiler flags.
-
+#
 # Sources for Intel/AMD:
 # - https://github.com/animetosho/ParPar/blob/master/gf16/gf16mul.cpp
 # - https://en.wikichip.org/wiki/amd/cpuid
 # - https://en.wikichip.org/wiki/intel/cpuid
-
+#
 # Sources for ARM:
 # - https://en.wikichip.org/wiki/arm_holdings/microarchitectures/cortex-a55
-
+#
 #=============================================================================
 # Copyright 2010-2016 Matthias Kretz <kretz@kde.org>
 #
@@ -54,8 +54,13 @@
 
 get_filename_component(_currentDir "${CMAKE_CURRENT_LIST_FILE}" PATH)
 
-# TODO better naming
-SET(DONOTADDFLAGS 0)
+# if this flag is set, the cache sizes will not added to the compile arguments
+SET(CMAKE_CACHE_DO_NOT_ADD_TO_FLAGS 0)
+
+# it this flag is set, the host compiler optimizations/vectorization flags are
+# not added to the compile arguments
+SET(CMAKE_HOST_DO_NOT_ADD_TO_FLAGS 0)
+
 SET(WRITE_CONFIG_FILE 1)
 SET(CONFIG_FILE "config.h")
 
@@ -340,7 +345,8 @@ macro(AutodetectHostArchitectureX86)
       elseif(_cpu_family EQUAL 15)
          set(TARGET_ARCHITECTURE "k8")
          if(_cpu_model GREATER 64) 
-			 # I don't know the right number to put here. This is just a guess from the hardware I have access to
+			 # I don't know the right number to put here. This is just a guess
+			 # from the hardware I have access to
             set(TARGET_ARCHITECTURE "k8-sse3")
          endif(_cpu_model GREATER 64)
 	  else()
@@ -610,9 +616,10 @@ Other supported values are: \"none\", \"generic\", \"core\", \"merom\" (65nm Cor
          else()
             _my_find(_available_vector_units_list "${_flag}" _found)
          endif()
-         set(USE_${_name} ${_found} CACHE BOOL "${documentation}" ${_force})
-         mark_as_advanced(USE_${_name})
-         if(USE_${_name})
+		 set(USE_HOST_${_name} ${_found} CACHE BOOL "${documentation}" ${_force})
+		 set(USE_HOST_${_name}_FLAG "-m${_flag}" CACHE BOOL "${documentation}" ${_force})
+		 mark_as_advanced(USE_HOST_${_name})
+		 if(USE_HOST_${_name})
             list(APPEND _enable_vector_unit_list "${_flag}")
          else()
             list(APPEND _disable_vector_unit_list "${_flag}")
@@ -644,31 +651,27 @@ Other supported values are: \"none\", \"generic\", \"core\", \"merom\" (65nm Cor
    endif()
 endmacro()
 
-#TODO
-# if(NOT ${DONOTADDFLAGS})
-# 	message(STATUS "Adding Cache flags")
-# 	message(STATUS "L1D Size: ${DATA_CACHE_LEVEL1_SIZE} Bytes")
-# 	message(STATUS "L2 Size: ${DATA_CACHE_LEVEL2_SIZE} Bytes")
-# 	message(STATUS "L3 Size: ${DATA_CACHE_LEVEL3_SIZE} Bytes")
-# 
-# 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DDATA_CACHE_LEVEL1_SIZE=${DATA_CACHE_LEVEL1_SIZE}")
-# 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DDATA_CACHE_LEVEL2_SIZE=${DATA_CACHE_LEVEL2_SIZE}")
-# 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DDATA_CACHE_LEVEL3_SIZE=${DATA_CACHE_LEVEL3_SIZE}")
-# 
-# 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DDATA_CACHE_LEVEL1_SIZE=${DATA_CACHE_LEVEL1_SIZE}")
-# 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DDATA_CACHE_LEVEL2_SIZE=${DATA_CACHE_LEVEL2_SIZE}")
-# 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DDATA_CACHE_LEVEL3_SIZE=${DATA_CACHE_LEVEL3_SIZE}")
-# endif()
-# 
-# if(${WRITE_CONFIG_FILE})
-# 	set(CMAKE_CONFIG_STRING "#ifndef CMAKE_CACHE_CONFIG
-# #define CMAKE_CACHE_CONFIG
-# 
-# #define DATA_CACHE_LEVEL1_SIZE ${DATA_CACHE_LEVEL1_SIZE}
-# #define DATA_CACHE_LEVEL2_SIZE ${DATA_CACHE_LEVEL2_SIZE}
-# #define DATA_CACHE_LEVEL3_SIZE ${DATA_CACHE_LEVEL3_SIZE}
-# #endif
-# ")
-# 	#message(STATUS "${CMAKE_CONFIG_STRING}")
-# 	file(WRITE "${CONFIG_FILE}" "${CMAKE_CONFIG_STRING}")
-# endif()
+# rather important
+OptimizeForArchitecture()
+
+if(NOT ${CMAKE_HOST_DO_NOT_ADD_TO_FLAGS})
+	FOREACH(FLAG ${_enable_vector_unit_list})
+		message(STATUS "Adding compiler flag: -m${FLAG}")
+		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m${FLAG}")
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m${FLAG}")
+	ENDFOREACH()
+ endif()
+ 
+ if(${WRITE_CONFIG_FILE})
+	FOREACH(FLAG ${_enable_vector_unit_list})
+		string(REPLACE "." "" FLAG "${FLAG}")
+		string(TOUPPER ${FLAG} FLAG)
+
+		message(STATUS "Adding compiler flag: USE_${FLAG} to file")
+
+		set(CMAKE_CONFIG_STRING "${CMAKE_CONFIG_STRING}#define USE_${FLAG}\n")
+	ENDFOREACH()
+
+
+	file(WRITE "${CONFIG_FILE}" "${CMAKE_CONFIG_STRING}")
+ endif()
