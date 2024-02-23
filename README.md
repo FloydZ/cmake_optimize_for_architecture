@@ -30,3 +30,10 @@ check different architectures run:k
 nix-build -E 'with import <nixpkgs> {system="aarch64-linux";}; callPackage ./default.nix {}'
 ```
 Note: this now compiles the test file on a ARM `aarch64-linux`. 
+
+TODO:
+=====
+
+Support: 
+- TCMalloc 
+- Autovectorization
