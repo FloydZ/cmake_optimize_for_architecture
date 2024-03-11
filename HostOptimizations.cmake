@@ -654,6 +654,8 @@ endmacro()
 # rather important
 OptimizeForArchitecture()
 
+# adds all found host cpu features to the C and CXX compiler command line.
+# both are added: `-mavx` and -DUSE_AVX`
 if(NOT ${CMAKE_HOST_DO_NOT_ADD_TO_FLAGS})
 	FOREACH(FLAG ${_enable_vector_unit_list})
 		message(STATUS "Adding compiler flag: -m${FLAG}")
@@ -662,13 +664,14 @@ if(NOT ${CMAKE_HOST_DO_NOT_ADD_TO_FLAGS})
     ENDFOREACH()
 
     FOREACH(FLAG ${_enable_vector_unit_list})
-       message(STATUS "Adding compiler flag: -DUSE_${FLAG}")
-       set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -USE_${FLAG}")
-       set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DUSE_${FLAG}")
+        message(STATUS "Adding compiler flag: -DUSE_${FLAG}")
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -USE_${FLAG}")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DUSE_${FLAG}")
     ENDFOREACH()
- endif()
- 
- if(${WRITE_CONFIG_FILE})
+endif()
+
+# adds all found host cpu feature to a `config.h` config file
+if(${WRITE_CONFIG_FILE})
 	FOREACH(FLAG ${_enable_vector_unit_list})
 		string(REPLACE "." "" FLAG "${FLAG}")
 		string(TOUPPER ${FLAG} FLAG)
@@ -678,6 +681,5 @@ if(NOT ${CMAKE_HOST_DO_NOT_ADD_TO_FLAGS})
 		set(CMAKE_CONFIG_STRING "${CMAKE_CONFIG_STRING}#define USE_${FLAG}\n")
 	ENDFOREACH()
 
-
 	file(WRITE "${CONFIG_FILE}" "${CMAKE_CONFIG_STRING}")
- endif()
+endif()
