@@ -664,6 +664,7 @@ if(NOT ${CMAKE_HOST_DO_NOT_ADD_TO_FLAGS})
 
     FOREACH(FLAG ${_enable_vector_unit_list})
         string(TOUPPER ${FLAG} FLAGU)
+        string(REPLACE "." "" FLAGU "${FLAGU}")
         message(STATUS "Adding compiler flag: -DUSE_${FLAGU}")
         set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -USE_${FLAGU}")
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DUSE_${FLAGU}")
