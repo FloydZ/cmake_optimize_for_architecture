@@ -61,7 +61,7 @@ SET(CMAKE_CACHE_DO_NOT_ADD_TO_FLAGS 0)
 # not added to the compile arguments
 SET(CMAKE_HOST_DO_NOT_ADD_TO_FLAGS 0)
 
-SET(WRITE_CONFIG_FILE 1)
+SET(WRITE_CONFIG_FILE 0)
 SET(CONFIG_FILE "config.h")
 
 # NOTE: the order is important
@@ -647,7 +647,6 @@ Other supported values are: \"none\", \"generic\", \"core\", \"merom\" (65nm Cor
       _enable_or_disable(AVX512BW "avx512bw" "Use AVX512BW." false)
       _enable_or_disable(AVX512IFMA "avx512ifma" "Use AVX512IFMA." false)
       _enable_or_disable(AVX512VBMI "avx512vbmi" "Use AVX512VBMI." false)
-
    endif()
 endmacro()
 
@@ -664,9 +663,10 @@ if(NOT ${CMAKE_HOST_DO_NOT_ADD_TO_FLAGS})
     ENDFOREACH()
 
     FOREACH(FLAG ${_enable_vector_unit_list})
-        message(STATUS "Adding compiler flag: -DUSE_${FLAG}")
-        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -USE_${FLAG}")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DUSE_${FLAG}")
+        string(TOUPPER ${FLAG} FLAGU)
+        message(STATUS "Adding compiler flag: -DUSE_${FLAGU}")
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -USE_${FLAGU}")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DUSE_${FLAGU}")
     ENDFOREACH()
 endif()
 
