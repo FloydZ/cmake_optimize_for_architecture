@@ -11,9 +11,10 @@ SET(WRITE_CONFIG_FILE 0)
 SET(CONFIG_FILE "config.h")
 
 # NOTE: the order is important
-include(${CMAKE_CURRENT_LIST_DIR}/architecture.cmake)
-include(${CMAKE_CURRENT_LIST_DIR}/compiler.cmake)
-include(${CMAKE_CURRENT_LIST_DIR}/cache.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/Architecture.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/Cache.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/CompilerOptimizations.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/HostOptimizations.cmake)
-include(${CMAKE_CURRENT_LIST_DIR}/autovectorize/AutoVectorize.cmake)
+
+# TODO currently under dev
+# include(${CMAKE_CURRENT_LIST_DIR}/autovectorize/AutoVectorize.cmake)

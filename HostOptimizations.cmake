@@ -207,6 +207,9 @@ macro(AutodetectHostArchitectureX86)
 
 
 		 # client cores
+		 elseif(_cpu_model EQUAL 190)
+			# N97: alderlake-n
+            set(TARGET_ARCHITECTURE "alderlake")
 		 elseif(_cpu_model EQUAL 183 OR _cpu_model EQUAL 187)
             set(TARGET_ARCHITECTURE "raptorlake")
          elseif(_cpu_model EQUAL 154)
@@ -239,7 +242,7 @@ macro(AutodetectHostArchitectureX86)
             set(TARGET_ARCHITECTURE "nehalem")
          elseif(_cpu_model EQUAL 23 OR _cpu_model EQUAL 29)
             set(TARGET_ARCHITECTURE "penryn")
-         elseif(_cpu_model equal 15)
+         elseif(_cpu_model EQUAL 15)
             set(TARGET_ARCHITECTURE "merom")
          elseif(_cpu_model EQUAL 28)
             set(TARGET_ARCHITECTURE "atom")
