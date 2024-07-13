@@ -1,14 +1,14 @@
 get_filename_component(_currentDir "${CMAKE_CURRENT_LIST_FILE}" PATH)
 
 # if this flag is set, the cache sizes will not added to the compile arguments
-IF(NOT ${CMAKE_CACHE_DO_NOT_ADD_TO_FLAGS})
-	SET(CMAKE_CACHE_DO_NOT_ADD_TO_FLAGS 0)
+IF(NOT CMAKE_CACHE_DO_NOT_ADD_TO_FLAGS)
+	SET(CMAKE_CACHE_DO_NOT_ADD_TO_FLAGS OFF)
 ENDIF()
 
 # it this flag is set, the host compiler optimizations/vectorization flags are
 # not added to the compile arguments
-IF(NOT ${CMAKE_HOST_DO_NOT_ADD_TO_FLAGS})
-	SET(CMAKE_HOST_DO_NOT_ADD_TO_FLAGS 0)
+IF(NOT CMAKE_HOST_DO_NOT_ADD_TO_FLAGS)
+	SET(CMAKE_HOST_DO_NOT_ADD_TO_FLAGS OFF)
 ENDIF()
 
 SET(WRITE_CONFIG_FILE 0)
