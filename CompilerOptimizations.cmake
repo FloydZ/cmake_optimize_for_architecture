@@ -14,6 +14,7 @@
 # BMI2 
 # LZCNT
 # POPCNT
+# TODO pclmul
 #
 # AVX512 details: https://en.wikipedia.org/wiki/AVX-512#CPUs_with_AVX-512
 #
