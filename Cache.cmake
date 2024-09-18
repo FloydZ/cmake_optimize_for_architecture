@@ -13,12 +13,22 @@
 # type                            
 #
 
-# first get the number of caches. 
-# The number of caches is not the same as the number of levels of caches.
-# That's because your modern Intel CPU hash two level 1 caches: one for data 
-# and one for instructions.
-execute_process(COMMAND bash -c "find /sys/devices/system/cpu/cpu0/cache -type d | wc -l"
-				OUTPUT_VARIABLE INTERNAL_NR_CACHES)
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    # first get the number of caches. 
+    # The number of caches is not the same as the number of levels of caches.
+    # That's because your modern Intel CPU hash two level 1 caches: one for data 
+    # and one for instructions.
+    execute_process(COMMAND bash -c "find /sys/devices/system/cpu/cpu0/cache -type d | wc -l"
+				    OUTPUT_VARIABLE INTERNAL_NR_CACHES)
+endif()
+
+if(APPLE)
+	# NOTE: better regex grep hw.l\d.*cachesize
+    execute_process(COMMAND bash -c "sysctl -a | grep hw."
+				    OUTPUT_VARIABLE APPLE_HARDWARE_INFO)
+	string(REGEX MATCHALL "[^\n\r]+" APPLE_HARDWARE_LIST ${APPLE_HARDWARE_INFO})
+endif()
+
 # we need to subtract 1 because the directory `.` is counted too.
 # and we need to subtract another 1, because loops in `cmake` are inclusive
 # the upper bound, wtf?.
@@ -58,6 +68,19 @@ macro(Translate2Bytes in)
 	endif()
 endmacro()
 
+# information: is something in this list:
+# 		["l1icachesize", l2cachesize]
+macro(AppleReadCacheInformation information)
+	# message(STATUS "${APPLE_HARDWARE_LIST}")
+
+	foreach(LINE ${APPLE_HARDWARE_LIST})
+		if(LINE MATCHES "hw.${information}") 
+			# message(STATUS "${LINE}")
+			string(REGEX MATCH "[0-9][0-9]+" MATCHED0 ${LINE})
+		endif()
+	endforeach()
+endmacro()
+
 # otherwise the whole things makes no sense
 # currenlty only exports:
 # DATA_CACHE_LEVEL1_SIZE
@@ -89,6 +112,14 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
 			endif()
 		endif()
 	endforeach()
+endif()
+
+if(APPLE)
+	# message(STATUS "${APPLE_HARDWARE_LIST}")
+	AppleReadCacheInformation("l1dcachesize")
+	set(DATA_CACHE_LEVEL1_SIZE ${MATCHED0})
+	AppleReadCacheInformation("l2cachesize")
+	set(DATA_CACHE_LEVEL2_SIZE ${MATCHED0})
 endif()
 
 # TODO: better logging, better flag name
