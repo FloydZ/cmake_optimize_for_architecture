@@ -1,0 +1,21 @@
+---
+## Opt view config
+
+# Set this to false to disable remark_filters list
+use_remark_filters: true
+
+# Exclude optimization remarks with names matching this regex.
+# Empirical list of remark names (as of clang14):
+# LoopSpillReloadCopies, LoadWithLoopInvariantAddressInvalidated, MissedDetails, LoadClobbered,
+# NotBeneficial, SpillReloadCopies, NotPossible, NoDefinition, NeverInline, UnsupportedIrreducibleCFG,
+# VectorizationNotBeneficial, LoadWithLoopInvariantAddressCondExecuted, HorSLPNotBeneficial, TooCostly
+# LoopMayAccessStore
+exclude_names: NeverInline|NotPossible|LoopSpillReloadCopies|SpillReloadCopies
+# Exclude optimization remarks with text matching this regex:
+exclude_text: ^std\:\:|^__dynamic_cast|^operator new|^operator delete|^__cxa|^__clang|^__cxx
+
+# Collect all optimization remarks, not just failures
+collect_opt_success: False
+
+# Annotate all files, including system headers
+annotate_external: false

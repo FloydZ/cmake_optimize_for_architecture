@@ -19,6 +19,7 @@ include(${CMAKE_CURRENT_LIST_DIR}/Architecture.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/Cache.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/CompilerOptimizations.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/HostOptimizations.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/target_generation.cmake)
 
 # TODO currently under dev
 # include(${CMAKE_CURRENT_LIST_DIR}/autovectorize/AutoVectorize.cmake)
