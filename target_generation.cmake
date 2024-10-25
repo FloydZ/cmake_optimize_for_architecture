@@ -1,7 +1,10 @@
 
 # this policy disables the warning that be set specified values for a new
 # target.
-cmake_policy(SET CMP0160 OLD)
+cmake_policy(PUSH)
+if(POLICY CMP0169)
+    cmake_policy(SET CMP0160 OLD)
+endif()
 
 # TODO explain
 execute_process(COMMAND "${CMAKE_COMMAND}" "--help-property-list" "${CMAKE_BINARY_DIR}/help-property-list.txt")
@@ -93,3 +96,5 @@ foreach(target ${all_targets})
     
     generate_new_record_target(${target} "")
 endforeach()
+
+cmake_policy(POP)
