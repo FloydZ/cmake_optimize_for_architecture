@@ -1,7 +1,25 @@
 Usage:
 ======
 
-TODO
+You can either load this repo as a submodule like:
+```bash
+git submodule add https://github.com/FloydZ/cmake_optimize_for_architecture
+```
+Afterwards add this to your `CMakeLists.txt`:
+```cmake 
+include("path/to/submodule/cmake_optimize_for_architecture/Optimizations.cmake")
+```
+
+If you do not want to add a submodule you can directly load it via:
+```cmake 
+FetchContent_Declare(
+    cmake_optimize
+    GIT_REPOSITORY https://github.com/FloydZ/cmake_optimize_for_architecture
+    GIT_TAG        master
+)
+FetchContent_MakeAvailable(cmake_optimize)
+```
+
 
 Compilers:
 =========
