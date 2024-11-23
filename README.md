@@ -1,8 +1,7 @@
 CMake helper file which automatically detects your CPU architecture or compiler 
 features and optimizes the code accordingly.
 
-Usage:
-======
+# Usage:
 
 You can either load this repo as a submodule like:
 ```bash
@@ -21,6 +20,18 @@ FetchContent_Declare(
     GIT_TAG        master
 )
 FetchContent_MakeAvailable(cmake_optimize)
+```
+
+## Target Generations:
+
+Its possible to get a list of all created targets:
+```cmake
+get_all_targets(all_targets)
+```
+
+Then you can create new targets, which copies the old `target` and adds stuff
+```cmake 
+generate_new_record_target(${target} "new" "-funroll-all-loops -ftracer")
 ```
 
 
