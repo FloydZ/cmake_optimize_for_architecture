@@ -32,9 +32,6 @@ becomes available in cmake. The corresponding compiler flag can be accessed via
 
 A list of x86-flags:
 ```
-SHA512 
-SM3
-SM4
 SSE2
 SSE3
 SSSE3
@@ -75,6 +72,9 @@ AMX_INT8
 AMX_TILE
 AMX_FP16
 AMX_COMPLEX
+SHA512 
+SM3
+SM4
 ```
 
 Additional Flags:
@@ -126,6 +126,12 @@ XSAVEOPT
 XSS
 ```
 
+### Sources:
+- [X86 GCC Manual](https://gcc.gnu.org/onlinedocs/gcc/x86-Options.html): this contains
+    all Intel generations, and their supported instruction sets.
+- [X86 Intrinsics Guide](https://www.intel.com/content/www/us/en/docs/intrinsics-guide/index.html)
+
+
 ## ARM: 
 
 A list ARM flags:
@@ -136,6 +142,9 @@ ARM_NEON_FP16
 ARM_NEON_DOTPROD
 ```
 
+### Sources:
+TODO 
+
 ## riscv: 
 
 A list riscv flags:
@@ -143,8 +152,8 @@ A list riscv flags:
 RISCV_V
 ```
 
-
-If you want to disable certain feature you can TODO
+### Sources:
+TODO 
 
 
 Compiler Optimizations:
@@ -152,29 +161,77 @@ Compiler Optimizations:
 
 TODO not finished
 
-A list of optimzations available by the compiler
+A list of optimzations available by the compiler.
 
 
+Cache:
+====== 
 
-Sources:
-========
-- [X86 GCC Manual](https://gcc.gnu.org/onlinedocs/gcc/x86-Options.html): this contains
-    all Intel generations, and their supported instruction sets.
+Additional to the CPU ISA features, cache sizes are also parsed. Note that only
+data cache sizes are reported via:
+```bash
+DATA_CACHE_LEVEL1_SIZE
+DATA_CACHE_LEVEL2_SIZE
+DATA_CACHE_LEVEL3_SIZE
+```
+
+Note: if a level 2 or 3 cache is not available the reported numbers will be 0.
+On Linux `/sys/devices/system/cpu/cpu0/cache` is parsed.
 
 Exported Flags:
 ==============
 
 Exported `cmake` variables:
-```
+```bash
+# cache size
 DATA_CACHE_LEVEL1_SIZE
 DATA_CACHE_LEVEL2_SIZE
 DATA_CACHE_LEVEL3_SIZE
-# only if available
-USE_SSE
+
+# only if available x86 architecture:
 USE_SSE2
+USE_SSE3
 USE_SSSE3
+USE_SSE4_1
+USE_SSS4_2
+USE_SSE4a
+USE_PCLMUL
+USE_AVX
+USE_FMA
+USE_BMI2
 USE_AVX2
+USE_XOP
+USE_FMA4
 USE_AVX512F
+USE_AVX512VL
+USE_AVX512PF
+USE_AVX512ER
+USE_AVX512CD
+USE_AVX512DQ
+USE_AVX512BW
+USE_AVX5124MAPS
+USE_AVX5124VNNIW
+USE_AVX512BF16
+USE_AVX512BITALG
+USE_AVX512CLX
+USE_AVX512FP16
+USE_AVX512FMA52
+USE_AVX512VBMI2
+USE_AVX512VBMI
+USE_AVX512VNNI2
+USE_AVX512VP2INTERSECT
+USE_AVX512VPOPCNTDQ
+USE_AVX512GFNI
+USE_AVX512VAES
+USE_AVX512VPCLMULQDQ
+USE_AMX_BF16
+USE_AMX_INT8
+USE_AMX_TILE
+USE_AMX_FP16
+USE_AMX_COMPLEX
+USE_SHA512 
+USE_SM3
+USE_SM4
 ```
 
 
