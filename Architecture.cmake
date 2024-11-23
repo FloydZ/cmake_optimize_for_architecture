@@ -28,6 +28,7 @@ endif()
 #	CLANG 
 #	ICC 
 # 	ICX
+#   SOUPER
 
 
 # Finds information about the compiler

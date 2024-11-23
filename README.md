@@ -1,3 +1,6 @@
+CMake helper file which automatically detects your CPU architecture or compiler 
+features and optimizes the code accordingly.
+
 Usage:
 ======
 
@@ -36,8 +39,10 @@ to not include them add: `set(CMAKE_CACHE_DO_NOT_ADD_TO_FLAGS 1)` before you
 include this project in your `CMakeLists.txt`. Note: this feature is only 
 available on linux.
 
-Host Optimzations:
-================
+
+# Host Optimzations:
+
+## x86:
 
 The available cpu features of the host are automatically added to the cpu 
 command. So if your cpu support the avx/avx2 instruction set, `-mavx/-mavx2`
@@ -47,6 +52,42 @@ disables this feature.
 If a certain CPU feature was found, additionally the flag `USE_HOST_${FLAG}`
 becomes available in cmake. The corresponding compiler flag can be accessed via
 `USE_HOST_${FLAG}_FLAG`.
+
+The following architectures are supported:
+```bash 
+Westmere
+Nehalem
+Ivy Bridge 
+Sandy Bridge 
+Knights Landing
+Kaby Lake 
+Coffee Lake 
+Whiskey Lake
+Broadwell
+Haswell-E
+Haswell
+Ivy Bridge-E
+Ivy Bridge
+Sandy Bridge
+Goldmont
+Silvermont
+Knights Landing
+Cannonlake
+Skylake Server
+Skylake Client
+Icelake Client
+Icelake Server
+Tigerlake
+Rocketlake
+AlderLake
+RaptorLake
+```
+The identified architecture will be written into the 
+```
+TARGET_ARCHITECTURE 
+```
+cmake variable.
+
 
 A list of x86-flags:
 ```
