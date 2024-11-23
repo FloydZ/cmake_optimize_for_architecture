@@ -32,6 +32,9 @@ becomes available in cmake. The corresponding compiler flag can be accessed via
 
 A list of x86-flags:
 ```
+SHA512 
+SM3
+SM4
 SSE2
 SSE3
 SSSE3
@@ -52,17 +55,96 @@ AVX512ER
 AVX512CD
 AVX512DQ
 AVX512BW
-AVX512IFMA
+AVX5124MAPS
+AVX5124VNNIW
+AVX512BF16
+AVX512BITALG
+AVX512CLX
+AVX512FP16
+AVX512FMA52
+AVX512VBMI2
 AVX512VBMI
+AVX512VNNI2
+AVX512VP2INTERSECT
+AVX512VPOPCNTDQ
+AVX512GFNI
+AVX512VAES
+AVX512VPCLMULQDQ
+AMX_BF16
+AMX_INT8
+AMX_TILE
+AMX_FP16
+AMX_COMPLEX
 ```
+
+Additional Flags:
+```
+ADX
+AES
+BMI1
+BMI2
+CET_SS
+CLDEMOTE
+CLFLUSHOPT
+CLWB
+CMPCCXADD
+CRC32
+ENQCMD
+FSGSBASE
+FXSR
+HRESET
+INVPCID
+KEYLOCKER
+KEYLOCKER_WIDE
+LZCNT
+MONITOR
+MOVBE
+MOVDIR64B
+MOVDIRI
+MPX
+PCLMULQDQ
+PCONFIG
+POPCNT
+PREFETCHI
+PRFCHW
+RAO_INT
+RDPID 
+RDRAND
+RSEED
+RDTSCP
+RTM
+SERIALIZE
+RDTSC 
+TSXLDTRK
+UINTR
+USER_MSR
+WAITPKG
+WBNOINVD
+XSAVE
+XSAVEC
+XSAVEOPT
+XSS
+```
+
+## ARM: 
 
 A list ARM flags:
 ```
-TODO
+ARM_NEON 
+ARM_NEON_BF16
+ARM_NEON_FP16
+ARM_NEON_DOTPROD
+```
+
+## riscv: 
+
+A list riscv flags:
+```
+RISCV_V
 ```
 
 
-If you want to disable certain feature you can
+If you want to disable certain feature you can TODO
 
 
 Compiler Optimizations:
@@ -73,10 +155,6 @@ TODO not finished
 A list of optimzations available by the compiler
 
 
-
-Installation:
-=============
-TODO
 
 Sources:
 ========
