@@ -36,11 +36,16 @@ if(NOT DEFINED GCC AND CMAKE_CXX_COMPILER_ID MATCHES "GNU")
   set(GCC 1)
   message(STATUS "Detected Compiler: GCC")
 endif()
+
 if(NOT DEFINED CLANG AND CMAKE_CXX_COMPILER_ID MATCHES "Clang")  # Clang or AppleClang (see CMP0025)
   set(CLANG 1)
   message(STATUS "Detected Compiler: clang")
 endif()
 
+if(NOT DEFINED SOUPER AND CMAKE_CXX_COMPILER_ID MATCHES "Souper")
+    set(SOUPER 1)
+  message(STATUS "Detected Compiler: souper")
+endif()
 
 # ----------------------------------------------------------------------------
 # Detect Intel ICC compiler
@@ -99,6 +104,8 @@ if(GCC)
 	message(STATUS "Compiler: GCC ${CMAKE_CXX_COMPILER_VERSION}")
 elseif(CLANG)
 	message(STATUS "Compiler: clang ${CMAKE_CXX_COMPILER_VERSION}")
+elseif(SOUPER)
+	message(STATUS "Compiler: souper ${CMAKE_CXX_COMPILER_VERSION}")
 elseif(ICC)
 	message(STATUS "Compiler: icc ${CMAKE_CXX_COMPILER_VERSION}")
 elseif(ICX)
