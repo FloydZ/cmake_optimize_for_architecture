@@ -1,0 +1,4088 @@
+--- !Passed
+Pass:            inline
+Name:            AlwaysInline
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                   Line: 142, Column: 4 }
+Function:        _ZNSt12_Vector_baseIdSaIdEE12_Vector_implC2Ev
+Args:
+  - String:          ''''
+  - Callee:          _ZNSaIdEC2Ev
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/allocator.h', 
+                       Line: 163, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZNSt12_Vector_baseIdSaIdEE12_Vector_implC2Ev
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 143, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost=always)'
+  - String:          ': '
+  - Reason:          always inline attribute
+  - String:          ' at callsite '
+  - String:          _Vector_impl
+  - String:          ':'
+  - Line:            '5'
+  - String:          ':'
+  - Column:          '4'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            AlwaysInline
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/allocator.h', 
+                   Line: 163, Column: 7 }
+Function:        _ZNSt12_Vector_baseIdSaIdEE12_Vector_implC2Ev
+Args:
+  - String:          ''''
+  - Callee:          _ZNSt15__new_allocatorIdEC2Ev
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/new_allocator.h', 
+                       Line: 88, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZNSt12_Vector_baseIdSaIdEE12_Vector_implC2Ev
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 143, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost=always)'
+  - String:          ': '
+  - Reason:          always inline attribute
+  - String:          ' at callsite '
+  - String:          allocator
+  - String:          ':'
+  - Line:            '0'
+  - String:          ':'
+  - Column:          '7'
+  - String:          ' @ '
+  - String:          _Vector_impl
+  - String:          ':'
+  - Line:            '5'
+  - String:          ':'
+  - Column:          '4'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            AlwaysInline
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/allocator.h', 
+                   Line: 163, Column: 7 }
+Function:        _ZNSaIdEC2Ev
+Args:
+  - String:          ''''
+  - Callee:          _ZNSt15__new_allocatorIdEC2Ev
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/new_allocator.h', 
+                       Line: 88, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZNSaIdEC2Ev
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/allocator.h', 
+                       Line: 163, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost=always)'
+  - String:          ': '
+  - Reason:          always inline attribute
+  - String:          ' at callsite '
+  - String:          allocator
+  - String:          ':'
+  - Line:            '0'
+  - String:          ':'
+  - Column:          '7'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            AlwaysInline
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                   Line: 1937, Column: 6 }
+Function:        _ZNSt6vectorIdSaIdEE15_M_erase_at_endEPd
+Args:
+  - String:          ''''
+  - Callee:          _ZSt8_DestroyIPddEvT_S1_RSaIT0_E
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/alloc_traits.h', 
+                       Line: 947, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZNSt6vectorIdSaIdEE15_M_erase_at_endEPd
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 1934, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost=always)'
+  - String:          ': '
+  - Reason:          always inline attribute
+  - String:          ' at callsite '
+  - String:          _M_erase_at_end
+  - String:          ':'
+  - Line:            '4'
+  - String:          ':'
+  - Column:          '6'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            AlwaysInline
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                   Line: 735, Column: 2 }
+Function:        _ZNSt6vectorIdSaIdEED2Ev
+Args:
+  - String:          ''''
+  - Callee:          _ZSt8_DestroyIPddEvT_S1_RSaIT0_E
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/alloc_traits.h', 
+                       Line: 947, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZNSt6vectorIdSaIdEED2Ev
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 734, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost=always)'
+  - String:          ': '
+  - Reason:          always inline attribute
+  - String:          ' at callsite '
+  - String:          '~vector'
+  - String:          ':'
+  - Line:            '2'
+  - String:          ':'
+  - Column:          '2'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            AlwaysInline
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                   Line: 390, Column: 4 }
+Function:        _ZNSt12_Vector_baseIdSaIdEE13_M_deallocateEPdm
+Args:
+  - String:          ''''
+  - Callee:          _ZNSt16allocator_traitsISaIdEE10deallocateERS0_Pdm
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/alloc_traits.h', 
+                       Line: 517, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZNSt12_Vector_baseIdSaIdEE13_M_deallocateEPdm
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 387, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost=always)'
+  - String:          ': '
+  - Reason:          always inline attribute
+  - String:          ' at callsite '
+  - String:          _M_deallocate
+  - String:          ':'
+  - Line:            '4'
+  - String:          ':'
+  - Column:          '4'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            AlwaysInline
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                   Line: 1923, Column: 28 }
+Function:        _ZNSt6vectorIdSaIdEE11_S_max_sizeERKS0_
+Args:
+  - String:          ''''
+  - Callee:          _ZNSt16allocator_traitsISaIdEE8max_sizeERKS0_
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/alloc_traits.h', 
+                       Line: 572, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZNSt6vectorIdSaIdEE11_S_max_sizeERKS0_
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 1917, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost=always)'
+  - String:          ': '
+  - Reason:          always inline attribute
+  - String:          ' at callsite '
+  - String:          _S_max_size
+  - String:          ':'
+  - Line:            '7'
+  - String:          ':'
+  - Column:          '28'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            AlwaysInline
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/alloc_traits.h', 
+                   Line: 574, Column: 13 }
+Function:        _ZNSt6vectorIdSaIdEE11_S_max_sizeERKS0_
+Args:
+  - String:          ''''
+  - Callee:          _ZNKSt15__new_allocatorIdE8max_sizeEv
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/new_allocator.h', 
+                       Line: 183, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZNSt6vectorIdSaIdEE11_S_max_sizeERKS0_
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 1917, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost=always)'
+  - String:          ': '
+  - Reason:          always inline attribute
+  - String:          ' at callsite '
+  - String:          max_size
+  - String:          ':'
+  - Line:            '3'
+  - String:          ':'
+  - Column:          '13'
+  - String:          ' @ '
+  - String:          _S_max_size
+  - String:          ':'
+  - Line:            '7'
+  - String:          ':'
+  - Column:          '28'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            AlwaysInline
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/alloc_traits.h', 
+                   Line: 574, Column: 13 }
+Function:        _ZNSt16allocator_traitsISaIdEE8max_sizeERKS0_
+Args:
+  - String:          ''''
+  - Callee:          _ZNKSt15__new_allocatorIdE8max_sizeEv
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/new_allocator.h', 
+                       Line: 183, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZNSt16allocator_traitsISaIdEE8max_sizeERKS0_
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/alloc_traits.h', 
+                       Line: 572, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost=always)'
+  - String:          ': '
+  - Reason:          always inline attribute
+  - String:          ' at callsite '
+  - String:          max_size
+  - String:          ':'
+  - Line:            '3'
+  - String:          ':'
+  - Column:          '13'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            AlwaysInline
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/new_allocator.h', 
+                   Line: 183, Column: 16 }
+Function:        _ZNSt16allocator_traitsISaIdEE8max_sizeERKS0_
+Args:
+  - String:          ''''
+  - Callee:          _ZNKSt15__new_allocatorIdE11_M_max_sizeEv
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/new_allocator.h', 
+                       Line: 231, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZNSt16allocator_traitsISaIdEE8max_sizeERKS0_
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/alloc_traits.h', 
+                       Line: 572, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost=always)'
+  - String:          ': '
+  - Reason:          always inline attribute
+  - String:          ' at callsite '
+  - String:          max_size
+  - String:          ':'
+  - Line:            '1'
+  - String:          ':'
+  - Column:          '16'
+  - String:          ' @ '
+  - String:          max_size
+  - String:          ':'
+  - Line:            '3'
+  - String:          ':'
+  - Column:          '13'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            AlwaysInline
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/new_allocator.h', 
+                   Line: 183, Column: 16 }
+Function:        _ZNSt6vectorIdSaIdEE11_S_max_sizeERKS0_
+Args:
+  - String:          ''''
+  - Callee:          _ZNKSt15__new_allocatorIdE11_M_max_sizeEv
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/new_allocator.h', 
+                       Line: 231, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZNSt6vectorIdSaIdEE11_S_max_sizeERKS0_
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 1917, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost=always)'
+  - String:          ': '
+  - Reason:          always inline attribute
+  - String:          ' at callsite '
+  - String:          max_size
+  - String:          ':'
+  - Line:            '1'
+  - String:          ':'
+  - Column:          '16'
+  - String:          ' @ '
+  - String:          max_size
+  - String:          ':'
+  - Line:            '3'
+  - String:          ':'
+  - Column:          '13'
+  - String:          ' @ '
+  - String:          _S_max_size
+  - String:          ':'
+  - Line:            '7'
+  - String:          ':'
+  - Column:          '28'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            AlwaysInline
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/new_allocator.h', 
+                   Line: 134, Column: 35 }
+Function:        _ZNSt15__new_allocatorIdE8allocateEmPKv
+Args:
+  - String:          ''''
+  - Callee:          _ZNKSt15__new_allocatorIdE11_M_max_sizeEv
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/new_allocator.h', 
+                       Line: 231, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZNSt15__new_allocatorIdE8allocateEmPKv
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/new_allocator.h', 
+                       Line: 127, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost=always)'
+  - String:          ': '
+  - Reason:          always inline attribute
+  - String:          ' at callsite '
+  - String:          allocate
+  - String:          ':'
+  - Line:            '8'
+  - String:          ':'
+  - Column:          '35'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            AlwaysInline
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/new_allocator.h', 
+                   Line: 183, Column: 16 }
+Function:        _ZNKSt15__new_allocatorIdE8max_sizeEv
+Args:
+  - String:          ''''
+  - Callee:          _ZNKSt15__new_allocatorIdE11_M_max_sizeEv
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/new_allocator.h', 
+                       Line: 231, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZNKSt15__new_allocatorIdE8max_sizeEv
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/new_allocator.h', 
+                       Line: 183, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost=always)'
+  - String:          ': '
+  - Reason:          always inline attribute
+  - String:          ' at callsite '
+  - String:          max_size
+  - String:          ':'
+  - Line:            '1'
+  - String:          ':'
+  - Column:          '16'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            AlwaysInline
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_algobase.h', 
+                   Line: 1158, Column: 11 }
+Function:        _ZSt6fill_nIPdmdET_S1_T0_RKT1_
+Args:
+  - String:          ''''
+  - Callee:          _ZSt19__iterator_categoryIPdENSt15iterator_traitsIT_E17iterator_categoryERKS2_
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_iterator_base_types.h', 
+                       Line: 240, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZSt6fill_nIPdmdET_S1_T0_RKT1_
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_algobase.h', 
+                       Line: 1153, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost=always)'
+  - String:          ': '
+  - Reason:          always inline attribute
+  - String:          ' at callsite '
+  - String:          'fill_n<double *, unsigned long, double>'
+  - String:          ':'
+  - Line:            '6'
+  - String:          ':'
+  - Column:          '11'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            AlwaysInline
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                   Line: 381, Column: 20 }
+Function:        _ZNSt12_Vector_baseIdSaIdEE11_M_allocateEm
+Args:
+  - String:          ''''
+  - Callee:          _ZNSt16allocator_traitsISaIdEE8allocateERS0_m
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/alloc_traits.h', 
+                       Line: 482, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZNSt12_Vector_baseIdSaIdEE11_M_allocateEm
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 379, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost=always)'
+  - String:          ': '
+  - Reason:          always inline attribute
+  - String:          ' at callsite '
+  - String:          _M_allocate
+  - String:          ':'
+  - Line:            '3'
+  - String:          ':'
+  - Column:          '20'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                   Line: 874, Column: 16 }
+Function:        _ZNSt6vectorIdSaIdEE5beginEv
+Args:
+  - String:          ''''
+  - Callee:          _ZN9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEEC2ERKS1_
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_iterator.h', 
+                       Line: 1077, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZNSt6vectorIdSaIdEE5beginEv
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 874, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-35'
+  - String:          ', threshold='
+  - Threshold:       '375'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          begin
+  - String:          ':'
+  - Line:            '1'
+  - String:          ':'
+  - Column:          '16'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                   Line: 894, Column: 16 }
+Function:        _ZNSt6vectorIdSaIdEE3endEv
+Args:
+  - String:          ''''
+  - Callee:          _ZN9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEEC2ERKS1_
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_iterator.h', 
+                       Line: 1077, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZNSt6vectorIdSaIdEE3endEv
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 894, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-35'
+  - String:          ', threshold='
+  - Threshold:       '375'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          end
+  - String:          ':'
+  - Line:            '1'
+  - String:          ':'
+  - Column:          '16'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_iterator.h', 
+                   Line: 1244, Column: 20 }
+Function:        _ZN9__gnu_cxxneIPdSt6vectorIdSaIdEEEEbRKNS_17__normal_iteratorIT_T0_EESA_
+Args:
+  - String:          ''''
+  - Callee:          _ZNK9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEE4baseEv
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_iterator.h', 
+                       Line: 1163, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZN9__gnu_cxxneIPdSt6vectorIdSaIdEEEEbRKNS_17__normal_iteratorIT_T0_EESA_
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_iterator.h', 
+                       Line: 1244, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-35'
+  - String:          ', threshold='
+  - Threshold:       '375'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          'operator!=<double *, std::vector<double, std::allocator<double> > >'
+  - String:          ':'
+  - Line:            '3'
+  - String:          ':'
+  - Column:          '20'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_iterator.h', 
+                   Line: 1244, Column: 36 }
+Function:        _ZN9__gnu_cxxneIPdSt6vectorIdSaIdEEEEbRKNS_17__normal_iteratorIT_T0_EESA_
+Args:
+  - String:          ''''
+  - Callee:          _ZNK9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEE4baseEv
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_iterator.h', 
+                       Line: 1163, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZN9__gnu_cxxneIPdSt6vectorIdSaIdEEEEbRKNS_17__normal_iteratorIT_T0_EESA_
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_iterator.h', 
+                       Line: 1244, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-35'
+  - String:          ', threshold='
+  - Threshold:       '375'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          'operator!=<double *, std::vector<double, std::allocator<double> > >'
+  - String:          ':'
+  - Line:            '3'
+  - String:          ':'
+  - Column:          '36'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: main.cc, Line: 10, Column: 21 }
+Function:        _Z10scale_downRSt6vectorIdSaIdEERKd
+Args:
+  - String:          ''''
+  - Callee:          _ZNSt6vectorIdSaIdEE5beginEv
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 874, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _Z10scale_downRSt6vectorIdSaIdEERKd
+    DebugLoc:        { File: main.cc, Line: 9, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-30'
+  - String:          ', threshold='
+  - Threshold:       '375'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          scale_down
+  - String:          ':'
+  - Line:            '2'
+  - String:          ':'
+  - Column:          '21'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: main.cc, Line: 10, Column: 21 }
+Function:        _Z10scale_downRSt6vectorIdSaIdEERKd
+Args:
+  - String:          ''''
+  - Callee:          _ZNSt6vectorIdSaIdEE3endEv
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 894, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _Z10scale_downRSt6vectorIdSaIdEERKd
+    DebugLoc:        { File: main.cc, Line: 9, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-30'
+  - String:          ', threshold='
+  - Threshold:       '375'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          scale_down
+  - String:          ':'
+  - Line:            '2'
+  - String:          ':'
+  - Column:          '21'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: main.cc, Line: 10, Column: 21 }
+Function:        _Z10scale_downRSt6vectorIdSaIdEERKd
+Args:
+  - String:          ''''
+  - Callee:          _ZN9__gnu_cxxneIPdSt6vectorIdSaIdEEEEbRKNS_17__normal_iteratorIT_T0_EESA_
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_iterator.h', 
+                       Line: 1244, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _Z10scale_downRSt6vectorIdSaIdEERKd
+    DebugLoc:        { File: main.cc, Line: 9, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-35'
+  - String:          ', threshold='
+  - Threshold:       '487'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          scale_down
+  - String:          ':'
+  - Line:            '2'
+  - String:          ':'
+  - Column:          '21'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: main.cc, Line: 10, Column: 21 }
+Function:        _Z10scale_downRSt6vectorIdSaIdEERKd
+Args:
+  - String:          ''''
+  - Callee:          _ZNK9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEEdeEv
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_iterator.h', 
+                       Line: 1100, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _Z10scale_downRSt6vectorIdSaIdEERKd
+    DebugLoc:        { File: main.cc, Line: 9, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-35'
+  - String:          ', threshold='
+  - Threshold:       '375'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          scale_down
+  - String:          ':'
+  - Line:            '2'
+  - String:          ':'
+  - Column:          '21'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: main.cc, Line: 10, Column: 21 }
+Function:        _Z10scale_downRSt6vectorIdSaIdEERKd
+Args:
+  - String:          ''''
+  - Callee:          _ZN9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEEppEv
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_iterator.h', 
+                       Line: 1110, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _Z10scale_downRSt6vectorIdSaIdEERKd
+    DebugLoc:        { File: main.cc, Line: 9, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-35'
+  - String:          ', threshold='
+  - Threshold:       '375'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          scale_down
+  - String:          ':'
+  - Line:            '2'
+  - String:          ':'
+  - Column:          '21'
+  - String:          ';'
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+DebugLoc:        { File: main.cc, Line: 11, Column: 17 }
+Function:        _Z10scale_downRSt6vectorIdSaIdEERKd
+Args:
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+DebugLoc:        { File: main.cc, Line: 11, Column: 17 }
+Function:        _Z10scale_downRSt6vectorIdSaIdEERKd
+Args:
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: main.cc, Line: 11, Column: 17 }
+Function:        _Z10scale_downRSt6vectorIdSaIdEERKd
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: main.cc, Line: 11, Column: 14 }
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+DebugLoc:        { File: main.cc, Line: 11, Column: 17 }
+Function:        _Z10scale_downRSt6vectorIdSaIdEERKd
+Args:
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                   Line: 137, Column: 2 }
+Function:        _ZNSt12_Vector_baseIdSaIdEE12_Vector_implC2Ev
+Args:
+  - String:          ''''
+  - Callee:          _ZNSt12_Vector_baseIdSaIdEE17_Vector_impl_dataC2Ev
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 101, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZNSt12_Vector_baseIdSaIdEE12_Vector_implC2Ev
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 143, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-30'
+  - String:          ', threshold='
+  - Threshold:       '375'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          _Vector_impl
+  - String:          ':'
+  - Line:            '0'
+  - String:          ':'
+  - Column:          '2'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                   Line: 315, Column: 7 }
+Function:        _ZNSt12_Vector_baseIdSaIdEEC2Ev
+Args:
+  - String:          ''''
+  - Callee:          _ZNSt12_Vector_baseIdSaIdEE12_Vector_implC2Ev
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 143, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZNSt12_Vector_baseIdSaIdEEC2Ev
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 315, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-30'
+  - String:          ', threshold='
+  - Threshold:       '375'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          _Vector_base
+  - String:          ':'
+  - Line:            '0'
+  - String:          ':'
+  - Column:          '7'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                   Line: 531, Column: 7 }
+Function:        _ZNSt6vectorIdSaIdEEC2Ev
+Args:
+  - String:          ''''
+  - Callee:          _ZNSt12_Vector_baseIdSaIdEEC2Ev
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 315, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZNSt6vectorIdSaIdEEC2Ev
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 531, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-30'
+  - String:          ', threshold='
+  - Threshold:       '375'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          vector
+  - String:          ':'
+  - Line:            '0'
+  - String:          ':'
+  - Column:          '7'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                   Line: 1924, Column: 9 }
+Function:        _ZNSt6vectorIdSaIdEE11_S_max_sizeERKS0_
+Args:
+  - String:          ''''
+  - Callee:          _ZSt3minImERKT_S2_S2_
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_algobase.h', 
+                       Line: 234, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZNSt6vectorIdSaIdEE11_S_max_sizeERKS0_
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 1917, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-20'
+  - String:          ', threshold='
+  - Threshold:       '487'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          _S_max_size
+  - String:          ':'
+  - Line:            '8'
+  - String:          ':'
+  - Column:          '9'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                   Line: 999, Column: 28 }
+Function:        _ZNKSt6vectorIdSaIdEE8max_sizeEv
+Args:
+  - String:          ''''
+  - Callee:          _ZNKSt12_Vector_baseIdSaIdEE19_M_get_Tp_allocatorEv
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 307, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZNKSt6vectorIdSaIdEE8max_sizeEv
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 999, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-35'
+  - String:          ', threshold='
+  - Threshold:       '375'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          max_size
+  - String:          ':'
+  - Line:            '1'
+  - String:          ':'
+  - Column:          '28'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                   Line: 999, Column: 16 }
+Function:        _ZNKSt6vectorIdSaIdEE8max_sizeEv
+Args:
+  - String:          ''''
+  - Callee:          _ZNSt6vectorIdSaIdEE11_S_max_sizeERKS0_
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 1917, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZNKSt6vectorIdSaIdEE8max_sizeEv
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 999, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-35'
+  - String:          ', threshold='
+  - Threshold:       '375'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          max_size
+  - String:          ':'
+  - Line:            '1'
+  - String:          ':'
+  - Column:          '16'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_algobase.h', 
+                   Line: 977, Column: 7 }
+Function:        _ZSt8__fill_aIPddEvT_S1_RKT0_
+Args:
+  - String:          ''''
+  - Callee:          _ZSt9__fill_a1IPddEN9__gnu_cxx11__enable_ifIXsr11__is_scalarIT0_EE7__valueEvE6__typeET_S6_RKS3_
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_algobase.h', 
+                       Line: 928, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZSt8__fill_aIPddEvT_S1_RKT0_
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_algobase.h', 
+                       Line: 977, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-15'
+  - String:          ', threshold='
+  - Threshold:       '325'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          '__fill_a<double *, double>'
+  - String:          ':'
+  - Line:            '1'
+  - String:          ':'
+  - Column:          '7'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_algobase.h', 
+                   Line: 1128, Column: 7 }
+Function:        _ZSt10__fill_n_aIPdmdET_S1_T0_RKT1_St26random_access_iterator_tag
+Args:
+  - String:          ''''
+  - Callee:          _ZSt8__fill_aIPddEvT_S1_RKT0_
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_algobase.h', 
+                       Line: 977, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZSt10__fill_n_aIPdmdET_S1_T0_RKT1_St26random_access_iterator_tag
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_algobase.h', 
+                       Line: 1119, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-15'
+  - String:          ', threshold='
+  - Threshold:       '325'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          '__fill_n_a<double *, unsigned long, double>'
+  - String:          ':'
+  - Line:            '11'
+  - String:          ':'
+  - Column:          '7'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_algobase.h', 
+                   Line: 1157, Column: 39 }
+Function:        _ZSt6fill_nIPdmdET_S1_T0_RKT1_
+Args:
+  - String:          ''''
+  - Callee:          _ZSt17__size_to_integerm
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_algobase.h', 
+                       Line: 1018, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZSt6fill_nIPdmdET_S1_T0_RKT1_
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_algobase.h', 
+                       Line: 1153, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-35'
+  - String:          ', threshold='
+  - Threshold:       '487'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          'fill_n<double *, unsigned long, double>'
+  - String:          ':'
+  - Line:            '5'
+  - String:          ':'
+  - Column:          '39'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_algobase.h', 
+                   Line: 1157, Column: 14 }
+Function:        _ZSt6fill_nIPdmdET_S1_T0_RKT1_
+Args:
+  - String:          ''''
+  - Callee:          _ZSt10__fill_n_aIPdmdET_S1_T0_RKT1_St26random_access_iterator_tag
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_algobase.h', 
+                       Line: 1119, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZSt6fill_nIPdmdET_S1_T0_RKT1_
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_algobase.h', 
+                       Line: 1153, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '0'
+  - String:          ', threshold='
+  - Threshold:       '325'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          'fill_n<double *, unsigned long, double>'
+  - String:          ':'
+  - Line:            '5'
+  - String:          ':'
+  - Column:          '14'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_uninitialized.h', 
+                   Line: 666, Column: 8 }
+Function:        _ZNSt27__uninitialized_default_n_1ILb1EE18__uninit_default_nIPdmEET_S3_T0_
+Args:
+  - String:          ''''
+  - Callee:          _ZSt10_ConstructIdJEEvPT_DpOT0_
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_construct.h', 
+                       Line: 110, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZNSt27__uninitialized_default_n_1ILb1EE18__uninit_default_nIPdmEET_S3_T0_
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_uninitialized.h', 
+                       Line: 661, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-30'
+  - String:          ', threshold='
+  - Threshold:       '487'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          '__uninit_default_n<double *, unsigned long>'
+  - String:          ':'
+  - Line:            '6'
+  - String:          ':'
+  - Column:          '8'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_uninitialized.h', 
+                   Line: 668, Column: 18 }
+Function:        _ZNSt27__uninitialized_default_n_1ILb1EE18__uninit_default_nIPdmEET_S3_T0_
+Args:
+  - String:          ''''
+  - Callee:          _ZSt6fill_nIPdmdET_S1_T0_RKT1_
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_algobase.h', 
+                       Line: 1153, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZNSt27__uninitialized_default_n_1ILb1EE18__uninit_default_nIPdmEET_S3_T0_
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_uninitialized.h', 
+                       Line: 661, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '0'
+  - String:          ', threshold='
+  - Threshold:       '325'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          '__uninit_default_n<double *, unsigned long>'
+  - String:          ':'
+  - Line:            '8'
+  - String:          ':'
+  - Column:          '18'
+  - String:          ';'
+...
+--- !Passed
+Pass:            loop-idiom
+Name:            ProcessLoopStridedStore
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_algobase.h', 
+                   Line: 931, Column: 11 }
+Function:        _ZNSt27__uninitialized_default_n_1ILb1EE18__uninit_default_nIPdmEET_S3_T0_
+Args:
+  - String:          'Transformed loop-strided store in '
+  - Function:        _ZNSt27__uninitialized_default_n_1ILb1EE18__uninit_default_nIPdmEET_S3_T0_
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_uninitialized.h', 
+                       Line: 661, Column: 0 }
+  - String:          ' function into a call to '
+  - NewFunction:     llvm.memset.p0.i64
+  - String:          '() intrinsic'
+  - FromBlock:       ''
+  - ToBlock:         ''
+...
+--- !Passed
+Pass:            loop-delete
+Name:            Invariant
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_algobase.h', 
+                   Line: 930, Column: 7 }
+Function:        _ZNSt27__uninitialized_default_n_1ILb1EE18__uninit_default_nIPdmEET_S3_T0_
+Args:
+  - String:          Loop deleted because it is invariant
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_uninitialized.h', 
+                   Line: 710, Column: 14 }
+Function:        _ZSt25__uninitialized_default_nIPdmET_S1_T0_
+Args:
+  - String:          ''''
+  - Callee:          _ZNSt27__uninitialized_default_n_1ILb1EE18__uninit_default_nIPdmEET_S3_T0_
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_uninitialized.h', 
+                       Line: 661, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZSt25__uninitialized_default_nIPdmET_S1_T0_
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_uninitialized.h', 
+                       Line: 697, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '20'
+  - String:          ', threshold='
+  - Threshold:       '250'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          '__uninitialized_default_n<double *, unsigned long>'
+  - String:          ':'
+  - Line:            '14'
+  - String:          ':'
+  - Column:          '14'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_uninitialized.h', 
+                   Line: 779, Column: 14 }
+Function:        _ZSt27__uninitialized_default_n_aIPdmdET_S1_T0_RSaIT1_E
+Args:
+  - String:          ''''
+  - Callee:          _ZSt25__uninitialized_default_nIPdmET_S1_T0_
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_uninitialized.h', 
+                       Line: 697, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZSt27__uninitialized_default_n_aIPdmdET_S1_T0_RSaIT1_E
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_uninitialized.h', 
+                       Line: 779, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '20'
+  - String:          ', threshold='
+  - Threshold:       '325'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          '__uninitialized_default_n_a<double *, unsigned long, double>'
+  - String:          ':'
+  - Line:            '2'
+  - String:          ':'
+  - Column:          '14'
+  - String:          ';'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                   Line: 1899, Column: 4 }
+Function:        _ZNKSt6vectorIdSaIdEE12_M_check_lenEmPKc
+Args:
+  - Callee:          _ZSt20__throw_length_errorPKc
+  - String:          ' will not be inlined into '
+  - Caller:          _ZNKSt6vectorIdSaIdEE12_M_check_lenEmPKc
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 1897, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                   Line: 1898, Column: 6 }
+Function:        _ZNKSt6vectorIdSaIdEE12_M_check_lenEmPKc
+Args:
+  - String:          ''''
+  - Callee:          _ZNKSt6vectorIdSaIdEE8max_sizeEv
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 999, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZNKSt6vectorIdSaIdEE12_M_check_lenEmPKc
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 1897, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-35'
+  - String:          ', threshold='
+  - Threshold:       '375'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          _M_check_len
+  - String:          ':'
+  - Line:            '2'
+  - String:          ':'
+  - Column:          '6'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                   Line: 1898, Column: 19 }
+Function:        _ZNKSt6vectorIdSaIdEE12_M_check_lenEmPKc
+Args:
+  - String:          ''''
+  - Callee:          _ZNKSt6vectorIdSaIdEE4sizeEv
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 993, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZNKSt6vectorIdSaIdEE12_M_check_lenEmPKc
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 1897, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-15'
+  - String:          ', threshold='
+  - Threshold:       '375'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          _M_check_len
+  - String:          ':'
+  - Line:            '2'
+  - String:          ':'
+  - Column:          '19'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                   Line: 1901, Column: 26 }
+Function:        _ZNKSt6vectorIdSaIdEE12_M_check_lenEmPKc
+Args:
+  - String:          ''''
+  - Callee:          _ZNKSt6vectorIdSaIdEE4sizeEv
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 993, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZNKSt6vectorIdSaIdEE12_M_check_lenEmPKc
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 1897, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-15'
+  - String:          ', threshold='
+  - Threshold:       '375'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          _M_check_len
+  - String:          ':'
+  - Line:            '5'
+  - String:          ':'
+  - Column:          '26'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                   Line: 1901, Column: 46 }
+Function:        _ZNKSt6vectorIdSaIdEE12_M_check_lenEmPKc
+Args:
+  - String:          ''''
+  - Callee:          _ZNKSt6vectorIdSaIdEE4sizeEv
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 993, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZNKSt6vectorIdSaIdEE12_M_check_lenEmPKc
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 1897, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-15'
+  - String:          ', threshold='
+  - Threshold:       '375'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          _M_check_len
+  - String:          ':'
+  - Line:            '5'
+  - String:          ':'
+  - Column:          '46'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                   Line: 1901, Column: 35 }
+Function:        _ZNKSt6vectorIdSaIdEE12_M_check_lenEmPKc
+Args:
+  - String:          ''''
+  - Callee:          _ZSt3maxImERKT_S2_S2_
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_algobase.h', 
+                       Line: 258, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZNKSt6vectorIdSaIdEE12_M_check_lenEmPKc
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 1897, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-20'
+  - String:          ', threshold='
+  - Threshold:       '487'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          _M_check_len
+  - String:          ':'
+  - Line:            '5'
+  - String:          ':'
+  - Column:          '35'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                   Line: 1902, Column: 18 }
+Function:        _ZNKSt6vectorIdSaIdEE12_M_check_lenEmPKc
+Args:
+  - String:          ''''
+  - Callee:          _ZNKSt6vectorIdSaIdEE4sizeEv
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 993, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZNKSt6vectorIdSaIdEE12_M_check_lenEmPKc
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 1897, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-15'
+  - String:          ', threshold='
+  - Threshold:       '375'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          _M_check_len
+  - String:          ':'
+  - Line:            '6'
+  - String:          ':'
+  - Column:          '18'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                   Line: 1902, Column: 36 }
+Function:        _ZNKSt6vectorIdSaIdEE12_M_check_lenEmPKc
+Args:
+  - String:          ''''
+  - Callee:          _ZNKSt6vectorIdSaIdEE8max_sizeEv
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 999, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZNKSt6vectorIdSaIdEE12_M_check_lenEmPKc
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 1897, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-35'
+  - String:          ', threshold='
+  - Threshold:       '375'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          _M_check_len
+  - String:          ':'
+  - Line:            '6'
+  - String:          ':'
+  - Column:          '36'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                   Line: 1902, Column: 50 }
+Function:        _ZNKSt6vectorIdSaIdEE12_M_check_lenEmPKc
+Args:
+  - String:          ''''
+  - Callee:          _ZNKSt6vectorIdSaIdEE8max_sizeEv
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 999, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZNKSt6vectorIdSaIdEE12_M_check_lenEmPKc
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 1897, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-35'
+  - String:          ', threshold='
+  - Threshold:       '375'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          _M_check_len
+  - String:          ':'
+  - Line:            '6'
+  - String:          ':'
+  - Column:          '50'
+  - String:          ';'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/new_allocator.h', 
+                   Line: 139, Column: 8 }
+Function:        _ZNSt15__new_allocatorIdE8allocateEmPKv
+Args:
+  - Callee:          _ZSt28__throw_bad_array_new_lengthv
+  - String:          ' will not be inlined into '
+  - Caller:          _ZNSt15__new_allocatorIdE8allocateEmPKv
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/new_allocator.h', 
+                       Line: 127, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/new_allocator.h', 
+                   Line: 140, Column: 6 }
+Function:        _ZNSt15__new_allocatorIdE8allocateEmPKv
+Args:
+  - Callee:          _ZSt17__throw_bad_allocv
+  - String:          ' will not be inlined into '
+  - Caller:          _ZNSt15__new_allocatorIdE8allocateEmPKv
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/new_allocator.h', 
+                       Line: 127, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/new_allocator.h', 
+                   Line: 151, Column: 27 }
+Function:        _ZNSt15__new_allocatorIdE8allocateEmPKv
+Args:
+  - Callee:          _Znwm
+  - String:          ' will not be inlined into '
+  - Caller:          _ZNSt15__new_allocatorIdE8allocateEmPKv
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/new_allocator.h', 
+                       Line: 127, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/alloc_traits.h', 
+                   Line: 482, Column: 20 }
+Function:        _ZNSt12_Vector_baseIdSaIdEE11_M_allocateEm
+Args:
+  - String:          ''''
+  - Callee:          _ZNSt15__new_allocatorIdE8allocateEmPKv
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/new_allocator.h', 
+                       Line: 127, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZNSt12_Vector_baseIdSaIdEE11_M_allocateEm
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 379, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '75'
+  - String:          ', threshold='
+  - Threshold:       '250'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          allocate
+  - String:          ':'
+  - Line:            '1'
+  - String:          ':'
+  - Column:          '20'
+  - String:          ' @ '
+  - String:          _M_allocate
+  - String:          ':'
+  - Line:            '3'
+  - String:          ':'
+  - Column:          '20'
+  - String:          ';'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/new_allocator.h', 
+                   Line: 172, Column: 2 }
+Function:        _ZNSt15__new_allocatorIdE10deallocateEPdm
+Args:
+  - Callee:          _ZdlPv
+  - String:          ' will not be inlined into '
+  - Caller:          _ZNSt15__new_allocatorIdE10deallocateEPdm
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/new_allocator.h', 
+                       Line: 157, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/alloc_traits.h', 
+                   Line: 517, Column: 13 }
+Function:        _ZNSt12_Vector_baseIdSaIdEE13_M_deallocateEPdm
+Args:
+  - String:          ''''
+  - Callee:          _ZNSt15__new_allocatorIdE10deallocateEPdm
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/new_allocator.h', 
+                       Line: 157, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZNSt12_Vector_baseIdSaIdEE13_M_deallocateEPdm
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 387, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-10'
+  - String:          ', threshold='
+  - Threshold:       '375'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          deallocate
+  - String:          ':'
+  - Line:            '1'
+  - String:          ':'
+  - Column:          '13'
+  - String:          ' @ '
+  - String:          _M_deallocate
+  - String:          ':'
+  - Line:            '4'
+  - String:          ':'
+  - Column:          '4'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_uninitialized.h', 
+                   Line: 1147, Column: 34 }
+Function:        _ZSt12__relocate_aIPdS0_SaIdEET0_T_S3_S2_RT1_
+Args:
+  - String:          ''''
+  - Callee:          _ZSt12__niter_baseIPdET_S1_
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_algobase.h', 
+                       Line: 318, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZSt12__relocate_aIPdS0_SaIdEET0_T_S3_S2_RT1_
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_uninitialized.h', 
+                       Line: 1146, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-35'
+  - String:          ', threshold='
+  - Threshold:       '487'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          '__relocate_a<double *, double *, std::allocator<double> >'
+  - String:          ':'
+  - Line:            '6'
+  - String:          ':'
+  - Column:          '34'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_uninitialized.h', 
+                   Line: 1148, Column: 6 }
+Function:        _ZSt12__relocate_aIPdS0_SaIdEET0_T_S3_S2_RT1_
+Args:
+  - String:          ''''
+  - Callee:          _ZSt12__niter_baseIPdET_S1_
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_algobase.h', 
+                       Line: 318, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZSt12__relocate_aIPdS0_SaIdEET0_T_S3_S2_RT1_
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_uninitialized.h', 
+                       Line: 1146, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-35'
+  - String:          ', threshold='
+  - Threshold:       '487'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          '__relocate_a<double *, double *, std::allocator<double> >'
+  - String:          ':'
+  - Line:            '7'
+  - String:          ':'
+  - Column:          '6'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_uninitialized.h', 
+                   Line: 1149, Column: 6 }
+Function:        _ZSt12__relocate_aIPdS0_SaIdEET0_T_S3_S2_RT1_
+Args:
+  - String:          ''''
+  - Callee:          _ZSt12__niter_baseIPdET_S1_
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_algobase.h', 
+                       Line: 318, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZSt12__relocate_aIPdS0_SaIdEET0_T_S3_S2_RT1_
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_uninitialized.h', 
+                       Line: 1146, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-35'
+  - String:          ', threshold='
+  - Threshold:       '487'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          '__relocate_a<double *, double *, std::allocator<double> >'
+  - String:          ':'
+  - Line:            '8'
+  - String:          ':'
+  - Column:          '6'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_uninitialized.h', 
+                   Line: 1147, Column: 14 }
+Function:        _ZSt12__relocate_aIPdS0_SaIdEET0_T_S3_S2_RT1_
+Args:
+  - String:          ''''
+  - Callee:          _ZSt14__relocate_a_1IddENSt9enable_ifIXsr3std24__is_bitwise_relocatableIT_EE5valueEPS1_E4typeES2_S2_S2_RSaIT0_E
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_uninitialized.h', 
+                       Line: 1117, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZSt12__relocate_aIPdS0_SaIdEET0_T_S3_S2_RT1_
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_uninitialized.h', 
+                       Line: 1146, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-30'
+  - String:          ', threshold='
+  - Threshold:       '325'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          '__relocate_a<double *, double *, std::allocator<double> >'
+  - String:          ':'
+  - Line:            '6'
+  - String:          ':'
+  - Column:          '14'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                   Line: 509, Column: 9 }
+Function:        _ZNSt6vectorIdSaIdEE11_S_relocateEPdS2_S2_RS0_
+Args:
+  - String:          ''''
+  - Callee:          _ZSt12__relocate_aIPdS0_SaIdEET0_T_S3_S2_RT1_
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_uninitialized.h', 
+                       Line: 1146, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZNSt6vectorIdSaIdEE11_S_relocateEPdS2_S2_RS0_
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 506, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-30'
+  - String:          ', threshold='
+  - Threshold:       '325'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          _S_relocate
+  - String:          ':'
+  - Line:            '5'
+  - String:          ':'
+  - Column:          '9'
+  - String:          ';'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+Function:        __clang_call_terminate
+Args:
+  - Callee:          __cxa_begin_catch
+  - String:          ' will not be inlined into '
+  - Caller:          __clang_call_terminate
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+Function:        __clang_call_terminate
+Args:
+  - Callee:          _ZSt9terminatev
+  - String:          ' will not be inlined into '
+  - Caller:          __clang_call_terminate
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/vector.tcc', 
+                   Line: 670, Column: 7 }
+Function:        _ZNSt6vectorIdSaIdEE17_M_default_appendEm
+Args:
+  - Callee:          __cxa_begin_catch
+  - String:          ' will not be inlined into '
+  - Caller:          _ZNSt6vectorIdSaIdEE17_M_default_appendEm
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/vector.tcc', 
+                       Line: 636, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/vector.tcc', 
+                   Line: 674, Column: 9 }
+Function:        _ZNSt6vectorIdSaIdEE17_M_default_appendEm
+Args:
+  - Callee:          __cxa_rethrow
+  - String:          ' will not be inlined into '
+  - Caller:          _ZNSt6vectorIdSaIdEE17_M_default_appendEm
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/vector.tcc', 
+                       Line: 636, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/vector.tcc', 
+                   Line: 675, Column: 7 }
+Function:        _ZNSt6vectorIdSaIdEE17_M_default_appendEm
+Args:
+  - Callee:          __cxa_end_catch
+  - String:          ' will not be inlined into '
+  - Caller:          _ZNSt6vectorIdSaIdEE17_M_default_appendEm
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/vector.tcc', 
+                       Line: 636, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/vector.tcc', 
+                   Line: 639, Column: 29 }
+Function:        _ZNSt6vectorIdSaIdEE17_M_default_appendEm
+Args:
+  - String:          ''''
+  - Callee:          _ZNKSt6vectorIdSaIdEE4sizeEv
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 993, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZNSt6vectorIdSaIdEE17_M_default_appendEm
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/vector.tcc', 
+                       Line: 636, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-15'
+  - String:          ', threshold='
+  - Threshold:       '375'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          _M_default_append
+  - String:          ':'
+  - Line:            '4'
+  - String:          ':'
+  - Column:          '29'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/vector.tcc', 
+                   Line: 643, Column: 17 }
+Function:        _ZNSt6vectorIdSaIdEE17_M_default_appendEm
+Args:
+  - String:          ''''
+  - Callee:          _ZNKSt6vectorIdSaIdEE8max_sizeEv
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 999, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZNSt6vectorIdSaIdEE17_M_default_appendEm
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/vector.tcc', 
+                       Line: 636, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-35'
+  - String:          ', threshold='
+  - Threshold:       '375'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          _M_default_append
+  - String:          ':'
+  - Line:            '8'
+  - String:          ':'
+  - Column:          '17'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/vector.tcc', 
+                   Line: 643, Column: 42 }
+Function:        _ZNSt6vectorIdSaIdEE17_M_default_appendEm
+Args:
+  - String:          ''''
+  - Callee:          _ZNKSt6vectorIdSaIdEE8max_sizeEv
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 999, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZNSt6vectorIdSaIdEE17_M_default_appendEm
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/vector.tcc', 
+                       Line: 636, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-35'
+  - String:          ', threshold='
+  - Threshold:       '375'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          _M_default_append
+  - String:          ':'
+  - Line:            '8'
+  - String:          ':'
+  - Column:          '42'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/vector.tcc', 
+                   Line: 651, Column: 13 }
+Function:        _ZNSt6vectorIdSaIdEE17_M_default_appendEm
+Args:
+  - String:          ''''
+  - Callee:          _ZNSt12_Vector_baseIdSaIdEE19_M_get_Tp_allocatorEv
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 302, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZNSt6vectorIdSaIdEE17_M_default_appendEm
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/vector.tcc', 
+                       Line: 636, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-35'
+  - String:          ', threshold='
+  - Threshold:       '375'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          _M_default_append
+  - String:          ':'
+  - Line:            '16'
+  - String:          ':'
+  - Column:          '13'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/vector.tcc', 
+                   Line: 650, Column: 3 }
+Function:        _ZNSt6vectorIdSaIdEE17_M_default_appendEm
+Args:
+  - String:          ''''
+  - Callee:          _ZSt27__uninitialized_default_n_aIPdmdET_S1_T0_RSaIT1_E
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_uninitialized.h', 
+                       Line: 779, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZNSt6vectorIdSaIdEE17_M_default_appendEm
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/vector.tcc', 
+                       Line: 636, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '15'
+  - String:          ', threshold='
+  - Threshold:       '325'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          _M_default_append
+  - String:          ':'
+  - Line:            '15'
+  - String:          ':'
+  - Column:          '3'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/vector.tcc', 
+                   Line: 662, Column: 3 }
+Function:        _ZNSt6vectorIdSaIdEE17_M_default_appendEm
+Args:
+  - String:          ''''
+  - Callee:          _ZNKSt6vectorIdSaIdEE12_M_check_lenEmPKc
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 1897, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZNSt6vectorIdSaIdEE17_M_default_appendEm
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/vector.tcc', 
+                       Line: 636, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '50'
+  - String:          ', threshold='
+  - Threshold:       '250'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          _M_default_append
+  - String:          ':'
+  - Line:            '27'
+  - String:          ':'
+  - Column:          '3'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/vector.tcc', 
+                   Line: 663, Column: 34 }
+Function:        _ZNSt6vectorIdSaIdEE17_M_default_appendEm
+Args:
+  - String:          ''''
+  - Callee:          _ZNSt12_Vector_baseIdSaIdEE11_M_allocateEm
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 379, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZNSt6vectorIdSaIdEE17_M_default_appendEm
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/vector.tcc', 
+                       Line: 636, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '90'
+  - String:          ', threshold='
+  - Threshold:       '250'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          _M_default_append
+  - String:          ':'
+  - Line:            '28'
+  - String:          ':'
+  - Column:          '34'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/vector.tcc', 
+                   Line: 669, Column: 15 }
+Function:        _ZNSt6vectorIdSaIdEE17_M_default_appendEm
+Args:
+  - String:          ''''
+  - Callee:          _ZNSt12_Vector_baseIdSaIdEE19_M_get_Tp_allocatorEv
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 302, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZNSt6vectorIdSaIdEE17_M_default_appendEm
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/vector.tcc', 
+                       Line: 636, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-35'
+  - String:          ', threshold='
+  - Threshold:       '375'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          _M_default_append
+  - String:          ':'
+  - Line:            '34'
+  - String:          ':'
+  - Column:          '15'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/vector.tcc', 
+                   Line: 668, Column: 9 }
+Function:        _ZNSt6vectorIdSaIdEE17_M_default_appendEm
+Args:
+  - String:          ''''
+  - Callee:          _ZSt27__uninitialized_default_n_aIPdmdET_S1_T0_RSaIT1_E
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_uninitialized.h', 
+                       Line: 779, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZNSt6vectorIdSaIdEE17_M_default_appendEm
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/vector.tcc', 
+                       Line: 636, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '15'
+  - String:          ', threshold='
+  - Threshold:       '325'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          _M_default_append
+  - String:          ':'
+  - Line:            '33'
+  - String:          ':'
+  - Column:          '9'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/vector.tcc', 
+                   Line: 673, Column: 9 }
+Function:        _ZNSt6vectorIdSaIdEE17_M_default_appendEm
+Args:
+  - String:          ''''
+  - Callee:          _ZNSt12_Vector_baseIdSaIdEE13_M_deallocateEPdm
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 387, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZNSt6vectorIdSaIdEE17_M_default_appendEm
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/vector.tcc', 
+                       Line: 636, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '0'
+  - String:          ', threshold='
+  - Threshold:       '45'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          _M_default_append
+  - String:          ':'
+  - Line:            '38'
+  - String:          ':'
+  - Column:          '9'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/vector.tcc', 
+                   Line: 677, Column: 23 }
+Function:        _ZNSt6vectorIdSaIdEE17_M_default_appendEm
+Args:
+  - String:          ''''
+  - Callee:          _ZNSt12_Vector_baseIdSaIdEE19_M_get_Tp_allocatorEv
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 302, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZNSt6vectorIdSaIdEE17_M_default_appendEm
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/vector.tcc', 
+                       Line: 636, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-35'
+  - String:          ', threshold='
+  - Threshold:       '375'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          _M_default_append
+  - String:          ':'
+  - Line:            '42'
+  - String:          ':'
+  - Column:          '23'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/vector.tcc', 
+                   Line: 676, Column: 5 }
+Function:        _ZNSt6vectorIdSaIdEE17_M_default_appendEm
+Args:
+  - String:          ''''
+  - Callee:          _ZNSt6vectorIdSaIdEE11_S_relocateEPdS2_S2_RS0_
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 506, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZNSt6vectorIdSaIdEE17_M_default_appendEm
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/vector.tcc', 
+                       Line: 636, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-30'
+  - String:          ', threshold='
+  - Threshold:       '250'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          _M_default_append
+  - String:          ':'
+  - Line:            '41'
+  - String:          ':'
+  - Column:          '5'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/vector.tcc', 
+                   Line: 703, Column: 8 }
+Function:        _ZNSt6vectorIdSaIdEE17_M_default_appendEm
+Args:
+  - String:          ''''
+  - Callee:          _ZNSt12_Vector_baseIdSaIdEE13_M_deallocateEPdm
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 387, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZNSt6vectorIdSaIdEE17_M_default_appendEm
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/vector.tcc', 
+                       Line: 636, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '0'
+  - String:          ', threshold='
+  - Threshold:       '250'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          _M_default_append
+  - String:          ':'
+  - Line:            '68'
+  - String:          ':'
+  - Column:          '8'
+  - String:          ';'
+...
+--- !Missed
+Pass:            inline
+Name:            NeverInline
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/vector.tcc', 
+                   Line: 675, Column: 7 }
+Function:        _ZNSt6vectorIdSaIdEE17_M_default_appendEm
+Args:
+  - String:          ''''
+  - Callee:          __clang_call_terminate
+  - String:          ''' not inlined into '''
+  - Caller:          _ZNSt6vectorIdSaIdEE17_M_default_appendEm
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/vector.tcc', 
+                       Line: 636, Column: 0 }
+  - String:          ''' because it should never be inlined '
+  - String:          '(cost=never)'
+  - String:          ': '
+  - Reason:          noinline function attribute
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_construct.h', 
+                   Line: 195, Column: 7 }
+Function:        _ZSt8_DestroyIPdEvT_S1_
+Args:
+  - String:          ''''
+  - Callee:          _ZNSt12_Destroy_auxILb1EE9__destroyIPdEEvT_S3_
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_construct.h', 
+                       Line: 172, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZSt8_DestroyIPdEvT_S1_
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_construct.h', 
+                       Line: 183, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-40'
+  - String:          ', threshold='
+  - Threshold:       '375'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          '_Destroy<double *>'
+  - String:          ':'
+  - Line:            '13'
+  - String:          ':'
+  - Column:          '7'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                   Line: 1938, Column: 6 }
+Function:        _ZNSt6vectorIdSaIdEE15_M_erase_at_endEPd
+Args:
+  - String:          ''''
+  - Callee:          _ZNSt12_Vector_baseIdSaIdEE19_M_get_Tp_allocatorEv
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 302, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZNSt6vectorIdSaIdEE15_M_erase_at_endEPd
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 1934, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-35'
+  - String:          ', threshold='
+  - Threshold:       '375'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          _M_erase_at_end
+  - String:          ':'
+  - Line:            '5'
+  - String:          ':'
+  - Column:          '6'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/alloc_traits.h', 
+                   Line: 948, Column: 7 }
+Function:        _ZNSt6vectorIdSaIdEE15_M_erase_at_endEPd
+Args:
+  - String:          ''''
+  - Callee:          _ZSt8_DestroyIPdEvT_S1_
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_construct.h', 
+                       Line: 183, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZNSt6vectorIdSaIdEE15_M_erase_at_endEPd
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 1934, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-40'
+  - String:          ', threshold='
+  - Threshold:       '487'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          '_Destroy<double *, double>'
+  - String:          ':'
+  - Line:            '3'
+  - String:          ':'
+  - Column:          '7'
+  - String:          ' @ '
+  - String:          _M_erase_at_end
+  - String:          ':'
+  - Line:            '4'
+  - String:          ':'
+  - Column:          '6'
+  - String:          ';'
+...
+--- !Missed
+Pass:            inline
+Name:            NeverInline
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                   Line: 1937, Column: 6 }
+Function:        _ZNSt6vectorIdSaIdEE15_M_erase_at_endEPd
+Args:
+  - String:          ''''
+  - Callee:          __clang_call_terminate
+  - String:          ''' not inlined into '''
+  - Caller:          _ZNSt6vectorIdSaIdEE15_M_erase_at_endEPd
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 1934, Column: 0 }
+  - String:          ''' because it should never be inlined '
+  - String:          '(cost=never)'
+  - String:          ': '
+  - Reason:          noinline function attribute
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                   Line: 1015, Column: 19 }
+Function:        _ZNSt6vectorIdSaIdEE6resizeEm
+Args:
+  - String:          ''''
+  - Callee:          _ZNKSt6vectorIdSaIdEE4sizeEv
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 993, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZNSt6vectorIdSaIdEE6resizeEm
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 1014, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-15'
+  - String:          ', threshold='
+  - Threshold:       '375'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          resize
+  - String:          ':'
+  - Line:            '2'
+  - String:          ':'
+  - Column:          '19'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                   Line: 1016, Column: 35 }
+Function:        _ZNSt6vectorIdSaIdEE6resizeEm
+Args:
+  - String:          ''''
+  - Callee:          _ZNKSt6vectorIdSaIdEE4sizeEv
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 993, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZNSt6vectorIdSaIdEE6resizeEm
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 1014, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-15'
+  - String:          ', threshold='
+  - Threshold:       '375'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          resize
+  - String:          ':'
+  - Line:            '3'
+  - String:          ':'
+  - Column:          '35'
+  - String:          ';'
+...
+--- !Missed
+Pass:            inline
+Name:            TooCostly
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                   Line: 1016, Column: 4 }
+Function:        _ZNSt6vectorIdSaIdEE6resizeEm
+Args:
+  - String:          ''''
+  - Callee:          _ZNSt6vectorIdSaIdEE17_M_default_appendEm
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/vector.tcc', 
+                       Line: 636, Column: 0 }
+  - String:          ''' not inlined into '''
+  - Caller:          _ZNSt6vectorIdSaIdEE6resizeEm
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 1014, Column: 0 }
+  - String:          ''' because too costly to inline '
+  - String:          '(cost='
+  - Cost:            '280'
+  - String:          ', threshold='
+  - Threshold:       '250'
+  - String:          ')'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                   Line: 1017, Column: 24 }
+Function:        _ZNSt6vectorIdSaIdEE6resizeEm
+Args:
+  - String:          ''''
+  - Callee:          _ZNKSt6vectorIdSaIdEE4sizeEv
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 993, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZNSt6vectorIdSaIdEE6resizeEm
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 1014, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-15'
+  - String:          ', threshold='
+  - Threshold:       '375'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          resize
+  - String:          ':'
+  - Line:            '4'
+  - String:          ':'
+  - Column:          '24'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                   Line: 1018, Column: 4 }
+Function:        _ZNSt6vectorIdSaIdEE6resizeEm
+Args:
+  - String:          ''''
+  - Callee:          _ZNSt6vectorIdSaIdEE15_M_erase_at_endEPd
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 1934, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZNSt6vectorIdSaIdEE6resizeEm
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 1014, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-20'
+  - String:          ', threshold='
+  - Threshold:       '250'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          resize
+  - String:          ':'
+  - Line:            '5'
+  - String:          ':'
+  - Column:          '4'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                   Line: 369, Column: 2 }
+Function:        _ZNSt12_Vector_baseIdSaIdEED2Ev
+Args:
+  - String:          ''''
+  - Callee:          _ZNSt12_Vector_baseIdSaIdEE13_M_deallocateEPdm
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 387, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZNSt12_Vector_baseIdSaIdEED2Ev
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 368, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '0'
+  - String:          ', threshold='
+  - Threshold:       '250'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          '~_Vector_base'
+  - String:          ':'
+  - Line:            '2'
+  - String:          ':'
+  - Column:          '2'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                   Line: 371, Column: 7 }
+Function:        _ZNSt12_Vector_baseIdSaIdEED2Ev
+Args:
+  - String:          ''''
+  - Callee:          _ZNSt15__new_allocatorIdED2Ev
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/new_allocator.h', 
+                       Line: 104, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZNSt12_Vector_baseIdSaIdEED2Ev
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 368, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-35'
+  - String:          ', threshold='
+  - Threshold:       '375'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          '~_Vector_base'
+  - String:          ':'
+  - Line:            '4'
+  - String:          ':'
+  - Column:          '7'
+  - String:          ';'
+...
+--- !Missed
+Pass:            inline
+Name:            NeverInline
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                   Line: 369, Column: 2 }
+Function:        _ZNSt12_Vector_baseIdSaIdEED2Ev
+Args:
+  - String:          ''''
+  - Callee:          __clang_call_terminate
+  - String:          ''' not inlined into '''
+  - Caller:          _ZNSt12_Vector_baseIdSaIdEED2Ev
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 368, Column: 0 }
+  - String:          ''' because it should never be inlined '
+  - String:          '(cost=never)'
+  - String:          ': '
+  - Reason:          noinline function attribute
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                   Line: 736, Column: 9 }
+Function:        _ZNSt6vectorIdSaIdEED2Ev
+Args:
+  - String:          ''''
+  - Callee:          _ZNSt12_Vector_baseIdSaIdEE19_M_get_Tp_allocatorEv
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 302, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZNSt6vectorIdSaIdEED2Ev
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 734, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-35'
+  - String:          ', threshold='
+  - Threshold:       '375'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          '~vector'
+  - String:          ':'
+  - Line:            '3'
+  - String:          ':'
+  - Column:          '9'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/alloc_traits.h', 
+                   Line: 948, Column: 7 }
+Function:        _ZNSt6vectorIdSaIdEED2Ev
+Args:
+  - String:          ''''
+  - Callee:          _ZSt8_DestroyIPdEvT_S1_
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_construct.h', 
+                       Line: 183, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZNSt6vectorIdSaIdEED2Ev
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 734, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-40'
+  - String:          ', threshold='
+  - Threshold:       '487'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          '_Destroy<double *, double>'
+  - String:          ':'
+  - Line:            '3'
+  - String:          ':'
+  - Column:          '7'
+  - String:          ' @ '
+  - String:          '~vector'
+  - String:          ':'
+  - Line:            '2'
+  - String:          ':'
+  - Column:          '2'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                   Line: 738, Column: 7 }
+Function:        _ZNSt6vectorIdSaIdEED2Ev
+Args:
+  - String:          ''''
+  - Callee:          _ZNSt12_Vector_baseIdSaIdEED2Ev
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 368, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _ZNSt6vectorIdSaIdEED2Ev
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 734, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '15'
+  - String:          ', threshold='
+  - Threshold:       '250'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          '~vector'
+  - String:          ':'
+  - Line:            '5'
+  - String:          ':'
+  - Column:          '7'
+  - String:          ';'
+...
+--- !Missed
+Pass:            inline
+Name:            NeverInline
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                   Line: 735, Column: 2 }
+Function:        _ZNSt6vectorIdSaIdEED2Ev
+Args:
+  - String:          ''''
+  - Callee:          __clang_call_terminate
+  - String:          ''' not inlined into '''
+  - Caller:          _ZNSt6vectorIdSaIdEED2Ev
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 734, Column: 0 }
+  - String:          ''' because it should never be inlined '
+  - String:          '(cost=never)'
+  - String:          ': '
+  - Reason:          noinline function attribute
+...
+--- !Missed
+Pass:            inline
+Name:            NoDefinition
+DebugLoc:        { File: main.cc, Line: 18, Column: 25 }
+Function:        _Z18scale_down_examplev
+Args:
+  - Callee:          rand
+  - String:          ' will not be inlined into '
+  - Caller:          _Z18scale_down_examplev
+    DebugLoc:        { File: main.cc, Line: 15, Column: 0 }
+  - String:          ' because its definition is unavailable'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: main.cc, Line: 16, Column: 25 }
+Function:        _Z18scale_down_examplev
+Args:
+  - String:          ''''
+  - Callee:          _ZNSt6vectorIdSaIdEEC2Ev
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 531, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _Z18scale_down_examplev
+    DebugLoc:        { File: main.cc, Line: 15, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-30'
+  - String:          ', threshold='
+  - Threshold:       '375'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          scale_down_example
+  - String:          ':'
+  - Line:            '1'
+  - String:          ':'
+  - Column:          '25'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: main.cc, Line: 16, Column: 30 }
+Function:        _Z18scale_down_examplev
+Args:
+  - String:          ''''
+  - Callee:          _ZNSt6vectorIdSaIdEE6resizeEm
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 1014, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _Z18scale_down_examplev
+    DebugLoc:        { File: main.cc, Line: 15, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '60'
+  - String:          ', threshold='
+  - Threshold:       '250'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          scale_down_example
+  - String:          ':'
+  - Line:            '1'
+  - String:          ':'
+  - Column:          '30'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: main.cc, Line: 28, Column: 1 }
+Function:        _Z18scale_down_examplev
+Args:
+  - String:          ''''
+  - Callee:          _ZNSt6vectorIdSaIdEED2Ev
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 734, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _Z18scale_down_examplev
+    DebugLoc:        { File: main.cc, Line: 15, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '10'
+  - String:          ', threshold='
+  - Threshold:       '45'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          scale_down_example
+  - String:          ':'
+  - Line:            '13'
+  - String:          ':'
+  - Column:          '1'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: main.cc, Line: 18, Column: 9 }
+Function:        _Z18scale_down_examplev
+Args:
+  - String:          ''''
+  - Callee:          _ZNSt6vectorIdSaIdEEixEm
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 1127, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _Z18scale_down_examplev
+    DebugLoc:        { File: main.cc, Line: 15, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-40'
+  - String:          ', threshold='
+  - Threshold:       '375'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          scale_down_example
+  - String:          ':'
+  - Line:            '3'
+  - String:          ':'
+  - Column:          '9'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: main.cc, Line: 28, Column: 1 }
+Function:        _Z18scale_down_examplev
+Args:
+  - String:          ''''
+  - Callee:          _ZNSt6vectorIdSaIdEED2Ev
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 734, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _Z18scale_down_examplev
+    DebugLoc:        { File: main.cc, Line: 15, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '10'
+  - String:          ', threshold='
+  - Threshold:       '250'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          scale_down_example
+  - String:          ':'
+  - Line:            '13'
+  - String:          ':'
+  - Column:          '1'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: main.cc, Line: 23, Column: 23 }
+Function:        _Z18scale_down_examplev
+Args:
+  - String:          ''''
+  - Callee:          _ZNSt6vectorIdSaIdEEixEm
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 1127, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _Z18scale_down_examplev
+    DebugLoc:        { File: main.cc, Line: 15, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-40'
+  - String:          ', threshold='
+  - Threshold:       '375'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          scale_down_example
+  - String:          ':'
+  - Line:            '8'
+  - String:          ':'
+  - Column:          '23'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: main.cc, Line: 23, Column: 9 }
+Function:        _Z18scale_down_examplev
+Args:
+  - String:          ''''
+  - Callee:          _Z10scale_downRSt6vectorIdSaIdEERKd
+    DebugLoc:        { File: main.cc, Line: 9, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _Z18scale_down_examplev
+    DebugLoc:        { File: main.cc, Line: 15, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '0'
+  - String:          ', threshold='
+  - Threshold:       '250'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          scale_down_example
+  - String:          ':'
+  - Line:            '8'
+  - String:          ':'
+  - Column:          '9'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: main.cc, Line: 24, Column: 16 }
+Function:        _Z18scale_down_examplev
+Args:
+  - String:          ''''
+  - Callee:          _ZNSt6vectorIdSaIdEEixEm
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 1127, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _Z18scale_down_examplev
+    DebugLoc:        { File: main.cc, Line: 15, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '-40'
+  - String:          ', threshold='
+  - Threshold:       '375'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          scale_down_example
+  - String:          ':'
+  - Line:            '9'
+  - String:          ':'
+  - Column:          '16'
+  - String:          ';'
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                   Line: 1016, Column: 4 }
+Function:        _Z18scale_down_examplev
+Args:
+  - String:          ''''
+  - Callee:          _ZNSt6vectorIdSaIdEE17_M_default_appendEm
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/vector.tcc', 
+                       Line: 636, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          _Z18scale_down_examplev
+    DebugLoc:        { File: main.cc, Line: 15, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '245'
+  - String:          ', threshold='
+  - Threshold:       '250'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          resize
+  - String:          ':'
+  - Line:            '3'
+  - String:          ':'
+  - Column:          '4'
+  - String:          ' @ '
+  - String:          scale_down_example
+  - String:          ':'
+  - Line:            '1'
+  - String:          ':'
+  - Column:          '30'
+  - String:          ';'
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+DebugLoc:        { File: main.cc, Line: 11, Column: 17 }
+Function:        _Z18scale_down_examplev
+Args:
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+DebugLoc:        { File: main.cc, Line: 11, Column: 17 }
+Function:        _Z18scale_down_examplev
+Args:
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Passed
+Pass:            TTI
+Name:            DontUnroll
+DebugLoc:        { File: main.cc, Line: 17, Column: 5 }
+Function:        _Z18scale_down_examplev
+Args:
+  - String:          'advising against unrolling the loop because it contains a '
+  - Call:            call
+    DebugLoc:        { File: main.cc, Line: 18, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: main.cc, Line: 11, Column: 17 }
+Function:        _Z18scale_down_examplev
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     load
+    DebugLoc:        { File: main.cc, Line: 24, Column: 16 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: main.cc, Line: 11, Column: 14 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: main.cc, Line: 11, Column: 17 }
+Function:        _Z18scale_down_examplev
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     load
+    DebugLoc:        { File: main.cc, Line: 24, Column: 16 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: main.cc, Line: 18, Column: 14 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: main.cc, Line: 11, Column: 14 }
+Function:        _Z18scale_down_examplev
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: main.cc, Line: 11, Column: 14 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: main.cc, Line: 18, Column: 14 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: main.cc, Line: 24, Column: 16 }
+Function:        _Z18scale_down_examplev
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     load
+    DebugLoc:        { File: main.cc, Line: 11, Column: 17 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: main.cc, Line: 11, Column: 14 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: main.cc, Line: 11, Column: 17 }
+Function:        _Z18scale_down_examplev
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     load
+    DebugLoc:        { File: main.cc, Line: 24, Column: 16 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: main.cc, Line: 11, Column: 14 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: main.cc, Line: 11, Column: 17 }
+Function:        _Z18scale_down_examplev
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     load
+    DebugLoc:        { File: main.cc, Line: 24, Column: 16 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: main.cc, Line: 18, Column: 14 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: main.cc, Line: 11, Column: 14 }
+Function:        _Z18scale_down_examplev
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: main.cc, Line: 11, Column: 14 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: main.cc, Line: 18, Column: 14 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: main.cc, Line: 24, Column: 16 }
+Function:        _Z18scale_down_examplev
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     load
+    DebugLoc:        { File: main.cc, Line: 11, Column: 17 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: main.cc, Line: 11, Column: 14 }
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+DebugLoc:        { File: main.cc, Line: 11, Column: 17 }
+Function:        _Z18scale_down_examplev
+Args:
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Passed
+Pass:            inline
+Name:            Inlined
+DebugLoc:        { File: main.cc, Line: 31, Column: 17 }
+Function:        main
+Args:
+  - String:          ''''
+  - Callee:          _Z18scale_down_examplev
+    DebugLoc:        { File: main.cc, Line: 15, Column: 0 }
+  - String:          ''' inlined into '''
+  - Caller:          main
+    DebugLoc:        { File: main.cc, Line: 30, Column: 0 }
+  - String:          ''''
+  - String:          ' with '
+  - String:          '(cost='
+  - Cost:            '160'
+  - String:          ', threshold='
+  - Threshold:       '250'
+  - String:          ')'
+  - String:          ' at callsite '
+  - String:          main
+  - String:          ':'
+  - Line:            '1'
+  - String:          ':'
+  - Column:          '17'
+  - String:          ';'
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+DebugLoc:        { File: main.cc, Line: 11, Column: 17 }
+Function:        main
+Args:
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+DebugLoc:        { File: main.cc, Line: 11, Column: 17 }
+Function:        main
+Args:
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Passed
+Pass:            TTI
+Name:            DontUnroll
+DebugLoc:        { File: main.cc, Line: 17, Column: 5 }
+Function:        main
+Args:
+  - String:          'advising against unrolling the loop because it contains a '
+  - Call:            call
+    DebugLoc:        { File: main.cc, Line: 18, Column: 25 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: main.cc, Line: 11, Column: 17 }
+Function:        main
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     load
+    DebugLoc:        { File: main.cc, Line: 24, Column: 16 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: main.cc, Line: 18, Column: 14 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: main.cc, Line: 11, Column: 17 }
+Function:        main
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     load
+    DebugLoc:        { File: main.cc, Line: 24, Column: 16 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: main.cc, Line: 11, Column: 14 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: main.cc, Line: 11, Column: 14 }
+Function:        main
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: main.cc, Line: 11, Column: 14 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: main.cc, Line: 18, Column: 14 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: main.cc, Line: 24, Column: 16 }
+Function:        main
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     load
+    DebugLoc:        { File: main.cc, Line: 11, Column: 17 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: main.cc, Line: 11, Column: 14 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: main.cc, Line: 11, Column: 17 }
+Function:        main
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     load
+    DebugLoc:        { File: main.cc, Line: 24, Column: 16 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: main.cc, Line: 18, Column: 14 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: main.cc, Line: 11, Column: 17 }
+Function:        main
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     load
+    DebugLoc:        { File: main.cc, Line: 24, Column: 16 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: main.cc, Line: 11, Column: 14 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: main.cc, Line: 11, Column: 14 }
+Function:        main
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     store
+    DebugLoc:        { File: main.cc, Line: 11, Column: 14 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: main.cc, Line: 18, Column: 14 }
+...
+--- !Missed
+Pass:            gvn
+Name:            LoadClobbered
+DebugLoc:        { File: main.cc, Line: 24, Column: 16 }
+Function:        main
+Args:
+  - String:          'load of type '
+  - Type:            double
+  - String:          ' not eliminated'
+  - String:          ' in favor of '
+  - OtherAccess:     load
+    DebugLoc:        { File: main.cc, Line: 11, Column: 17 }
+  - String:          ' because it is clobbered by '
+  - ClobberedBy:     store
+    DebugLoc:        { File: main.cc, Line: 11, Column: 14 }
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+DebugLoc:        { File: main.cc, Line: 11, Column: 17 }
+Function:        main
+Args:
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            InterleavingNotBeneficial
+DebugLoc:        { File: main.cc, Line: 10, Column: 5 }
+Function:        _Z10scale_downRSt6vectorIdSaIdEERKd
+Args:
+  - String:          the cost-model indicates that interleaving is not beneficial
+...
+--- !Passed
+Pass:            loop-vectorize
+Name:            Vectorized
+DebugLoc:        { File: main.cc, Line: 10, Column: 5 }
+Function:        _Z10scale_downRSt6vectorIdSaIdEERKd
+Args:
+  - String:          'vectorized '
+  - String:          ''
+  - String:          'loop (vectorization width: '
+  - VectorizationFactor: '2'
+  - String:          ', interleaved count: '
+  - InterleaveCount: '1'
+  - String:          ')'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotPossible
+DebugLoc:        { File: main.cc, Line: 11, Column: 14 }
+Function:        _Z10scale_downRSt6vectorIdSaIdEERKd
+Args:
+  - String:          'Cannot SLP vectorize list: vectorization was impossible'
+  - String:          ' with available vectorization factors'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotBeneficial
+DebugLoc:        { File: main.cc, Line: 10, Column: 5 }
+Function:        _Z10scale_downRSt6vectorIdSaIdEERKd
+Args:
+  - String:          'List vectorization was possible but not beneficial with cost '
+  - Cost:            '0'
+  - String:          ' >= '
+  - Treshold:        '0'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotBeneficial
+DebugLoc:        { File: main.cc, Line: 10, Column: 5 }
+Function:        _Z10scale_downRSt6vectorIdSaIdEERKd
+Args:
+  - String:          'List vectorization was possible but not beneficial with cost '
+  - Cost:            '0'
+  - String:          ' >= '
+  - Treshold:        '0'
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotBeneficial
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_iterator.h', 
+                   Line: 1077, Column: 20 }
+Function:        _Z10scale_downRSt6vectorIdSaIdEERKd
+Args:
+  - String:          'List vectorization was possible but not beneficial with cost '
+  - Cost:            '0'
+  - String:          ' >= '
+  - Treshold:        '0'
+...
+--- !Passed
+Pass:            licm
+Name:            Hoisted
+DebugLoc:        { File: main.cc, Line: 11, Column: 17 }
+Function:        _Z10scale_downRSt6vectorIdSaIdEERKd
+Args:
+  - String:          'hoisting '
+  - Inst:            load
+    DebugLoc:        { File: main.cc, Line: 11, Column: 17 }
+...
+--- !Passed
+Pass:            licm
+Name:            Hoisted
+DebugLoc:        { File: main.cc, Line: 11, Column: 14 }
+Function:        _Z10scale_downRSt6vectorIdSaIdEERKd
+Args:
+  - String:          'hoisting '
+  - Inst:            insertelement
+    DebugLoc:        { File: main.cc, Line: 11, Column: 14 }
+...
+--- !Passed
+Pass:            licm
+Name:            Hoisted
+DebugLoc:        { File: main.cc, Line: 11, Column: 14 }
+Function:        _Z10scale_downRSt6vectorIdSaIdEERKd
+Args:
+  - String:          'hoisting '
+  - Inst:            shufflevector
+    DebugLoc:        { File: main.cc, Line: 11, Column: 14 }
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+DebugLoc:        { File: main.cc, Line: 11, Column: 17 }
+Function:        _Z10scale_downRSt6vectorIdSaIdEERKd
+Args:
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            CantVectorizeLibcall
+DebugLoc:        { File: main.cc, Line: 18, Column: 25 }
+Function:        _Z18scale_down_examplev
+Args:
+  - String:          'loop not vectorized: '
+  - String:          call instruction cannot be vectorized
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            CantVectorizeInstruction
+DebugLoc:        { File: main.cc, Line: 17, Column: 5 }
+Function:        _Z18scale_down_examplev
+Args:
+  - String:          'loop not vectorized: '
+  - String:          instruction cannot be vectorized
+...
+--- !Missed
+Pass:            loop-vectorize
+Name:            MissedDetails
+DebugLoc:        { File: main.cc, Line: 17, Column: 5 }
+Function:        _Z18scale_down_examplev
+Args:
+  - String:          loop not vectorized
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            UnsafeDep
+DebugLoc:        { File: main.cc, Line: 11, Column: 14 }
+Function:        _Z18scale_down_examplev
+Args:
+  - String:          'loop not vectorized: '
+  - String:          'unsafe dependent memory operations in loop. Use #pragma clang loop distribute(enable) to allow loop distribution to attempt to isolate the offending operations into a separate loop'
+  - String:          "\nUnknown data dependence."
+  - String:          ' Memory location is the same as accessed at '
+  - Location:        '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h:1129:34'
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 1129, Column: 34 }
+...
+--- !Missed
+Pass:            loop-vectorize
+Name:            MissedDetails
+DebugLoc:        { File: main.cc, Line: 10, Column: 5 }
+Function:        _Z18scale_down_examplev
+Args:
+  - String:          loop not vectorized
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotPossible
+DebugLoc:        { File: main.cc, Line: 11, Column: 14 }
+Function:        _Z18scale_down_examplev
+Args:
+  - String:          'Cannot SLP vectorize list: vectorization was impossible'
+  - String:          ' with available vectorization factors'
+...
+--- !Passed
+Pass:            TTI
+Name:            DontUnroll
+DebugLoc:        { File: main.cc, Line: 17, Column: 5 }
+Function:        _Z18scale_down_examplev
+Args:
+  - String:          'advising against unrolling the loop because it contains a '
+  - Call:            call
+    DebugLoc:        { File: main.cc, Line: 18, Column: 25 }
+...
+--- !Passed
+Pass:            loop-unroll
+Name:            PartialUnrolled
+DebugLoc:        { File: main.cc, Line: 10, Column: 5 }
+Function:        _Z18scale_down_examplev
+Args:
+  - String:          'unrolled loop by a factor of '
+  - UnrollCount:     '5'
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+DebugLoc:        { File: main.cc, Line: 11, Column: 17 }
+Function:        _Z18scale_down_examplev
+Args:
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+DebugLoc:        { File: main.cc, Line: 11, Column: 17 }
+Function:        _Z18scale_down_examplev
+Args:
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+DebugLoc:        { File: main.cc, Line: 11, Column: 17 }
+Function:        _Z18scale_down_examplev
+Args:
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+DebugLoc:        { File: main.cc, Line: 11, Column: 17 }
+Function:        _Z18scale_down_examplev
+Args:
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+DebugLoc:        { File: main.cc, Line: 11, Column: 17 }
+Function:        _Z18scale_down_examplev
+Args:
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            CantVectorizeLibcall
+DebugLoc:        { File: main.cc, Line: 18, Column: 25 }
+Function:        main
+Args:
+  - String:          'loop not vectorized: '
+  - String:          call instruction cannot be vectorized
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            CantVectorizeInstruction
+DebugLoc:        { File: main.cc, Line: 17, Column: 5 }
+Function:        main
+Args:
+  - String:          'loop not vectorized: '
+  - String:          instruction cannot be vectorized
+...
+--- !Missed
+Pass:            loop-vectorize
+Name:            MissedDetails
+DebugLoc:        { File: main.cc, Line: 17, Column: 5 }
+Function:        main
+Args:
+  - String:          loop not vectorized
+...
+--- !Analysis
+Pass:            loop-vectorize
+Name:            UnsafeDep
+DebugLoc:        { File: main.cc, Line: 11, Column: 14 }
+Function:        main
+Args:
+  - String:          'loop not vectorized: '
+  - String:          'unsafe dependent memory operations in loop. Use #pragma clang loop distribute(enable) to allow loop distribution to attempt to isolate the offending operations into a separate loop'
+  - String:          "\nUnknown data dependence."
+  - String:          ' Memory location is the same as accessed at '
+  - Location:        '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h:1129:34'
+    DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_vector.h', 
+                       Line: 1129, Column: 34 }
+...
+--- !Missed
+Pass:            loop-vectorize
+Name:            MissedDetails
+DebugLoc:        { File: main.cc, Line: 10, Column: 5 }
+Function:        main
+Args:
+  - String:          loop not vectorized
+...
+--- !Missed
+Pass:            slp-vectorizer
+Name:            NotPossible
+DebugLoc:        { File: main.cc, Line: 11, Column: 14 }
+Function:        main
+Args:
+  - String:          'Cannot SLP vectorize list: vectorization was impossible'
+  - String:          ' with available vectorization factors'
+...
+--- !Passed
+Pass:            TTI
+Name:            DontUnroll
+DebugLoc:        { File: main.cc, Line: 17, Column: 5 }
+Function:        main
+Args:
+  - String:          'advising against unrolling the loop because it contains a '
+  - Call:            call
+    DebugLoc:        { File: main.cc, Line: 18, Column: 25 }
+...
+--- !Passed
+Pass:            loop-unroll
+Name:            PartialUnrolled
+DebugLoc:        { File: main.cc, Line: 10, Column: 5 }
+Function:        main
+Args:
+  - String:          'unrolled loop by a factor of '
+  - UnrollCount:     '5'
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+DebugLoc:        { File: main.cc, Line: 11, Column: 17 }
+Function:        main
+Args:
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+DebugLoc:        { File: main.cc, Line: 11, Column: 17 }
+Function:        main
+Args:
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+DebugLoc:        { File: main.cc, Line: 11, Column: 17 }
+Function:        main
+Args:
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+DebugLoc:        { File: main.cc, Line: 11, Column: 17 }
+Function:        main
+Args:
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Missed
+Pass:            licm
+Name:            LoadWithLoopInvariantAddressInvalidated
+DebugLoc:        { File: main.cc, Line: 11, Column: 17 }
+Function:        main
+Args:
+  - String:          failed to move load with loop-invariant address because the loop may invalidate its value
+...
+--- !Missed
+Pass:            regalloc
+Name:            SpillReloadCopies
+DebugLoc:        { File: main.cc, Line: 8, Column: 1 }
+Function:        _Z10scale_downRSt6vectorIdSaIdEERKd
+Args:
+  - NumVRCopies:     '5'
+  - String:          ' virtual registers copies '
+  - TotalCopiesCost: '1.484375e+00'
+  - String:          ' total copies cost '
+  - String:          generated in function
+...
+--- !Analysis
+Pass:            prologepilog
+Name:            StackSize
+DebugLoc:        { File: main.cc, Line: 9, Column: 0 }
+Function:        _Z10scale_downRSt6vectorIdSaIdEERKd
+Args:
+  - NumStackBytes:   '0'
+  - String:          ' stack bytes in function '''
+  - Function:        _Z10scale_downRSt6vectorIdSaIdEERKd
+  - String:          ''''
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/stl_iterator.h', 
+                   Line: 1077, Column: 20 }
+Function:        _Z10scale_downRSt6vectorIdSaIdEERKd
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '4'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: main.cc, Line: 10, Column: 5 }
+Function:        _Z10scale_downRSt6vectorIdSaIdEERKd
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '5'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        _Z10scale_downRSt6vectorIdSaIdEERKd
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '2'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: main.cc, Line: 10, Column: 5 }
+Function:        _Z10scale_downRSt6vectorIdSaIdEERKd
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '3'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: main.cc, Line: 10, Column: 5 }
+Function:        _Z10scale_downRSt6vectorIdSaIdEERKd
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '6'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        _Z10scale_downRSt6vectorIdSaIdEERKd
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '2'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: main.cc, Line: 10, Column: 5 }
+Function:        _Z10scale_downRSt6vectorIdSaIdEERKd
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '8'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: main.cc, Line: 11, Column: 14 }
+Function:        _Z10scale_downRSt6vectorIdSaIdEERKd
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '6'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: main.cc, Line: 10, Column: 21 }
+Function:        _Z10scale_downRSt6vectorIdSaIdEERKd
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '2'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: main.cc, Line: 11, Column: 14 }
+Function:        _Z10scale_downRSt6vectorIdSaIdEERKd
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '6'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: main.cc, Line: 13, Column: 1 }
+Function:        _Z10scale_downRSt6vectorIdSaIdEERKd
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '8'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionCount
+DebugLoc:        { File: main.cc, Line: 9, Column: 0 }
+Function:        _Z10scale_downRSt6vectorIdSaIdEERKd
+Args:
+  - NumInstructions: '52'
+  - String:          ' instructions in function'
+...
+--- !Missed
+Pass:            regalloc
+Name:            LoopSpillReloadCopies
+DebugLoc:        { File: main.cc, Line: 22, Column: 5 }
+Function:        _Z18scale_down_examplev
+Args:
+  - NumVRCopies:     '1'
+  - String:          ' virtual registers copies '
+  - TotalCopiesCost: '3.200000e+01'
+  - String:          ' total copies cost '
+  - String:          generated in loop
+...
+--- !Missed
+Pass:            regalloc
+Name:            SpillReloadCopies
+DebugLoc:        { File: main.cc, Line: 15, Column: 1 }
+Function:        _Z18scale_down_examplev
+Args:
+  - NumSpills:       '1'
+  - String:          ' spills '
+  - TotalSpillsCost: '1.000000e+00'
+  - String:          ' total spills cost '
+  - NumReloads:      '1'
+  - String:          ' reloads '
+  - TotalReloadsCost: '1.000000e+00'
+  - String:          ' total reloads cost '
+  - NumVRCopies:     '5'
+  - String:          ' virtual registers copies '
+  - TotalCopiesCost: '3.600000e+01'
+  - String:          ' total copies cost '
+  - String:          generated in function
+...
+--- !Analysis
+Pass:            prologepilog
+Name:            StackSize
+DebugLoc:        { File: main.cc, Line: 15, Column: 0 }
+Function:        _Z18scale_down_examplev
+Args:
+  - NumStackBytes:   '40'
+  - String:          ' stack bytes in function '''
+  - Function:        _Z18scale_down_examplev
+  - String:          ''''
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/new_allocator.h', 
+                   Line: 151, Column: 27 }
+Function:        _Z18scale_down_examplev
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '13'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: main.cc, Line: 18, Column: 25 }
+Function:        _Z18scale_down_examplev
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '8'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/vector.tcc', 
+                   Line: 706, Column: 55 }
+Function:        _Z18scale_down_examplev
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '3'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        _Z18scale_down_examplev
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '1'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: main.cc, Line: 11, Column: 14 }
+Function:        _Z18scale_down_examplev
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '18'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: main.cc, Line: 24, Column: 13 }
+Function:        _Z18scale_down_examplev
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '4'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/new_allocator.h', 
+                   Line: 172, Column: 2 }
+Function:        _Z18scale_down_examplev
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '14'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionCount
+DebugLoc:        { File: main.cc, Line: 15, Column: 0 }
+Function:        _Z18scale_down_examplev
+Args:
+  - NumInstructions: '61'
+  - String:          ' instructions in function'
+...
+--- !Missed
+Pass:            regalloc
+Name:            LoopSpillReloadCopies
+DebugLoc:        { File: main.cc, Line: 22, Column: 5 }
+Function:        main
+Args:
+  - NumVRCopies:     '1'
+  - String:          ' virtual registers copies '
+  - TotalCopiesCost: '3.200000e+01'
+  - String:          ' total copies cost '
+  - String:          generated in loop
+...
+--- !Missed
+Pass:            regalloc
+Name:            SpillReloadCopies
+DebugLoc:        { File: main.cc, Line: 30, Column: 1 }
+Function:        main
+Args:
+  - NumSpills:       '1'
+  - String:          ' spills '
+  - TotalSpillsCost: '1.000000e+00'
+  - String:          ' total spills cost '
+  - NumFoldedReloads: '1'
+  - String:          ' folded reloads '
+  - TotalFoldedReloadsCost: '1.000000e+00'
+  - String:          ' total folded reloads cost '
+  - NumVRCopies:     '5'
+  - String:          ' virtual registers copies '
+  - TotalCopiesCost: '3.600000e+01'
+  - String:          ' total copies cost '
+  - String:          generated in function
+...
+--- !Analysis
+Pass:            prologepilog
+Name:            StackSize
+DebugLoc:        { File: main.cc, Line: 30, Column: 0 }
+Function:        main
+Args:
+  - NumStackBytes:   '40'
+  - String:          ' stack bytes in function '''
+  - Function:        main
+  - String:          ''''
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/new_allocator.h', 
+                   Line: 151, Column: 27 }
+Function:        main
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '13'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: main.cc, Line: 18, Column: 25 }
+Function:        main
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '8'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/vector.tcc', 
+                   Line: 706, Column: 55 }
+Function:        main
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '3'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+Function:        main
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '1'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: main.cc, Line: 11, Column: 14 }
+Function:        main
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '18'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: main.cc, Line: 24, Column: 13 }
+Function:        main
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '4'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionMix
+DebugLoc:        { File: '/nix/store/yg4ahy7gahx91nq80achmzilrjyv0scj-gcc-13.3.0/include/c++/13.3.0/bits/new_allocator.h', 
+                   Line: 172, Column: 2 }
+Function:        main
+Args:
+  - String:          'BasicBlock: '
+  - BasicBlock:      ''
+  - String:          "\n"
+  - String:          ''
+  - String:          ': '
+  - INST_:           '9'
+  - String:          "\n"
+...
+--- !Analysis
+Pass:            asm-printer
+Name:            InstructionCount
+DebugLoc:        { File: main.cc, Line: 30, Column: 0 }
+Function:        main
+Args:
+  - NumInstructions: '56'
+  - String:          ' instructions in function'
+...

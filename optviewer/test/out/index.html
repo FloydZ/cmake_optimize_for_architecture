@@ -1,0 +1,51 @@
+
+<html>
+<meta charset="utf-8" />
+<head>
+<link rel="icon" type="image/png" href="assets/favicon.ico"/>
+<link rel='stylesheet' type='text/css' href='assets/style.css'>
+<link rel='stylesheet' type='text/css' href='assets/jquery.dataTables.min.css'>
+<script src="assets/jquery-3.5.1.js"></script>
+<script src="assets/jquery.dataTables.min.js"></script>
+<script src="assets/colResizable-1.6.min.js"></script>
+<title>OptView2 Index</title>
+</head>
+<body>
+<h3>5 issue types:</h3>
+<ul id='entries_summary'>
+<li>MissedDetails: 2
+<li>NotBeneficial: 1
+<li>LoadClobbered: 3
+<li>LoadWithLoopInvariantAddressInvalidated: 1
+<li>NoDefinition: 1
+</ul>
+<div class="centered">
+<table id="opt_table" class="" width="100%"></table>
+</div>
+<script type="text/javascript">
+var dataSet = [{"description": "MissedDetails", "loc": "<a href=\"main.cc.html#L10\">main.cc:10:5</a>", "message": "loop not vectorized", "functionName": "scale_down_example", "relativeHotness": "", "color": "red"}, {"description": "NotBeneficial", "loc": "<a href=\"main.cc.html#L10\">main.cc:10:5</a>", "message": "List vectorization was possible but not beneficial with cost 0 >= 0", "functionName": "scale_down", "relativeHotness": "", "color": "red"}, {"description": "LoadClobbered", "loc": "<a href=\"main.cc.html#L11\">main.cc:11:14</a>", "message": "load of type double not eliminated in favor of <a href=\"main.cc.html#L11\">store</a> because it is clobbered by <a href=\"main.cc.html#L18\">store</a>", "functionName": "scale_down_example", "relativeHotness": "", "color": "red"}, {"description": "LoadClobbered", "loc": "<a href=\"main.cc.html#L11\">main.cc:11:17</a>", "message": "load of type double not eliminated because it is clobbered by <a href=\"main.cc.html#L11\">store</a>", "functionName": "scale_down", "relativeHotness": "", "color": "red"}, {"description": "LoadWithLoopInvariantAddressInvalidated", "loc": "<a href=\"main.cc.html#L11\">main.cc:11:17</a>", "message": "failed to move load with loop-invariant address because the loop may invalidate its value", "functionName": "scale_down", "relativeHotness": "", "color": "red"}, {"description": "MissedDetails", "loc": "<a href=\"main.cc.html#L17\">main.cc:17:5</a>", "message": "loop not vectorized", "functionName": "scale_down_example", "relativeHotness": "", "color": "red"}, {"description": "NoDefinition", "loc": "<a href=\"main.cc.html#L18\">main.cc:18:25</a>", "message": "rand will not be inlined into scale_down_example because its definition is unavailable", "functionName": "scale_down_example", "relativeHotness": "", "color": "red"}, {"description": "LoadClobbered", "loc": "<a href=\"main.cc.html#L24\">main.cc:24:16</a>", "message": "load of type double not eliminated in favor of <a href=\"main.cc.html#L11\">load</a> because it is clobbered by <a href=\"main.cc.html#L11\">store</a>", "functionName": "scale_down_example", "relativeHotness": "", "color": "red"}];
+$(document).ready(function() {
+    $('#opt_table').DataTable( {
+        data: dataSet,
+        "lengthMenu": [[100, 500, -1], [100, 500, "All"]],
+        columns: [
+            { title: "Location", data: "loc" },
+            { title: "Description", data: "description" },
+            { title: "Function", data: "functionName" },
+            { title: "Message", data: "message" },
+            { title: "Hotness", data: "relativeHotness" },
+        ],
+        columnDefs: [
+            {
+                "targets": [1],
+                "createdCell": function (td, data, rowData, row, col) {
+                    $(td).addClass("column-entry-" + rowData['color']);
+                },
+            }
+        ]
+    } );
+    $("#opt_table").colResizable()
+} );
+</script>
+</body>
+</html>
