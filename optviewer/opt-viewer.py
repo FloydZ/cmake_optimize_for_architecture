@@ -24,7 +24,6 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(mess
 
 desc = '''Generate HTML output to visualize optimization records from the YAML files
 generated with -fsave-optimization-record and -fdiagnostics-show-hotness.
-
 The tools requires PyYAML and Pygments Python packages.'''
 
 
@@ -37,7 +36,16 @@ class Context:
 context = Context()
 
 
-def render_file_source(source_dir, output_dir, filename, line_remarks):
+def render_file_source(source_dir: str,
+                       output_dir: str, 
+                       filename:str,
+                       line_remarks):
+    """
+    :param source_dir:
+    :param output_dir:
+    :param filename:
+    :param line_remarks:
+    """
     html_filename = os.path.join(output_dir, optrecord.html_file_name(filename))
     filename = filename if os.path.exists(filename) else os.path.join(source_dir, filename)
 
@@ -45,6 +53,10 @@ def render_file_source(source_dir, output_dir, filename, line_remarks):
     cpp_lexer = CppLexer(stripnl=False)
 
     def render_source_lines(stream, line_remarks):
+        """
+        :param stream:
+        :param line_remarks:
+        """
         file_text = stream.read()
 
         html_highlighted = highlight(
@@ -100,6 +112,10 @@ def render_file_source(source_dir, output_dir, filename, line_remarks):
 
 
     def render_inline_remark(remark, line):
+        """
+        :param remark:
+        :param line:
+        """
         inlining_context = remark.DemangledFunctionName
         dl = context.caller_loc.get(remark.Function)
         if dl:
@@ -225,7 +241,12 @@ $(document).ready(function() {{
 </html>
 ''')
 
+
 def render_index(output_dir, all_remarks):
+    """
+    :param output_dir: 
+    :param all_remarks: 
+    """
     def render_entry(remark):
         return dict(description=remark.Name,
                     loc=f"<a href={remark.Link}>{remark.DebugLocString}</a>",
@@ -299,6 +320,9 @@ def _render_file(source_dir, output_dir, ctx, entry):
 
 
 def map_remarks(all_remarks):
+    """
+    :param all_remarks:
+    """
     # Set up a map between function names and their source location for
     # function where inlining happened
     for remark in optrecord.itervalues(all_remarks):
@@ -408,7 +432,7 @@ def main():
     parser.add_argument(
         '--exclude-text',
         default='',
-        help='Omit optimization remarks with names matched by this regex')
+        help='Omit optimization remarks with texts matched by this regex')
 
     parser.add_argument(
         '--collect-opt-success',

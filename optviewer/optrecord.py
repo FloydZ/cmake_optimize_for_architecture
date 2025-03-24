@@ -31,26 +31,27 @@ except:
     pass
 
 import re
-
 import optpmap
 
-try:
-    dict.iteritems
-except AttributeError:
-    # Python 3
-    def itervalues(d):
-        return iter(d.values())
-    def iteritems(d):
-        return iter(d.items())
-else:
-    # Python 2
-    def itervalues(d):
-        return d.itervalues()
-    def iteritems(d):
-        return d.iteritems()
+
+def itervalues(d):
+    """
+    :param d:
+    """
+    return iter(d.values())
 
 
-def html_file_name(filename):
+def iteritems(d):
+    """
+    :param d:
+    """
+    return iter(d.items())
+
+
+def html_file_name(filename: str):
+    """
+    :param filename: str
+    """
     replace_targets = ['/', '#', ':', '\\']
     new_name = filename
     for target in replace_targets:
@@ -58,14 +59,22 @@ def html_file_name(filename):
     return new_name + ".html"
 
 
-def make_link(File, Line):
-    return "\"{}#L{}\"".format(html_file_name(File), Line)
+def make_link(file: str, line: str):
+    """
+    :param file:
+    :param line:
+    """
+    return "\"{}#L{}\"".format(html_file_name(file), line)
+
 
 class EmptyLock(object):
+    """
+    """
     def __enter__(self):
         return True
     def __exit__(self, *args):
         pass
+
 
 class Remark(yaml.YAMLObject):
     # Work-around for http://pyyaml.org/ticket/154.
@@ -74,16 +83,18 @@ class Remark(yaml.YAMLObject):
     default_demangler = 'c++filt -n -p'
     demangler_proc = None
 
-#    @classmethod
-#    def find_demangler(cls):
-
-
     @classmethod
     def open_demangler_proc(cls, demangler):
+        """
+        :param demangler:
+        """
         cls.demangler_proc = subprocess.Popen(demangler.split(), stdin=subprocess.PIPE, stdout=subprocess.PIPE)
 
     @classmethod
     def set_demangler(cls, demangler):
+        """
+        :param demangler:
+        """
         cls.open_demangler_proc(demangler)
         if (platform.system() == 'Windows'):
             cls.demangler_lock = EmptyLock(); # on windows we spawn demangler for each process, no Lock is needed
@@ -93,6 +104,9 @@ class Remark(yaml.YAMLObject):
 
     @classmethod
     def demangle(cls, name):
+        """
+        :param name:
+        """
         if not cls.demangler_proc:
             cls.set_demangler(cls.default_demangler)
         with cls.demangler_lock:
@@ -263,6 +277,8 @@ class Remark(yaml.YAMLObject):
 
 
 class Analysis(Remark):
+    """
+    """
     yaml_tag = '!Analysis'
 
     @property
@@ -271,14 +287,20 @@ class Analysis(Remark):
 
 
 class AnalysisFPCommute(Analysis):
+    """
+    """
     yaml_tag = '!AnalysisFPCommute'
 
 
 class AnalysisAliasing(Analysis):
+    """
+    """
     yaml_tag = '!AnalysisAliasing'
 
 
 class Passed(Remark):
+    """
+    """
     yaml_tag = '!Passed'
 
     @property
@@ -287,20 +309,36 @@ class Passed(Remark):
 
 
 class Missed(Remark):
+    """
+    """
     yaml_tag = '!Missed'
 
     @property
     def color(self):
         return "red"
 
+
 class Failure(Missed):
+    """
+    """
     yaml_tag = '!Failure'
 
-def get_remarks(input_file, exclude_names=None, exclude_text = None, collect_opt_success=False, annotate_external=False):
+
+def get_remarks(input_file, 
+                exclude_names=None,
+                exclude_text = None,
+                collect_opt_success=False,
+                annotate_external=False):
+    """
+    :param input_file:
+    :param exclude_names:
+    :param exclude_text:
+    :param collect_opt_success:
+    :param annotate_external:
+    """
     max_hotness = 0
     all_remarks = dict()
     file_remarks = defaultdict(functools.partial(defaultdict, list))
-    #logging.debug(f"Parsing {input_file}")
 
     #TODO: filter unique name+file+line loc *here*
     with io.open(input_file, encoding = 'utf-8') as f:
@@ -345,11 +383,25 @@ def get_remarks(input_file, exclude_names=None, exclude_text = None, collect_opt
     return max_hotness, all_remarks, file_remarks
 
 
-def gather_results(filenames, num_jobs, annotate_external=False, exclude_names=None, exclude_text=None, collect_opt_success=False):
+def gather_results(filenames,
+                   num_jobs, 
+                   annotate_external=False, 
+                   exclude_names=None,
+                   exclude_text=None,
+                   collect_opt_success=False):
+    """
+    :param filenames:
+    :param num_jobs:
+    :param exclude_names:
+    :param exclude_text:
+    :param collect_opt_success:
+
+    :return all_remarks, file_remarks, should_display_hotness
+    """
     logging.info('Reading YAML files...')
 
-    remarks = optpmap.pmap(
-                get_remarks, filenames, num_jobs, exclude_names, exclude_text, collect_opt_success, annotate_external)
+    remarks = optpmap.pmap(get_remarks, filenames, num_jobs, exclude_names, \
+                           exclude_text, collect_opt_success, annotate_external)
 
     max_hotness = max(entry[0] for entry in remarks)
 
@@ -373,6 +425,9 @@ def gather_results(filenames, num_jobs, annotate_external=False, exclude_names=N
 
 
 def find_opt_files(*dirs_or_files):
+    """
+    :param dirs_or_files:
+    """
     all = []
     for dir_or_file in dirs_or_files:
         if os.path.isfile(dir_or_file):

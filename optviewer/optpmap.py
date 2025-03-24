@@ -7,13 +7,25 @@ _total = None
 
 
 def _init(current, total):
+    """
+    :param current:
+    :param total:
+    """
     global _current
     global _total
+    assert current
+    assert total
     _current = current
     _total = total
 
 
 def _wrapped_func(func_and_args):
+    """
+    :param func_and_args:
+    """
+    assert _current
+    assert _total
+
     func = func_and_args[0]
     args = func_and_args[1:]
 
@@ -32,6 +44,12 @@ def pmap(func, iterable, processes, *args, **kwargs):
     Applies `func` to every item of `iterable` and return a list of the
     results. If `processes` is greater than one, a process pool is used to run
     the functions in parallel.
+    
+    :param func:
+    :param iterable:
+    :param process:
+    :param args:
+    :param kwargs:
     """
     global _current
     global _total
