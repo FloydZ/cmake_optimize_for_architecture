@@ -504,11 +504,12 @@ def main():
                         should_display_hotness=should_display_hotness,
                         num_jobs=args.jobs,
                         open_browser=args.open_browser)
-    else: # not split_top_foders
+    else: 
+        # not split_top_foders
         files = optrecord.find_opt_files(os.path.join(*args.yaml_dirs_or_files))
-        if not files:
+        if len(files) == 0:
             parser.error("No *.opt.yaml files found")
-            sys.exit(1)
+            return 1
 
         all_remarks, file_remarks, should_display_hotness = \
             optrecord.gather_results(filenames=files, num_jobs=args.jobs,
@@ -517,6 +518,9 @@ def main():
                                      collect_opt_success=args.collect_opt_success,
                                      annotate_external=args.annotate_external)
 
+        print(all_remarks)
+        print("==========================================================")
+        print(file_remarks)
         map_remarks(all_remarks)
 
         generate_report(all_remarks=all_remarks,
