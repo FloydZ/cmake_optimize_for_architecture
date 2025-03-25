@@ -312,7 +312,14 @@ $(document).ready(function() {{
 ''')
     return index_path
 
+
 def _render_file(source_dir, output_dir, ctx, entry):
+    """
+    :param source_dir:
+    :param output_dir:
+    :param ctx:
+    :param entry:
+    """
     global context
     context = ctx
     filename, remarks = entry
@@ -336,6 +343,28 @@ def map_remarks(all_remarks):
                     except KeyError:
                         pass
 
+
+def read_file_line(file_path: str,
+                   line_number: int) -> str:
+    """
+    :param file_path: str containing file path
+    :param line_number: line which is going to be returned
+    :return the line at pos `line_number`
+
+    throws an exception if line number does not exists.
+    """
+    with open(file_path) as f:
+        lines = f.readline(line_number)
+        if len(lines) != line_number:
+            raise Exception("file line does not except")
+        return lines[-1]
+
+
+def generate_cli_report(all_remarks,
+                        file_remarks):
+    for remark in file_remarks:
+        print(remark)
+    return
 
 def generate_report(all_remarks,
                     file_remarks,
@@ -386,12 +415,14 @@ def generate_report(all_remarks,
     if open_browser:
         try:
             import webbrowser
-            if webbrowser.get("wslview %s") == None:
+            if webbrowser.get("wslview %s") is None:
                 webbrowser.open(url_path)
             else:
                 webbrowser.get("wslview %s").open(url_path)
         except Exception:
             pass
+    return
+
 
 def main():
     parser = argparse.ArgumentParser(description=desc)
@@ -511,13 +542,54 @@ def main():
             parser.error("No *.opt.yaml files found")
             return 1
 
+        # should_display_hotness is either true/false
         all_remarks, file_remarks, should_display_hotness = \
             optrecord.gather_results(filenames=files, num_jobs=args.jobs,
                                      exclude_names=args.exclude_names,
                                      exclude_text=args.exclude_text,
                                      collect_opt_success=args.collect_opt_success,
                                      annotate_external=args.annotate_external)
+        # all_remarks = [{
+        #   "Args": {},
+        #   "Column" 17,
+        #   "DebugLoc": {
+        #       "File": "main.cc".
+        #       "Line": 11.
+        #       "Columns": 17,
+        #   },
+        #   "DebugLocString": "main.cc:11:17",
+        #   "File": "main.cc",
+        #   "Function": "test",
+        #   "Hotness": 0,
+        #   "Line": 11,
+        #   "Name": "'LoadWithLoopInvariantAddressInvalidated'"
+        #   "Pass": "licm"
+        #   "PassWithDiffPrefix": "licm"
+        #   "RelativeHotness": ""
+        # }]
 
+        # file_remarks = {
+        #   "${file_name}: {
+        #       #{line_number}: [{
+        #           "Args": {},
+        #           "Column" 17,
+        #           "DebugLoc": {
+        #               "File": "main.cc".
+        #               "Line": 11.
+        #               "Columns": 17,
+        #           },
+        #           "DebugLocString": "main.cc:11:17",
+        #           "File": "main.cc",
+        #           "Function": "test",
+        #           "Hotness": 0,
+        #           "Line": 11,
+        #           "Name": "'LoadWithLoopInvariantAddressInvalidated'"
+        #           "Pass": "licm"
+        #           "PassWithDiffPrefix": "licm"
+        #           "RelativeHotness": ""
+        #       }, ...],
+        #   },
+        # }
         print(all_remarks)
         print("==========================================================")
         print(file_remarks)
@@ -534,6 +606,6 @@ def main():
     end_time = datetime.now()
     logging.info(f"Ran for {end_time-start_time}")
 
+
 if __name__ == '__main__':
     main()
-
