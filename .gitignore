@@ -1,5 +1,6 @@
 build/
 .cache/
+*.idea/
 *.o
 *a.out
 build/
