@@ -10,6 +10,9 @@ git submodule add https://github.com/FloydZ/cmake_optimize_for_architecture
 Afterwards add this to your `CMakeLists.txt`:
 ```cmake 
 include("path/to/submodule/cmake_optimize_for_architecture/Optimizations.cmake")
+...
+include("path/to/submodule/cmake_optimize_for_architecture/OptimizationsLate.cmake")
+
 ```
 
 If you do not want to add a submodule you can directly load it via:
@@ -20,6 +23,30 @@ FetchContent_Declare(
     GIT_TAG        master
 )
 FetchContent_MakeAvailable(cmake_optimize)
+```
+
+# Flags
+
+if this flag is set, the cache sizes will not added to the compile arguments
+```
+CMAKE_CACHE_DO_NOT_ADD_TO_FLAGS
+```
+
+it this flag is set, the host compiler optimizations/vectorization flags are
+not added to the compile arguments
+```
+CMAKE_HOST_DO_NOT_ADD_TO_FLAGS
+```
+
+if this flag is set, all generated optimizations flags/cache information and 
+more into `${CONFIG_FILE}`
+```
+WRITE_CONFIG_FILE
+```
+
+config file to write the configurations to
+```
+CONFIG_FILE
 ```
 
 ## Target Generations:

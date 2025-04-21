@@ -1,4 +1,3 @@
-
 # this policy disables the warning that be set specified values for a new
 # target.
 cmake_policy(PUSH)
@@ -9,6 +8,33 @@ endif()
 # TODO explain
 execute_process(COMMAND "${CMAKE_COMMAND}" "--help-property-list" "${CMAKE_BINARY_DIR}/help-property-list.txt")
 file(STRINGS "${CMAKE_BINARY_DIR}/help-property-list.txt" property_list)
+
+
+
+# Parameters:
+# - _result the list containing all found targets
+# - _dir root directory to start looking from
+function(get_all_targets_recursive _result _dir)
+    # message(STATUS ${_dir})
+    get_property(_subdirs DIRECTORY "${_dir}" PROPERTY SUBDIRECTORIES)
+    foreach(_subdir IN LISTS _subdirs)
+        get_all_targets_recursive(${_result} "${_subdir}")
+    endforeach()
+
+    get_directory_property(_sub_targets DIRECTORY "${_dir}" BUILDSYSTEM_TARGETS)
+    # message(STATUS ${_sub_targets})
+    set(${_result} ${${_result}} ${_sub_targets} PARENT_SCOPE)
+endfunction()
+
+# wrapper around `get_all_targets_recursive` with ${CMAKE_CURRENT_SOURCE_DIR}
+# as main path to search for buildsystem targets.
+function(get_all_targets var)
+    set(targets)
+    get_all_targets_recursive(targets ${CMAKE_CURRENT_SOURCE_DIR})
+    set(${var} ${targets} PARENT_SCOPE)
+endfunction()
+
+
 
 # TODO explain
 function(copy_target_props src_target dest_target)
@@ -43,24 +69,8 @@ function(copy_target_props src_target dest_target)
   endif()
 endfunction()
 
-# TODO explain
-macro(get_all_targets_recursive targets dir)
-    get_property(subdirectories DIRECTORY ${dir} PROPERTY SUBDIRECTORIES)
-    foreach(subdir ${subdirectories})
-        get_all_targets_recursive(${targets} ${subdir})
-    endforeach()
-
-    get_property(current_targets DIRECTORY ${dir} PROPERTY BUILDSYSTEM_TARGETS)
-    list(APPEND ${targets} ${current_targets})
-endmacro()
 
 # TODO explain
-function(get_all_targets var)
-    set(targets)
-    get_all_targets_recursive(targets ${CMAKE_CURRENT_SOURCE_DIR})
-    set(${var} ${targets} PARENT_SCOPE)
-endfunction()
-
 # generate 
 function(generate_new_target new_target old_target)
     get_target_property(prop_val "${old_target}" "BINARY_DIR")
@@ -70,7 +80,7 @@ function(generate_new_target new_target old_target)
     copy_target_props(${old_target} "${new_target}")
 endfunction()
 
-
+# TODO explain
 function(generate_new_record_target old_target YAML_OUTPUT_DIR)
     set(new_target "${old_target}_record")
     get_target_property(prop_val "${old_target}" "BINARY_DIR")
@@ -86,7 +96,6 @@ function(generate_new_record_target old_target YAML_OUTPUT_DIR)
 endfunction()
 
 get_all_targets(all_targets)
-
 foreach(target ${all_targets})
     # generate_new_target(${target}_loop_unrolling ${target})
     # target_compile_options(${target}_loop_unrolling PUBLIC "-funroll-all-loops -ftracer")

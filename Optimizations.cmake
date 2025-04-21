@@ -11,15 +11,25 @@ IF(NOT CMAKE_HOST_DO_NOT_ADD_TO_FLAGS)
 	SET(CMAKE_HOST_DO_NOT_ADD_TO_FLAGS OFF)
 ENDIF()
 
-SET(WRITE_CONFIG_FILE 0)
-SET(CONFIG_FILE "config.h")
+# if this flag is set, all generated optimizations flags/cache information and 
+# more into ${CONFIG_FILE}
+IF(NOT WRITE_CONFIG_FILE)
+    SET(WRITE_CONFIG_FILE OFF)
+ENDIF()
+
+# config file to write the configurations to
+IF(NOT CONFIG_FILE)
+    SET(CONFIG_FILE "config.h")
+ENDIF()
 
 # NOTE: the order is important
-include(${CMAKE_CURRENT_LIST_DIR}/Architecture.cmake)
-include(${CMAKE_CURRENT_LIST_DIR}/Cache.cmake)
-include(${CMAKE_CURRENT_LIST_DIR}/CompilerOptimizations.cmake)
-include(${CMAKE_CURRENT_LIST_DIR}/HostOptimizations.cmake)
-include(${CMAKE_CURRENT_LIST_DIR}/target_generation.cmake)
+# first import general information
+include(${CMAKE_CURRENT_LIST_DIR}/architecture.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/cache.cmake)
+
+# generate compiler informations and more
+include(${CMAKE_CURRENT_LIST_DIR}/compiler_optimizations.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/host_optimizations.cmake)
 
 # TODO currently under dev
 # include(${CMAKE_CURRENT_LIST_DIR}/autovectorize/AutoVectorize.cmake)

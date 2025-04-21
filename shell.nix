@@ -8,7 +8,10 @@ stdenv.mkDerivation {
   buildInputs = [ 
     cmake
 	gnumake 
-	clang
+    clang
+
+    # additional features
+    bloaty
   ] ++ (lib.optionals pkgs.stdenv.isLinux ([
   ]));
 }
