@@ -13,6 +13,8 @@ stdenv.mkDerivation {
     # additional features
     bloaty
     flamegraph
+    cudaPackages.cuda_nvcc
+    cudaPackages.cuda_cudart
   ] ++ (lib.optionals pkgs.stdenv.isLinux ([
     linuxKernel.packages.linux_6_6.perf
   ]));

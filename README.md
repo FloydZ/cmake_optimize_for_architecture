@@ -342,6 +342,26 @@ USE_SM4
 ```
 
 
+# Libraries
+Additonal its supported to search for the following libraries and features:
+```
+Cython
+FastFloat
+Fmt
+libAIO
+libDwarf
+libiberty
+libsodium
+liblz4
+snappy
+TCMalloc
+Zstd
+int128_t
+libatomic
+```
+
+
+
 Hack/Debug:
 ==========
 On `nixos` you can quickly debug the project by running:
