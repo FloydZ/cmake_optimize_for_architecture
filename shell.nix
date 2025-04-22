@@ -12,6 +12,8 @@ stdenv.mkDerivation {
 
     # additional features
     bloaty
+    flamegraph
   ] ++ (lib.optionals pkgs.stdenv.isLinux ([
+    linuxKernel.packages.linux_6_6.perf
   ]));
 }

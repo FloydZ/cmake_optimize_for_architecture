@@ -49,6 +49,16 @@ config file to write the configurations to
 CONFIG_FILE
 ```
 
+
+if this flag is set, for each target a new target `bloaty_${old_target}` is 
+generated, which upon running will apply bloaty to the original binary.
+additionally, if you do not want to add bloaty to each target you can call 
+`create_new_bloaty_target(${old_target})` to create a bloaty target for only a 
+single `${old_target}`.
+```
+CMAKE_BLOATY_ENABLE
+```
+
 ## Target Generations:
 
 Its possible to get a list of all created targets:

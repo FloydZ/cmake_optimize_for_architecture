@@ -97,10 +97,11 @@ endfunction()
 
 get_all_targets(all_targets)
 foreach(target ${all_targets})
+    #NOTE: this is just an example
     # generate_new_target(${target}_loop_unrolling ${target})
     # target_compile_options(${target}_loop_unrolling PUBLIC "-funroll-all-loops -ftracer")
     
-    generate_new_record_target(${target} "")
+    #generate_new_record_target(${target} "")
 endforeach()
 
 cmake_policy(POP)

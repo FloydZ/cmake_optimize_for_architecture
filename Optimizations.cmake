@@ -11,6 +11,12 @@ IF(NOT CMAKE_HOST_DO_NOT_ADD_TO_FLAGS)
 	SET(CMAKE_HOST_DO_NOT_ADD_TO_FLAGS OFF)
 ENDIF()
 
+# if this flag is set, for each target a new target "bloaty_${old_target}" is 
+# generated, which upon running will apply bloaty to the original binary
+IF(NOT CMAKE_BLOATY_ENABLE)
+    SET(CMAKE_BLOATY_ENABLE OFF)
+ENDIF()
+
 # if this flag is set, all generated optimizations flags/cache information and 
 # more into ${CONFIG_FILE}
 IF(NOT WRITE_CONFIG_FILE)
