@@ -80,28 +80,6 @@ function(generate_new_target new_target old_target)
     copy_target_props(${old_target} "${new_target}")
 endfunction()
 
-# TODO explain
-function(generate_new_record_target old_target YAML_OUTPUT_DIR)
-    set(new_target "${old_target}_record")
-    get_target_property(prop_val "${old_target}" "BINARY_DIR")
-    add_executable(${new_target})
-    set_target_properties(${new_target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${prop_val}")
-    if(YAML_OUTPUT_DIR STREQUAL "")
-        set(YAML_OUTPUT_DIR "${prop_val}/optimizations_remarks")
-    endif()
-
-    copy_target_props(${old_target} "${new_target}")
-
-    target_compile_options(${new_target} PUBLIC -fsave-optimization-record -foptimization-record-file=${YAML_OUTPUT_DIR}/${new_target}.opt.yaml)
-endfunction()
 
 get_all_targets(all_targets)
-foreach(target ${all_targets})
-    #NOTE: this is just an example
-    # generate_new_target(${target}_loop_unrolling ${target})
-    # target_compile_options(${target}_loop_unrolling PUBLIC "-funroll-all-loops -ftracer")
-    
-    #generate_new_record_target(${target} "")
-endforeach()
-
 cmake_policy(POP)
