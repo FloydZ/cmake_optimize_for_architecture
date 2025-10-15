@@ -10,6 +10,9 @@ git submodule add https://github.com/FloydZ/cmake_optimize_for_architecture
 Afterwards add this to your `CMakeLists.txt`:
 ```cmake 
 include("path/to/submodule/cmake_optimize_for_architecture/Optimizations.cmake")
+...
+include("path/to/submodule/cmake_optimize_for_architecture/OptimizationsLate.cmake")
+
 ```
 
 If you do not want to add a submodule you can directly load it via:
@@ -20,6 +23,40 @@ FetchContent_Declare(
     GIT_TAG        master
 )
 FetchContent_MakeAvailable(cmake_optimize)
+```
+
+# Flags
+
+if this flag is set, the cache sizes will not added to the compile arguments
+```
+CMAKE_CACHE_DO_NOT_ADD_TO_FLAGS
+```
+
+it this flag is set, the host compiler optimizations/vectorization flags are
+not added to the compile arguments
+```
+CMAKE_HOST_DO_NOT_ADD_TO_FLAGS
+```
+
+if this flag is set, all generated optimizations flags/cache information and 
+more into `${CONFIG_FILE}`
+```
+WRITE_CONFIG_FILE
+```
+
+config file to write the configurations to
+```
+CONFIG_FILE
+```
+
+
+if this flag is set, for each target a new target `bloaty_${old_target}` is 
+generated, which upon running will apply bloaty to the original binary.
+additionally, if you do not want to add bloaty to each target you can call 
+`create_new_bloaty_target(${old_target})` to create a bloaty target for only a 
+single `${old_target}`.
+```
+CMAKE_BLOATY_ENABLE
 ```
 
 ## Target Generations:
@@ -303,6 +340,26 @@ USE_SHA512
 USE_SM3
 USE_SM4
 ```
+
+
+# Libraries
+Additonal its supported to search for the following libraries and features:
+```
+Cython
+FastFloat
+Fmt
+libAIO
+libDwarf
+libiberty
+libsodium
+liblz4
+snappy
+TCMalloc
+Zstd
+int128_t
+libatomic
+```
+
 
 
 Hack/Debug:
