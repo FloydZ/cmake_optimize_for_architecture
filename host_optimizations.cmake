@@ -460,6 +460,8 @@ Other supported values are: \"none\", \"generic\", \"core\", \"merom\" (65nm Cor
       else()
          message(STATUS "SSE4.1: disabled (auto-detected from this computer's CPU flags)")
       endif()
+   elseif(TARGET_ARCHITECTURE STREQUAL "icelake-server")
+	  _zen4()
    elseif(TARGET_ARCHITECTURE STREQUAL "knl")
       _knightslanding()
    elseif(TARGET_ARCHITECTURE STREQUAL "alderlake")
