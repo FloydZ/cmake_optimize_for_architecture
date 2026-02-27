@@ -184,11 +184,13 @@ macro(AutodetectHostArchitectureX86)
          #    set(TARGET_ARCHITECTURE "diamond-rapids-server")
 		 #elseif(_cpu_model EQUAL XXX) # TODO not published
          #    set(TARGET_ARCHITECTURE "granite-rapids-server")
+	 	 elseif(_cpu_model EQUAL 207)
+             set(TARGET_ARCHITECTURE "emerald-rapids-server")
 	 	 elseif(_cpu_model EQUAL 143)
              set(TARGET_ARCHITECTURE "sapphire-rapids-server")
 	 	 elseif(_cpu_model EQUAL 106 OR _cpu_model EQUAL 108) # 6A 6C
              set(TARGET_ARCHITECTURE "icelake-server")
-		 elseif(_cpu_model EQUAL 85) # 55 aka cacade lake aka cooper lake
+		 elseif(_cpu_model EQUAL 85) # 0x55/85 aka cascade lake aka cooper lake
              set(TARGET_ARCHITECTURE "skylake-server")
 		 elseif(_cpu_model EQUAL 79 OR _cpu_model EQUAL 86)
              set(TARGET_ARCHITECTURE "broadwell-server")
@@ -205,32 +207,40 @@ macro(AutodetectHostArchitectureX86)
 		 elseif(_cpu_model EQUAL 20 OR _cpu_model EQUAL 23)
             set(TARGET_ARCHITECTURE "penryn-server")
 
-
 		 # client cores
 		 elseif(_cpu_model EQUAL 190)
 			# N97: alderlake-n
             set(TARGET_ARCHITECTURE "alderlake")
+            elseif(_cpu_model EQUAL 186) # raptor-lake-H
+            set(TARGET_ARCHITECTURE "raptorlake") # 13 gen i9 CPU
 		 elseif(_cpu_model EQUAL 183 OR _cpu_model EQUAL 187)
             set(TARGET_ARCHITECTURE "raptorlake")
-         elseif(_cpu_model EQUAL 154)
+         elseif(_cpu_model EQUAL 151 OR _cpu_model EQUAL 154)
+            # 151: AlderLake-P, 154: AlderLake-S
             set(TARGET_ARCHITECTURE "alderlake")
          elseif(_cpu_model EQUAL 138)
             set(TARGET_ARCHITECTURE "lakefield")
          elseif(_cpu_model EQUAL 167)
             set(TARGET_ARCHITECTURE "rocketlake")
          elseif(_cpu_model EQUAL 140 OR _cpu_model EQUAL 141 OR _cpu_model EQUAL 143)
+            #141: TigerLake-H (Mobile), XXX: TigerLake-B (Desktop), 140: TigerLake-U
             set(TARGET_ARCHITECTURE "tigerlake")
 		 elseif(_cpu_model EQUAL 126 OR _cpu_model EQUAL 125) # 7E
+            # 126: IceLake-U: desktop, 125: IceLake-Y: desktop
             set(TARGET_ARCHITECTURE "icelake")
          elseif(_cpu_model EQUAL 102 OR _cpu_model EQUAL 103) # 66, 67?
             set(TARGET_ARCHITECTURE "cannonlake")
          elseif(_cpu_model EQUAL 142 OR _cpu_model EQUAL 158) # 8E, 9E
-            set(TARGET_ARCHITECTURE "kaby-lake") # aka coffee-lake aka whiskey-lake
+            # 
+            set(TARGET_ARCHITECTURE "kabylake") # aka coffee-lake aka whiskey-lake
          elseif(_cpu_model EQUAL 78 OR _cpu_model EQUAL 94) # 4E, 5E
+            # 78 = Skylake-U/Y (overclockable), 94 = Skylake-S/H (BGA packing)
             set(TARGET_ARCHITECTURE "skylake")
          elseif(_cpu_model EQUAL 61 OR _cpu_model EQUAL 71 OR _cpu_model EQUAL 79 OR _cpu_model EQUAL 86) # 3D, 47, 4F, 56
+            # 61 = Broadwell-DT (Desktop: LGA 1150), 71 = Broadwell-H (HM86, HM87, QM87), 79 = Broadwell-EP (LGA 2011-v3 server), 86 = Broadwell-DE 
             set(TARGET_ARCHITECTURE "broadwell")
          elseif(_cpu_model EQUAL 60 OR _cpu_model EQUAL 69 OR _cpu_model EQUAL 70 OR _cpu_model EQUAL 63)
+            # 60 = Haswell-DT (Desktop), 63 = Haswell-EP (Server), 69 = Haswell-UL (UltraBook) 70 = Haswell-ULX (UltraBook)
             set(TARGET_ARCHITECTURE "haswell")
          elseif(_cpu_model EQUAL 58 OR _cpu_model EQUAL 62)
             set(TARGET_ARCHITECTURE "ivy-bridge")
@@ -354,7 +364,7 @@ Using an incorrect setting here can result in crashes of the resulting binary be
 Setting the value to \"auto\" will try to optimize for the architecture where cmake is called. \
 Other supported values are: \"none\", \"generic\", \"core\", \"merom\" (65nm Core2), \
 \"penryn\" (45nm Core2), \"nehalem\", \"westmere\", \"sandy-bridge\", \"ivy-bridge\", \
-\"haswell\", \"broadwell\", \"skylake\", \"skylake-xeon\", \"kaby-lake\", \"cannonlake\", \"silvermont\", \
+\"haswell\", \"broadwell\", \"skylake\", \"skylake-xeon\", \"kabylake\", \"cannonlake\", \"silvermont\", \
 \"goldmont\", \"knl\" (Knights Landing), \"atom\", \"k8\", \"k8-sse3\", \"barcelona\", \
 \"istanbul\", \"magny-cours\", \"bulldozer\", \"interlagos\", \"piledriver\", \
 \"AMD 14h\", \"AMD 16h\", \"zen\" , \"zen2\" , \"zen3\" , \"zen4\".")
@@ -435,11 +445,15 @@ Other supported values are: \"none\", \"generic\", \"core\", \"merom\" (65nm Cor
       list(APPEND _march_flag_list "goldmont")
       _silvermont()
    endmacro()
-
    macro(_zen4)
       list(APPEND _march_flag_list "zen4")
       _cannonlake()
       list(APPEND _available_vector_units_list "avx512vbmi2" "avx512bitalg" "avx512vpopcntdq" "avx512vnni" "vaes" "vpclmulqdq" "gfni")
+   endmacro()
+   macro(_sapphire_rapids_server)
+      list(APPEND _march_flag_list "sapphire-rapids-server")
+      _zen4()
+      list(APPEND _available_vector_units_list "amx")
    endmacro()
 
    if(TARGET_ARCHITECTURE STREQUAL "core")
@@ -460,6 +474,10 @@ Other supported values are: \"none\", \"generic\", \"core\", \"merom\" (65nm Cor
       else()
          message(STATUS "SSE4.1: disabled (auto-detected from this computer's CPU flags)")
       endif()
+   elseif(TARGET_ARCHITECTURE STREQUAL "sapphire-rapids-server")
+	  _sapphire_rapids_server()
+   elseif(TARGET_ARCHITECTURE STREQUAL "emerald-rapids-server")
+      _zen4()
    elseif(TARGET_ARCHITECTURE STREQUAL "icelake-server")
 	  _zen4()
    elseif(TARGET_ARCHITECTURE STREQUAL "knl")
@@ -474,7 +492,7 @@ Other supported values are: \"none\", \"generic\", \"core\", \"merom\" (65nm Cor
       _cannonlake()
    elseif(TARGET_ARCHITECTURE STREQUAL "cannonlake")
       _cannonlake()
-   elseif(TARGET_ARCHITECTURE STREQUAL "kaby-lake")
+   elseif(TARGET_ARCHITECTURE STREQUAL "kabylake")
       _skylake()
    elseif(TARGET_ARCHITECTURE STREQUAL "skylake-xeon" OR TARGET_ARCHITECTURE STREQUAL "skylake-server")
       _skylake_server()
@@ -647,6 +665,7 @@ Other supported values are: \"none\", \"generic\", \"core\", \"merom\" (65nm Cor
 	  _enable_or_disable(VAES "vaes" "Use VAES." false)
 	  _enable_or_disable(VPCLMULQDQ "vpclmulqdq" "Use VPCLMULQDQ." false)
 	  _enable_or_disable(GFNI "gfni" "Use GFNI." false)
+      _enable_or_disable(AMX "amx" "Use AMX." false)
    endif()
 endmacro()
 
