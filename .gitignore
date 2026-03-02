@@ -5,7 +5,9 @@ build/
 *a.out
 build/
 .cmake/
-.cmake_*/
+.cmake-build-debug/
+.cmake-build-release/
+.cmake-*/
 compile_commands.json
 cmake_install.cmake 
 CMakeCache.txt
