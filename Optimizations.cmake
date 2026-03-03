@@ -39,3 +39,17 @@ include(${CMAKE_CURRENT_LIST_DIR}/host_optimizations.cmake)
 
 # TODO currently under dev
 # include(${CMAKE_CURRENT_LIST_DIR}/autovectorize/AutoVectorize.cmake)
+
+
+# this is needed to fix some standard problems
+IF(NOT CMAKE_NOT_ADD_CORRECTIONS)
+    if(UNIX)
+        include_directories("/usr/local/include")
+        link_directories("/usr/local/lib")
+    endif()
+    # for reasons I dont understand, this is needed for APPLE devices.
+    if(APPLE)
+        include_directories("/opt/homebrew/include/")
+        link_directories("/opt/homebrew/lib")
+    endif()
+ENDIF()

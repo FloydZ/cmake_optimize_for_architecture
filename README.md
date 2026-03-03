@@ -59,6 +59,12 @@ single `${old_target}`.
 CMAKE_BLOATY_ENABLE
 ```
 
+
+If set, standard helper include paths and other corrections are not added
+```
+CMAKE_NOT_ADD_CORRECTIONS
+```
+
 ## Target Generations:
 
 Its possible to get a list of all created targets:
