@@ -545,7 +545,7 @@ Other supported values are: \"none\", \"generic\", \"core\", \"merom\" (65nm Cor
       list(APPEND _march_flag_list "goldmont")
       _silvermont()
    endmacro()
-   macro(_zen4)
+   macro(_zen)
       list(APPEND _march_flag_list "zen1")
       _skylake()
    endmacro()
