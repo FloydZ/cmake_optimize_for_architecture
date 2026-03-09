@@ -426,6 +426,7 @@ macro(OptimizeForArchitectureARM64)
    endif(TARGET_ARCHITECTURE STREQUAL "auto")
 endmacro()
 
+# "treemont", "goldmontplus", "airmont", "silvermond", "saltwell", "bonnwell", ""
 macro(OptimizeForArchitectureX86)
    set(TARGET_ARCHITECTURE "auto" CACHE STRING "CPU architecture to optimize for. \
 Using an incorrect setting here can result in crashes of the resulting binary because of invalid instructions used. \
