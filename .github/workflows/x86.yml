@@ -15,3 +15,6 @@ jobs:
     - uses: DeterminateSystems/magic-nix-cache-action@v2
 
     - run: nix-build -E 'with import <nixpkgs> {}; callPackage ./default.nix {}'
+    
+    - run: ./test.sh
+
