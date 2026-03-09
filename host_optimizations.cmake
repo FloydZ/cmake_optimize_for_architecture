@@ -419,16 +419,54 @@ macro(AutodetectHostArchitectureARM64)
    endif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
 endmacro()
 
+macro(AutodetectHostArchitectureRiscv64)
+   set(TARGET_ARCHITECTURE "generic")
+   set(Vc_ARCHITECTURE_FLAGS)
+   set(_vendor_id)
+   set(_cpu_family)
+   set(_cpu_model)
+   set(_cpu_flags)
+   set(_cpu_features)
+
+   if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+      file(READ "/proc/cpuinfo" _cpuinfo)
+      string(REGEX REPLACE ".*vendor_id[ \t]*:[ \t]+([a-zA-Z0-9_-]+).*" "\\1" _vendor_id "${_cpuinfo}")
+      string(REGEX REPLACE ".*cpu family[ \t]*:[ \t]+([a-zA-Z0-9_-]+).*" "\\1" _cpu_family "${_cpuinfo}")
+      string(REGEX REPLACE ".*model[ \t]*:[ \t]+([a-zA-Z0-9_-]+).*" "\\1" _cpu_model "${_cpuinfo}")
+
+      #string(REGEX REPLACE "isa[ \t]*:[_ \t]+([^\n]+).*" "\\1" _cpu_flags "${_cpuinfo}")
+      string(REGEX MATCH "isa[ \t]*:[ \t]*([^\n]+)" _ ${_cpuinfo})
+      set(_cpu_flags "${CMAKE_MATCH_1}")
+      
+      string(REPLACE "_" ";" _cpu_flags_list "${_cpu_flags}")
+      
+      message(STATUS "ISA string: ${_cpu_flags}")
+      message(STATUS "ISA list: ${_cpu_flags_List}")
+      #message(STATUS "detected vendor id: ${_vendor_id}")
+      #message(STATUS "detected cpu family: ${_cpu_family}")
+      #message(STATUS "detected cpu model: ${_cpu_model}")
+      #message(STATUS "detected cpu flags: ${_cpu_flags}")
+
+      set(TARGET_ARCHITECTURE "riscv64 ${_cpu_flags}")
+      list(APPEND _enable_vector_unit_list "${_cpu_flags}")
+   endif()
+endmacro()
+
+
 macro(OptimizeForArchitecture)
    if("${CMAKE_SYSTEM_PROCESSOR}" MATCHES "(x86|AMD64)")
       OptimizeForArchitectureX86()
    elseif("${CMAKE_SYSTEM_PROCESSOR}" MATCHES "arm64")
       OptimizeForArchitectureARM64()
+   elseif("${CMAKE_SYSTEM_PROCESSOR}" MATCHES "riscv64")
+      OptimizeForArchitectureRiscv64()
    else()
       message(STATUS "No support for auto-detection of the target instruction set/extension")
       set(TARGET_ARCHITECTURE "unused" CACHE STRING "CPU architecture to optimize for. (unused)")
    endif()
 endmacro()
+
+
 
 macro(OptimizeForArchitectureARM64)
    set(TARGET_ARCHITECTURE "auto" CACHE STRING "CPU architecture to optimize for")
@@ -440,7 +478,15 @@ macro(OptimizeForArchitectureARM64)
    endif(TARGET_ARCHITECTURE STREQUAL "auto")
 endmacro()
 
+macro(OptimizeForArchitectureRiscv64)
+   set(TARGET_ARCHITECTURE "auto" CACHE STRING "CPU architecture to optimize for")
+   set(_available_vector_units_list)
 
+   if(TARGET_ARCHITECTURE STREQUAL "auto")
+      AutodetectHostArchitectureRiscv64()
+      message(STATUS "Detected CPU: ${TARGET_ARCHITECTURE}")
+   endif(TARGET_ARCHITECTURE STREQUAL "auto")
+endmacro()
 
 macro(OptimizeForArchitectureX86)
    set(TARGET_ARCHITECTURE "auto" CACHE STRING "CPU architecture to optimize for. \
@@ -840,6 +886,12 @@ if(NOT ${CMAKE_HOST_DO_NOT_ADD_TO_FLAGS})
       message(STATUS "Adding compiler flag: -DUSE_NEON")
       set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DUSE_NEON")
       set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DUSE_NEON")
+   endif()
+   
+   if("${CMAKE_SYSTEM_PROCESSOR}" MATCHES "riscv64")
+      message(STATUS "Adding compiler flag: -DUSE_RVV")
+      set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DUSE_RVV")
+      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DUSE_RVV")
    endif()
 endif()
 
