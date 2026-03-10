@@ -65,6 +65,18 @@ If set, standard helper include paths and other corrections are not added
 CMAKE_NOT_ADD_CORRECTIONS
 ```
 
+If set, the script will not load the exact git commit, branch name and tag.
+```
+CMAKE_DO_NOT_ADD_GIT
+```
+otherwise you can access them via
+```cmake
+message(STATUS "Git commit: ${GIT_COMMIT}")
+message(STATUS "Git tag: ${GIT_TAG}")
+message(STATUS "Git branch: ${GIT_BRANCH}")
+```
+
+
 ## Target Generations:
 
 Its possible to get a list of all created targets:

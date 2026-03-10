@@ -23,6 +23,10 @@ IF(NOT WRITE_CONFIG_FILE)
     SET(WRITE_CONFIG_FILE OFF)
 ENDIF()
 
+IF(NOT CMAKE_DO_NOT_ADD_GIT)
+    SET(CMAKE_DO_NOT_ADD_GIT OFF)
+ENDIF()
+
 # config file to write the configurations to
 IF(NOT CONFIG_FILE)
     SET(CONFIG_FILE "config.h")
@@ -40,6 +44,7 @@ include(${CMAKE_CURRENT_LIST_DIR}/host_optimizations.cmake)
 # TODO currently under dev
 # include(${CMAKE_CURRENT_LIST_DIR}/autovectorize/AutoVectorize.cmake)
 
+include(${CMAKE_CURRENT_LIST_DIR}/git.cmake)
 
 # this is needed to fix some standard problems
 IF(NOT CMAKE_NOT_ADD_CORRECTIONS)
