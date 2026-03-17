@@ -45,6 +45,10 @@ include(${CMAKE_CURRENT_LIST_DIR}/host_optimizations.cmake)
 # include(${CMAKE_CURRENT_LIST_DIR}/autovectorize/AutoVectorize.cmake)
 
 include(${CMAKE_CURRENT_LIST_DIR}/git.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/CFeatureCheck.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/CXXFeatureCheck.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/AddCXXCompilerFlag.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/AddCCompilerFlag.cmake)
 
 # this is needed to fix some standard problems
 IF(NOT CMAKE_NOT_ADD_CORRECTIONS)
