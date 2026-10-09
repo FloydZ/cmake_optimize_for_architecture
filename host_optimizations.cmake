@@ -886,7 +886,9 @@ if(NOT ${CMAKE_HOST_DO_NOT_ADD_TO_FLAGS})
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DUSE_${FLAGU}")
     ENDFOREACH()
 
-    if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    # NOTE: only on ARM Macs. Before, `USE_NEON` was also set on Intel Macs
+    # 	(x86_64), where `arm_neon.h`/`arm_acle.h` do not compile.
+    if(CMAKE_SYSTEM_NAME STREQUAL "Darwin" AND "${CMAKE_SYSTEM_PROCESSOR}" MATCHES "(arm64|aarch64)")
        message(STATUS "Adding compiler flag: -DUSE_NEON")
        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DUSE_NEON")
        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DUSE_NEON")
