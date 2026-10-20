@@ -174,6 +174,14 @@ TARGET_ARCHITECTURE
 ```
 cmake variable.
 
+### Sources:
+- https://github.com/torvalds/linux/blob/master/arch/x86/include/asm/intel-family.h
+- https://github.com/torvalds/linux/blob/master/arch/x86/kernel/cpu/amd.c
+- https://github.com/llvm/llvm-project/blob/main/llvm/lib/TargetParser/Host.cpp
+- https://github.com/gcc-mirror/gcc/blob/master/gcc/common/config/i386/cpuinfo.h
+- https://github.com/gcc-mirror/gcc/blob/master/gcc/config/i386/i386.h
+- https://github.com/gcc-mirror/gcc/blob/master/gcc/common/config/i386/i386-common.cc
+
 
 A list of x86-flags:
 ```
@@ -287,8 +295,27 @@ ARM_NEON_FP16
 ARM_NEON_DOTPROD
 ```
 
+### Apple:
+
+Apple CPUs are identified via `sysctl hw.cpufamily` on macOS and via the
+MIDR part number (`CPU part` in `/proc/cpuinfo`) on Asahi Linux. The detected
+chip is written into `TARGET_ARCHITECTURE` using the GCC/LLVM `-mcpu` names.
+They can also be set manually, e.g. when cross compiling for iOS/watchOS:
+```bash
+apple-a7 apple-a8 apple-a9 apple-a10 apple-a11 apple-a12 apple-a13
+apple-a14 apple-a15 apple-a16 apple-a17 apple-a18 apple-a19
+apple-m1 apple-m2 apple-m3 apple-m4 apple-m5
+apple-s4 apple-s5 apple-s6 apple-s7 apple-s8 apple-s9 apple-s10
+```
+M1/M2/M3/M4/M5 include their Pro/Max/Ultra variants.
+
 ### Sources:
-TODO 
+- https://github.com/apple-oss-distributions/xnu/blob/main/osfmk/mach/machine.h
+- https://github.com/llvm/llvm-project/blob/main/llvm/lib/TargetParser/Host.cpp
+- https://github.com/llvm/llvm-project/blob/main/llvm/lib/Target/AArch64/AArch64Processors.td
+- https://github.com/gcc-mirror/gcc/blob/master/gcc/config/aarch64/aarch64-cores.def
+- https://github.com/torvalds/linux/blob/master/arch/arm64/include/asm/cputype.h
+- https://github.com/AsahiLinux/docs/blob/main/docs/hw/soc/soc-codenames.md
 
 ## riscv: 
 

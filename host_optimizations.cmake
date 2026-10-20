@@ -16,13 +16,39 @@
 # Vc_AVX2_INTRINSICS_BROKEN is defined and set, the OptimizeForArchitecture
 # macro will consequently disable the relevant features via compiler flags.
 #
-# Sources for Intel/AMD:
+# Sources for Intel/AMD/Hygon/Zhaoxin:
+# - https://github.com/torvalds/linux/blob/master/arch/x86/include/asm/intel-family.h
+#     Intel family/model numbers
+# - https://github.com/torvalds/linux/blob/master/arch/x86/kernel/cpu/amd.c
+#     AMD Zen 1-6 model ranges
+# - https://github.com/llvm/llvm-project/blob/main/llvm/lib/TargetParser/Host.cpp
+#     getIntelProcessorTypeAndSubtype/getAMDProcessorTypeAndSubtype/getHygonProcessorTypeAndSubtype
+# - https://github.com/gcc-mirror/gcc/blob/master/gcc/common/config/i386/cpuinfo.h
+#     get_intel_cpu/get_amd_cpu/get_hygon_cpu/get_zhaoxin_cpu
+# - https://github.com/gcc-mirror/gcc/blob/master/gcc/config/i386/i386.h
+#     ISA extensions of each -march= (PTA_*)
+# - https://github.com/gcc-mirror/gcc/blob/master/gcc/common/config/i386/i386-common.cc
+#     -march= table (Zhaoxin)
 # - https://github.com/animetosho/ParPar/blob/master/gf16/gf16mul.cpp
 # - https://en.wikichip.org/wiki/amd/cpuid
 # - https://en.wikichip.org/wiki/intel/cpuid
 #
 # Sources for ARM:
 # - https://en.wikichip.org/wiki/arm_holdings/microarchitectures/cortex-a55
+#
+# Sources for Apple:
+# - https://github.com/apple-oss-distributions/xnu/blob/main/osfmk/mach/machine.h
+#     CPUFAMILY_ARM_* values of `hw.cpufamily` (macOS)
+# - https://github.com/llvm/llvm-project/blob/main/llvm/lib/TargetParser/Host.cpp
+#     getHostCPUName (hw.cpufamily, incl. M5/A18/A19) and implementer 0x61 parts
+# - https://github.com/torvalds/linux/blob/master/arch/arm64/include/asm/cputype.h
+#     MIDR part numbers (Asahi Linux)
+# - https://github.com/gcc-mirror/gcc/blob/master/gcc/config/aarch64/aarch64-cores.def
+#     MIDR part numbers and ISA level of apple-a12/m1-m5
+# - https://github.com/llvm/llvm-project/blob/main/llvm/lib/Target/AArch64/AArch64Processors.td
+#     ISA level of apple-a7 ... apple-m5
+# - https://github.com/AsahiLinux/docs/blob/main/docs/hw/soc/soc-codenames.md
+#     marketing name <-> codename <-> core table
 #
 #=============================================================================
 # Copyright 2010-2016 Matthias Kretz <kretz@kde.org>
@@ -114,10 +140,12 @@ endmacro()
 # `TARGET_ARCHITECTURE`. Every model number is annotated with its hex value.
 #
 # Sources (cross-checked against each other):
-# - Linux:  arch/x86/include/asm/intel-family.h
-# - Linux:  arch/x86/kernel/cpu/amd.c (Zen generations)
-# - LLVM:   llvm/lib/TargetParser/Host.cpp
-# - GCC:    gcc/common/config/i386/cpuinfo.h
+# - https://github.com/torvalds/linux/blob/master/arch/x86/include/asm/intel-family.h
+# - https://github.com/torvalds/linux/blob/master/arch/x86/kernel/cpu/amd.c
+# - https://github.com/llvm/llvm-project/blob/main/llvm/lib/TargetParser/Host.cpp
+# - https://github.com/gcc-mirror/gcc/blob/master/gcc/common/config/i386/cpuinfo.h
+# The flag sets of the targets follow the PTA_* masks in:
+# - https://github.com/gcc-mirror/gcc/blob/master/gcc/config/i386/i386.h
 macro(_DetectX86Architecture)
    if(_vendor_id STREQUAL "GenuineIntel")
       if(_cpu_family EQUAL 6)
@@ -442,41 +470,36 @@ endmacro()
 macro(AutodetectHostArchitectureARM64)
    set(TARGET_ARCHITECTURE "generic")
    set(Vc_ARCHITECTURE_FLAGS)
-   set(_vendor_id)
-   set(_cpu_family)
-   set(_cpu_model)
+   set(_cpu_implementer)
+   set(_cpu_part)
    set(_cpu_flags)
    set(_cpu_features)
 
    if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
       file(READ "/proc/cpuinfo" _cpuinfo)
-      string(REGEX REPLACE ".*vendor_id[ \t]*:[ \t]+([a-zA-Z0-9_-]+).*" "\\1" _vendor_id "${_cpuinfo}")
-      string(REGEX REPLACE ".*cpu family[ \t]*:[ \t]+([a-zA-Z0-9_-]+).*" "\\1" _cpu_family "${_cpuinfo}")
-      string(REGEX REPLACE ".*model[ \t]*:[ \t]+([a-zA-Z0-9_-]+).*" "\\1" _cpu_model "${_cpuinfo}")
-
-      string(REGEX REPLACE ".*Features[ \t]*:[ \t]+([^\n]+).*" "\\1" _cpu_flags "${_cpuinfo}")
-      message(STATUS "detected vendor id: ${_vendor_id}")
-      message(STATUS "detected cpu family: ${_cpu_family}")
-      message(STATUS "detected cpu model: ${_cpu_model}")
+      # there is no vendor_id/family/model on ARM, the core is identified by
+      # the implementer and part number of its MIDR register.
+      string(REGEX MATCH "CPU implementer[ \t]*:[ \t]*(0x[0-9a-fA-F]+)" _ "${_cpuinfo}")
+      string(TOLOWER "${CMAKE_MATCH_1}" _cpu_implementer)
+      string(REGEX MATCH "CPU part[ \t]*:[ \t]*(0x[0-9a-fA-F]+)" _ "${_cpuinfo}")
+      string(TOLOWER "${CMAKE_MATCH_1}" _cpu_part)
+      string(REGEX MATCH "Features[ \t]*:[ \t]*([^\n]+)" _ "${_cpuinfo}")
+      set(_cpu_flags "${CMAKE_MATCH_1}")
+      message(STATUS "detected cpu implementer: ${_cpu_implementer}")
+      message(STATUS "detected cpu part: ${_cpu_part}")
       message(STATUS "detected cpu flags: ${_cpu_flags}")
+
+      if(_cpu_implementer STREQUAL "0x61") # Apple, e.g. Asahi Linux
+         _DetectAppleArchitectureFromPart()
+      endif()
    elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
       # something like: Apple M1 Max
-      execute_process(COMMAND sysctl -n machdep.cpu.brand_string OUTPUT_VARIABLE _sysctl_output_string OUTPUT_STRIP_TRAILING_WHITESPACE)
-      string(REGEX MATCHALL "[1-5]" _apple_cpu_version "${_sysctl_output_string}")
-      set(TARGET_ARCHITECTURE ${_sysctl_output_string})
+      execute_process(COMMAND sysctl -n machdep.cpu.brand_string OUTPUT_VARIABLE _apple_brand OUTPUT_STRIP_TRAILING_WHITESPACE ERROR_QUIET)
+      execute_process(COMMAND sysctl -n hw.cpufamily OUTPUT_VARIABLE _apple_cpufamily OUTPUT_STRIP_TRAILING_WHITESPACE ERROR_QUIET)
+      message(STATUS "detected cpu: ${_apple_brand}")
+      message(STATUS "detected cpu family: ${_apple_cpufamily}")
+      _DetectAppleArchitectureFromCpuFamily()
 
-      if(${_apple_cpu_version} EQUAL 1)
-         set(_enable_vector_unit_list "arch=armv8.2-a")
-      elseif(${_apple_cpu_version} EQUAL 2)
-         set(_enable_vector_unit_list "arch=armv8.2-a")
-      elseif(${_apple_cpu_version} EQUAL 3)
-         set(_enable_vector_unit_list "arch=armv8.2-a")
-      elseif(${_apple_cpu_version} EQUAL 4)
-         # SME is available but SVE is missing
-         set(_enable_vector_unit_list "arch=armv8.7-a")
-      elseif(${_apple_cpu_version} EQUAL 5)
-         set(_enable_vector_unit_list "arch=armv9.2-a")
-      endif ()
       execute_process(COMMAND sysctl -a OUTPUT_VARIABLE _sysctl OUTPUT_STRIP_TRAILING_WHITESPACE ERROR_QUIET)
       string(REGEX MATCHALL "hw\\.optional\\.arm\\.FEAT_[A-Za-z0-9_]+:[ \t]*[01]" _feat_lines "${_sysctl}")
       set(_skip "crc32" flagm2 sha256 sha512 sha1 pmull frintts pacimp lrcpc lrcpc2 fcma jscvt pauth dpb dpb2 lse2 mcsv2 csv3 dit)
@@ -492,18 +515,151 @@ macro(AutodetectHostArchitectureARM64)
             list(APPEND _available_vector_units_list "${_name}")
          endif()
       endforeach()
-
-      string(JOIN "+" _features ${_available_vector_units_list})
-      if(_features)
-         set(ARCH_STR "armv8.2-a+${_features}")
-      else()
-         set(ARCH_STR "armv8.2-a")
-      endif()
       message("${_available_vector_units_list}")
 
    elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows")
       message(WARNING "Windows ARM not supported")
    endif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+endmacro()
+
+
+# Maps `_apple_cpufamily` (`sysctl -n hw.cpufamily`, printed as a signed 32 bit
+# integer) to `TARGET_ARCHITECTURE`. Each value is annotated with the
+# CPUFAMILY_ARM_* constant from XNU and its hex value. The names follow the
+# `-mcpu=` names of GCC/LLVM.
+#
+# Sources (cross-checked against each other):
+# - https://github.com/apple-oss-distributions/xnu/blob/main/osfmk/mach/machine.h
+# - https://github.com/llvm/llvm-project/blob/main/llvm/lib/TargetParser/Host.cpp
+# - https://github.com/AsahiLinux/docs/blob/main/docs/hw/soc/soc-codenames.md
+macro(_DetectAppleArchitectureFromCpuFamily)
+   set(_family "${_apple_cpufamily}")
+   if(_family MATCHES "^-[0-9]+$")
+      math(EXPR _family "${_family} + 4294967296")
+   endif()
+
+   if(_family EQUAL 933271106) # 0x37a09642 CYCLONE
+      set(TARGET_ARCHITECTURE "apple-a7")
+   elseif(_family EQUAL 747742334) # 0x2c91a47e TYPHOON
+      set(TARGET_ARCHITECTURE "apple-a8")
+   elseif(_family EQUAL 2465937352) # 0x92fb37c8 TWISTER
+      set(TARGET_ARCHITECTURE "apple-a9")
+   elseif(_family EQUAL 1741614739) # 0x67ceee93 HURRICANE
+      # A10, A10X, T2
+      set(TARGET_ARCHITECTURE "apple-a10")
+   elseif(_family EQUAL 3894312694) # 0xe81e7ef6 MONSOON_MISTRAL
+      set(TARGET_ARCHITECTURE "apple-a11")
+   elseif(_family EQUAL 131287967) # 0x07d34b9f VORTEX_TEMPEST
+      # A12, A12X, A12Z (Developer Transition Kit), S4, S5
+      set(TARGET_ARCHITECTURE "apple-a12")
+   elseif(_family EQUAL 1176831186) # 0x462504d2 LIGHTNING_THUNDER
+      # A13, S6, S7, S8
+      set(TARGET_ARCHITECTURE "apple-a13")
+   elseif(_family EQUAL 458787763) # 0x1b588bb3 FIRESTORM_ICESTORM
+      # A14, M1, M1 Pro, M1 Max, M1 Ultra
+      set(TARGET_ARCHITECTURE "apple-m1")
+   elseif(_family EQUAL 3660830781) # 0xda33d83d BLIZZARD_AVALANCHE
+      # A15, M2, M2 Pro, M2 Max, M2 Ultra
+      set(TARGET_ARCHITECTURE "apple-m2")
+   elseif(_family EQUAL 2271604202) # 0x8765edea EVEREST_SAWTOOTH
+      # A16, S9
+      set(TARGET_ARCHITECTURE "apple-a16")
+   elseif(_family EQUAL 4197663070 OR _family EQUAL 1598941843 OR _family EQUAL 1912690738) # 0xfa33415e IBIZA, 0x5f4dea93 LOBOS, 0x72015832 PALMA
+      # IBIZA: M3, LOBOS: M3 Pro, PALMA: M3 Max
+      set(TARGET_ARCHITECTURE "apple-m3")
+   elseif(_family EQUAL 678884789) # 0x2876f5b5 COLL
+      # A17 Pro
+      set(TARGET_ARCHITECTURE "apple-a17")
+   elseif(_family EQUAL 1867590060 OR _family EQUAL 399882554) # 0x6f5129ac DONAN, 0x17d5b93a BRAVA
+      # DONAN: M4, BRAVA: M4 Pro, M4 Max
+      set(TARGET_ARCHITECTURE "apple-m4")
+   elseif(_family EQUAL 541402832 OR _family EQUAL 1976872121) # 0x204526d0 TUPAI, 0x75d4acb9 TAHITI
+      # TUPAI: A18, TAHITI: A18 Pro
+      set(TARGET_ARCHITECTURE "apple-a18")
+   elseif(_family EQUAL 492472296 OR _family EQUAL 4151073562) # 0x1d5a87e8 HIDRA, 0xf76c5b1a SOTRA
+      # HIDRA: M5, SOTRA: M5 Pro, M5 Max
+      set(TARGET_ARCHITECTURE "apple-m5")
+   elseif(_family EQUAL 2872336137 OR _family EQUAL 30910251) # 0xab345f09 THERA, 0x01d7a72b TILOS
+      # THERA: A19 Pro, TILOS: A19
+      set(TARGET_ARCHITECTURE "apple-a19")
+   elseif(_apple_brand MATCHES "^Apple (M[1-5]|A1[1-9]|A[7-9])( |$)")
+      # unknown cpufamily, but a known brand string
+      string(TOLOWER "apple-${CMAKE_MATCH_1}" TARGET_ARCHITECTURE)
+   else()
+      # same as LLVM: default to the newest known CPU
+      message(WARNING "Unknown Apple CPU (${_apple_brand}, hw.cpufamily ${_apple_cpufamily}), using the settings of the newest known one (apple-m5)")
+      set(TARGET_ARCHITECTURE "apple-m5")
+   endif()
+endmacro()
+
+
+# Maps the MIDR part number (`CPU part` in /proc/cpuinfo) of an Apple core
+# (implementer 0x61) to `TARGET_ARCHITECTURE`. The E- and P-cores of a chip
+# have different part numbers, but always belong to the same generation.
+#
+# Sources (cross-checked against each other):
+# - https://github.com/torvalds/linux/blob/master/arch/arm64/include/asm/cputype.h
+# - https://github.com/llvm/llvm-project/blob/main/llvm/lib/TargetParser/Host.cpp
+# - https://github.com/gcc-mirror/gcc/blob/master/gcc/config/aarch64/aarch64-cores.def
+macro(_DetectAppleArchitectureFromPart)
+   if(_cpu_part MATCHES "^0x012$")
+      # A12
+      set(TARGET_ARCHITECTURE "apple-a12")
+   elseif(_cpu_part MATCHES "^0x0(20|21|22|23|24|25|28|29)$")
+      # 0x020/0x021: A14, 0x022/0x023: M1, 0x024/0x025: M1 Pro,
+      # 0x028/0x029: M1 Max/Ultra
+      set(TARGET_ARCHITECTURE "apple-m1")
+   elseif(_cpu_part MATCHES "^0x0(30|31|32|33|34|35|38|39)$")
+      # 0x030/0x031: A15, 0x032/0x033: M2, 0x034/0x035: M2 Pro,
+      # 0x038/0x039: M2 Max/Ultra
+      set(TARGET_ARCHITECTURE "apple-m2")
+   elseif(_cpu_part MATCHES "^0x0(42|43|44|45|48|49)$")
+      set(TARGET_ARCHITECTURE "apple-m3")
+   elseif(_cpu_part MATCHES "^0x0(52|53|54|55|58|59)$")
+      set(TARGET_ARCHITECTURE "apple-m4")
+   elseif(_cpu_part MATCHES "^0x0(62|63|64|65|68|69)$")
+      set(TARGET_ARCHITECTURE "apple-m5")
+   else()
+      message(WARNING "Unknown Apple CPU part ${_cpu_part}, using the generic settings")
+   endif()
+endmacro()
+
+
+# Sets `_apple_march` to the -march= base of an Apple core (`TARGET_ARCHITECTURE`
+# is one of the `apple-*` names). Taken from the ISA levels LLVM and GCC define
+# for these cores; where they differ the lower one is used.
+# - https://github.com/llvm/llvm-project/blob/main/llvm/lib/Target/AArch64/AArch64Processors.td
+# - https://github.com/gcc-mirror/gcc/blob/master/gcc/config/aarch64/aarch64-cores.def
+macro(_AppleArchitectureFlags)
+   if(TARGET_ARCHITECTURE MATCHES "^apple-a(7|8|9|10)$")
+      # A10 additionally has CRC and RDM, but no LSE (so it is no v8.1)
+      set(_apple_march "armv8-a")
+   elseif(TARGET_ARCHITECTURE STREQUAL "apple-a11")
+      set(_apple_march "armv8.2-a")
+   elseif(TARGET_ARCHITECTURE MATCHES "^apple-(a12|s4|s5)$")
+      set(_apple_march "armv8.3-a")
+   elseif(TARGET_ARCHITECTURE MATCHES "^apple-(a13|s6|s7|s8)$")
+      set(_apple_march "armv8.4-a")
+   elseif(TARGET_ARCHITECTURE MATCHES "^apple-(a14|m1)$")
+      # v8.5 without BTI. LLVM: v8.4 + extensions, GCC: v8.5
+      set(_apple_march "armv8.4-a")
+   elseif(TARGET_ARCHITECTURE MATCHES "^apple-(a15|m2|a16|m3|s9|s10|a17)$")
+      set(_apple_march "armv8.6-a")
+   elseif(TARGET_ARCHITECTURE MATCHES "^apple-(a18|m4|a19|m5)$")
+      # SME/SME2 are available, but no SVE. Technically v9.2, but compilers
+      # treat v9 as implying SVE, so v8.7 is the closest safe choice.
+      set(_apple_march "armv8.7-a")
+   else()
+      message(FATAL_ERROR "Unknown target architecture: \"${TARGET_ARCHITECTURE}\". Please set TARGET_ARCHITECTURE to a supported value.")
+   endif()
+   set(_enable_vector_unit_list "arch=${_apple_march}")
+
+   string(JOIN "+" _features ${_available_vector_units_list})
+   if(_features)
+      set(ARCH_STR "${_apple_march}+${_features}")
+   else()
+      set(ARCH_STR "${_apple_march}")
+   endif()
 endmacro()
 
 macro(AutodetectHostArchitectureRiscv64)
@@ -543,7 +699,7 @@ endmacro()
 macro(OptimizeForArchitecture)
    if("${CMAKE_SYSTEM_PROCESSOR}" MATCHES "(x86|AMD64)")
       OptimizeForArchitectureX86()
-   elseif("${CMAKE_SYSTEM_PROCESSOR}" MATCHES "arm64")
+   elseif("${CMAKE_SYSTEM_PROCESSOR}" MATCHES "^(arm64|ARM64|aarch64)")
       OptimizeForArchitectureARM64()
    elseif("${CMAKE_SYSTEM_PROCESSOR}" MATCHES "riscv64")
       OptimizeForArchitectureRiscv64()
@@ -556,13 +712,21 @@ endmacro()
 
 
 macro(OptimizeForArchitectureARM64)
-   set(TARGET_ARCHITECTURE "auto" CACHE STRING "CPU architecture to optimize for")
+   set(TARGET_ARCHITECTURE "auto" CACHE STRING "CPU architecture to optimize for. \
+Setting the value to \"auto\" will try to optimize for the architecture where cmake is called. \
+Supported Apple values are: \"apple-a7\" ... \"apple-a19\", \"apple-m1\" ... \"apple-m5\", \"apple-s4\" ... \"apple-s10\".")
+   string(TOLOWER "${TARGET_ARCHITECTURE}" TARGET_ARCHITECTURE)
    set(_available_vector_units_list)
 
    if(TARGET_ARCHITECTURE STREQUAL "auto")
       AutodetectHostArchitectureARM64()
       message(STATUS "Detected CPU: ${TARGET_ARCHITECTURE}")
    endif(TARGET_ARCHITECTURE STREQUAL "auto")
+
+   if(TARGET_ARCHITECTURE MATCHES "^apple-")
+      _AppleArchitectureFlags()
+      message(STATUS "Apple CPU base architecture: ${_apple_march}")
+   endif()
 endmacro()
 
 macro(OptimizeForArchitectureRiscv64)
