@@ -398,6 +398,69 @@ M1/M2/M3/M4/M5 include their Pro/Max/Ultra variants.
 - https://github.com/torvalds/linux/blob/master/arch/arm64/include/asm/cputype.h
 - https://github.com/AsahiLinux/docs/blob/main/docs/hw/soc/soc-codenames.md
 
+## CUDA:
+
+`cuda.cmake` detects the NVIDIA GPUs of the host and the CUDA features which
+both the CUDA compiler and the GPUs support. It is only active if the `CUDA`
+language is enabled or `CUDA_DETECT` is set.
+
+The GPUs are read from (in this order):
+1. `nvidia-smi --query-gpu=name,compute_cap`
+2. compiling and running `checks/OpenCVDetectCudaArch.cu` with `nvcc`
+3. the model name in `/proc/driver/nvidia/gpus/*/information`, which is mapped
+   to its compute capability with a table of all GPUs since Maxwell
+
+Unless the architectures were chosen by the user (`CUDAARCHS` or a
+`CMAKE_CUDA_ARCHITECTURES` different from nvcc's default), 
+`CMAKE_CUDA_ARCHITECTURES` is set to the ones of the GPUs (e.g. `120` for a
+RTX 5090). `CUDA_DO_NOT_SET_ARCHITECTURES` disables this.
+
+Each `checks/cuda/cuda_<X>_<Y>.cu` tests the feature(s) introduced with compute
+capability X.Y. It is compiled for `sm_XY` (or the oldest architecture the
+compiler still supports) and run on the GPU. A feature is used if all
+architectures in `CMAKE_CUDA_ARCHITECTURES` support it, the compiler can build
+its check and the GPU runs it. The features are added as defines to the C, CXX
+and CUDA flags and to the config file:
+```
+USE_CUDA_WARP_VOTE                 1.2  __all_sync, __any_sync
+USE_CUDA_BALLOT                    2.0  __ballot_sync
+USE_CUDA_SYNCTHREADS_COUNT         2.0  __syncthreads_count
+USE_CUDA_SHUFFLE                   3.0  __shfl_sync
+USE_CUDA_FUNNEL_SHIFT              3.2  __funnelshift_l/r
+USE_CUDA_DYNAMIC_PARALLELISM       3.5  kernels launching kernels
+USE_CUDA_FP16                      5.3  native half precision arithmetic
+USE_CUDA_DOUBLE_ATOMIC_ADD         6.0  atomicAdd(double*)
+USE_CUDA_DP4A                      6.1  __dp4a
+USE_CUDA_TENSOR_CORES              7.0  wmma, half precision
+USE_CUDA_INT8_TENSOR_CORES         7.2  wmma, 8 bit integers
+USE_CUDA_INT4_TENSOR_CORES         7.5  wmma, 4 bit integers
+USE_CUDA_WARP_REDUCE               8.0  __reduce_add_sync
+USE_CUDA_BF16_TENSOR_CORES         8.0  wmma, bfloat16
+USE_CUDA_FP8                       8.9  FP8 (e4m3/e5m2) conversions
+USE_CUDA_THREAD_BLOCK_CLUSTERS     9.0  __cluster_dims__, cluster.sync()
+USE_CUDA_DISTRIBUTED_SHARED_MEMORY 9.0  cluster.map_shared_rank()
+```
+
+Further results: `CUDA_DEVICE_NAMES`, `CUDA_DEVICE_COMPUTE_CAPABILITIES`,
+`CUDA_DEVICE_ARCHITECTURES`, `CUDA_COMPILER_ARCHITECTURES` (from
+`nvcc --list-gpu-arch`), `CUDA_CHECKS_COMPILED`, `CUDA_CHECKS_PASSED` and
+`CUDA_SUPPORTED_FEATURES`.
+
+Options:
+```
+CUDA_DETECT                    run even if CUDA is not enabled
+CUDA_DO_NOT_RUN_CHECKS         only detect the GPUs, skip the checks
+CUDA_DO_NOT_SET_ARCHITECTURES  never change CMAKE_CUDA_ARCHITECTURES
+CUDA_CHECK_FLAGS               extra nvcc flags for the checks, e.g. -allow-unsupported-compiler
+```
+The checks use `CMAKE_CUDA_HOST_COMPILER` as host compiler, if set. The results
+are cached, delete the build directory after changing the GPU or the compiler.
+
+### Sources:
+- https://en.wikipedia.org/wiki/CUDA (compute capabilities, GPUs, features)
+- https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#compute-capabilities
+- https://developer.nvidia.com/cuda-gpus
+
 ## riscv: 
 
 A list riscv flags:

@@ -40,6 +40,8 @@ include(${CMAKE_CURRENT_LIST_DIR}/cache.cmake)
 # generate compiler informations and more
 include(${CMAKE_CURRENT_LIST_DIR}/compiler_optimizations.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/host_optimizations.cmake)
+# only active if CUDA is enabled or CUDA_DETECT is set
+include(${CMAKE_CURRENT_LIST_DIR}/cuda.cmake)
 
 # TODO currently under dev
 # include(${CMAKE_CURRENT_LIST_DIR}/autovectorize/AutoVectorize.cmake)

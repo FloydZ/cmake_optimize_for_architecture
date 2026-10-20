@@ -34,6 +34,14 @@ if [ -n "${ARM_CC:-}" ]; then
                    -DCMAKE_TRY_COMPILE_TARGET_TYPE=STATIC_LIBRARY )
 fi
 
+# CUDA detection: must not break the configuration, even without GPU or nvcc
+echo "cuda"
+rm -rf ./build
+mkdir ./build
+cd ./build
+cmake .. -DCUDA_DETECT=ON
+cd ..
+
 for arch in "${arm_archs[@]}"
 do
     echo "${arch}"
