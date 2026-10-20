@@ -49,6 +49,12 @@ config file to write the configurations to
 CONFIG_FILE
 ```
 
+cpuinfo file read on Linux (default: `/proc/cpuinfo`). Can be set to a copy of
+the `/proc/cpuinfo` of another machine, e.g. of the target when cross compiling
+```
+CPUINFO_FILE
+```
+
 
 if this flag is set, for each target a new target `bloaty_${old_target}` is 
 generated, which upon running will apply bloaty to the original binary.
@@ -298,6 +304,77 @@ ARM_NEON_BF16
 ARM_NEON_FP16
 ARM_NEON_DOTPROD
 ```
+
+### Cortex-A:
+
+On Linux every core is identified by the implementer and part number of its
+MIDR register (`CPU implementer`/`CPU part` in `/proc/cpuinfo`). All 64 bit
+Arm Cortex-A, Cortex-X and C1 cores are known, as well as the Qualcomm Kryo
+cores derived from them (Snapdragon 835-865):
+```bash
+cortex-a34 cortex-a35 cortex-a53 cortex-a57 cortex-a72 cortex-a73
+cortex-a55 cortex-a65 cortex-a65ae cortex-a75 cortex-a76 cortex-a76ae cortex-a77
+cortex-a78 cortex-a78ae cortex-a78c cortex-x1 cortex-x1c
+cortex-a510 cortex-a710 cortex-a715 cortex-x2 cortex-x3
+cortex-a320 cortex-a520 cortex-a520ae cortex-a720 cortex-a720ae cortex-a725 cortex-x4 cortex-x925
+c1-nano c1-pro c1-premium c1-ultra
+```
+On big.LITTLE systems the biggest core is chosen, among the cores with the
+lowest architecture level, so the code runs on all of them.
+
+The detected core is passed as `-mcpu=<core>`, together with the modifiers
+for the extensions that are optional or that vendors disable, read from the
+`Features` line of `/proc/cpuinfo`: crypto (`+aes+sha2+sha3+sm4` or
+`+nocrypto`), SVE (`+nosve`, e.g. Snapdragon 8 Gen 1), SME (`+nosme`) and CRC
+on Armv8.0 (`+crc`/`+nocrc`). For example on a Raspberry Pi 4:
+`-mcpu=cortex-a72+crc+nocrypto`. Without `+nocrypto`, clang would enable
+AES/SHA2 for a Cortex-A72, which the Raspberry Pi 4 does not have.
+
+If the compiler does not know the core, `-march=<architecture level>` with
+the same modifiers is used instead. Apple CPUs get `-mcpu=apple-*` in the same
+way. With `CMAKE_HOST_DO_NOT_ADD_TO_FLAGS` no flag is added.
+
+The core can also be set manually, optionally with own modifiers, e.g.
+`-DTARGET_ARCHITECTURE=cortex-a72+nocrypto`. Then the features are derived
+from the architecture level instead of `/proc/cpuinfo`.
+
+The found features are added as `USE_<FEATURE>` defines (and to the config
+file):
+```
+USE_ARCH=<architecture level, e.g. ARMV82-A>
+USE_NEON
+USE_CRC
+USE_AES
+USE_SHA2
+USE_SHA3
+USE_SM4
+USE_LSE
+USE_RDM
+USE_FP16
+USE_DOTPROD
+USE_FP16FML
+USE_RCPC
+USE_I8MM
+USE_BF16
+USE_SVE
+USE_SVE2
+USE_SME
+USE_SME2
+```
+
+To detect the cores of another machine, e.g. of the target when cross
+compiling, point `CPUINFO_FILE` to a copy of its `/proc/cpuinfo`:
+```bash
+cmake .. -DCPUINFO_FILE=/path/to/target-cpuinfo
+```
+
+#### Sources:
+- https://github.com/torvalds/linux/blob/master/arch/arm64/include/asm/cputype.h
+- https://github.com/torvalds/linux/blob/master/arch/arm64/kernel/cpuinfo.c (names of the `Features`)
+- https://github.com/llvm/llvm-project/blob/main/llvm/lib/TargetParser/Host.cpp
+- https://github.com/llvm/llvm-project/blob/main/llvm/lib/Target/AArch64/AArch64Processors.td
+- https://github.com/gcc-mirror/gcc/blob/master/gcc/config/aarch64/aarch64-cores.def
+- https://github.com/gcc-mirror/gcc/blob/master/gcc/config/aarch64/aarch64-option-extensions.def
 
 ### Apple:
 

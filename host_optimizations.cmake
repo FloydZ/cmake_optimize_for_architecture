@@ -78,6 +78,39 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #=============================================================================
 
+# cpuinfo file read on Linux. Can be pointed to the cpuinfo of another machine,
+# e.g. of the target when cross compiling.
+if(NOT CPUINFO_FILE)
+   set(CPUINFO_FILE "/proc/cpuinfo")
+endif()
+
+# Sets `_ret` to TRUE if all enabled C/CXX compilers accept `_flag`. The
+# results are cached per flag (HOST_HAVE_C_FLAG_...).
+include(CheckCCompilerFlag)
+include(CheckCXXCompilerFlag)
+macro(_compiler_supports_flag _flag _ret)
+   set(${_ret} TRUE)
+   get_property(_enabled_languages GLOBAL PROPERTY ENABLED_LANGUAGES)
+   string(MAKE_C_IDENTIFIER "${_flag}" _flag_id)
+   set(_old_required_quiet "${CMAKE_REQUIRED_QUIET}")
+   set(CMAKE_REQUIRED_QUIET ON)
+   list(FIND _enabled_languages "C" _lang_index)
+   if(NOT _lang_index EQUAL -1)
+      check_c_compiler_flag("${_flag}" HOST_HAVE_C_FLAG${_flag_id})
+      if(NOT HOST_HAVE_C_FLAG${_flag_id})
+         set(${_ret} FALSE)
+      endif()
+   endif()
+   list(FIND _enabled_languages "CXX" _lang_index)
+   if(NOT _lang_index EQUAL -1)
+      check_cxx_compiler_flag("${_flag}" HOST_HAVE_CXX_FLAG${_flag_id})
+      if(NOT HOST_HAVE_CXX_FLAG${_flag_id})
+         set(${_ret} FALSE)
+      endif()
+   endif()
+   set(CMAKE_REQUIRED_QUIET "${_old_required_quiet}")
+endmacro()
+
 macro(_my_find _list _value _ret)
    list(FIND ${_list} "${_value}" _found)
    if(_found EQUAL -1)
@@ -97,7 +130,7 @@ macro(AutodetectHostArchitectureX86)
    set(_cpu_features)
 
    if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-      file(READ "/proc/cpuinfo" _cpuinfo)
+      file(READ "${CPUINFO_FILE}" _cpuinfo)
       string(REGEX REPLACE ".*vendor_id[ \t]*:[ \t]+([a-zA-Z0-9_-]+).*" "\\1" _vendor_id "${_cpuinfo}")
       string(REGEX REPLACE ".*cpu family[ \t]*:[ \t]+([a-zA-Z0-9_-]+).*" "\\1" _cpu_family "${_cpuinfo}")
       string(REGEX REPLACE ".*model[ \t]*:[ \t]+([a-zA-Z0-9_-]+).*" "\\1" _cpu_model "${_cpuinfo}")
@@ -476,21 +509,45 @@ macro(AutodetectHostArchitectureARM64)
    set(_cpu_features)
 
    if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-      file(READ "/proc/cpuinfo" _cpuinfo)
-      # there is no vendor_id/family/model on ARM, the core is identified by
-      # the implementer and part number of its MIDR register.
-      string(REGEX MATCH "CPU implementer[ \t]*:[ \t]*(0x[0-9a-fA-F]+)" _ "${_cpuinfo}")
-      string(TOLOWER "${CMAKE_MATCH_1}" _cpu_implementer)
-      string(REGEX MATCH "CPU part[ \t]*:[ \t]*(0x[0-9a-fA-F]+)" _ "${_cpuinfo}")
-      string(TOLOWER "${CMAKE_MATCH_1}" _cpu_part)
+      file(READ "${CPUINFO_FILE}" _cpuinfo)
+      # there is no vendor_id/family/model on ARM, every core is identified by
+      # the implementer and part number of its MIDR register. big.LITTLE
+      # systems list different parts for their cores.
+      string(REGEX MATCHALL "CPU implementer[ \t]*:[ \t]*0x[0-9a-fA-F]+" _implementer_lines "${_cpuinfo}")
+      string(REGEX MATCHALL "CPU part[ \t]*:[ \t]*0x[0-9a-fA-F]+" _part_lines "${_cpuinfo}")
+      set(_cpu_cores)
+      list(LENGTH _part_lines _num_parts)
+      list(LENGTH _implementer_lines _num_implementers)
+      if(_num_parts GREATER 0 AND _num_parts EQUAL _num_implementers)
+         math(EXPR _last "${_num_parts} - 1")
+         foreach(_i RANGE ${_last})
+            list(GET _implementer_lines ${_i} _implementer)
+            list(GET _part_lines ${_i} _part)
+            string(REGEX REPLACE ".*(0x[0-9a-fA-F]+)$" "\\1" _implementer "${_implementer}")
+            string(REGEX REPLACE ".*(0x[0-9a-fA-F]+)$" "\\1" _part "${_part}")
+            string(TOLOWER "${_implementer}:${_part}" _core)
+            list(APPEND _cpu_cores "${_core}")
+         endforeach()
+         list(REMOVE_DUPLICATES _cpu_cores)
+         list(GET _cpu_cores 0 _core)
+         string(REPLACE ":" ";" _core "${_core}")
+         list(GET _core 0 _cpu_implementer)
+         list(GET _core 1 _cpu_part)
+      endif()
+      # the kernel reports the features all cores have in common
       string(REGEX MATCH "Features[ \t]*:[ \t]*([^\n]+)" _ "${_cpuinfo}")
       set(_cpu_flags "${CMAKE_MATCH_1}")
-      message(STATUS "detected cpu implementer: ${_cpu_implementer}")
-      message(STATUS "detected cpu part: ${_cpu_part}")
+      message(STATUS "detected cpu cores (implementer:part): ${_cpu_cores}")
       message(STATUS "detected cpu flags: ${_cpu_flags}")
 
       if(_cpu_implementer STREQUAL "0x61") # Apple, e.g. Asahi Linux
          _DetectAppleArchitectureFromPart()
+      elseif(_cpu_cores)
+         _DetectArmArchitectureFromParts()
+      endif()
+      if(_cpu_flags)
+         _ArmFeaturesFromHwcaps()
+         set(_arm_hwcaps_known TRUE)
       endif()
    elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
       # something like: Apple M1 Max
@@ -662,6 +719,230 @@ macro(_AppleArchitectureFlags)
    endif()
 endmacro()
 
+
+# All 64 bit Arm Cortex-A/X and C1 cores, and the Qualcomm Kryo cores which
+# are derived from them. Format:
+#   <implementer>:<part>=<-mcpu name>,<tier>,<-march>
+# tier: 1 = little, 2 = big, 3 = prime core (used to pick the core of a
+# big.LITTLE system for -mcpu). The Kryo parts use the -mcpu names of LLVM.
+#
+# Sources (cross-checked against each other):
+# - https://github.com/torvalds/linux/blob/master/arch/arm64/include/asm/cputype.h
+# - https://github.com/llvm/llvm-project/blob/main/llvm/lib/TargetParser/Host.cpp
+# - https://github.com/gcc-mirror/gcc/blob/master/gcc/config/aarch64/aarch64-cores.def
+# - https://github.com/llvm/llvm-project/blob/main/llvm/lib/Target/AArch64/AArch64Processors.td
+set(_ARM_CORE_TABLE
+   # Armv8.0
+   "0x41:0xd02=cortex-a34,1,armv8-a"
+   "0x41:0xd04=cortex-a35,1,armv8-a"
+   "0x41:0xd03=cortex-a53,1,armv8-a"
+   "0x41:0xd07=cortex-a57,2,armv8-a"
+   "0x41:0xd08=cortex-a72,2,armv8-a"
+   "0x41:0xd09=cortex-a73,2,armv8-a"
+   # Armv8.2
+   "0x41:0xd05=cortex-a55,1,armv8.2-a"
+   "0x41:0xd06=cortex-a65,1,armv8.2-a"
+   "0x41:0xd43=cortex-a65ae,1,armv8.2-a"
+   "0x41:0xd0a=cortex-a75,2,armv8.2-a"
+   "0x41:0xd0b=cortex-a76,2,armv8.2-a"
+   "0x41:0xd0e=cortex-a76ae,2,armv8.2-a"
+   "0x41:0xd0d=cortex-a77,2,armv8.2-a"
+   "0x41:0xd41=cortex-a78,2,armv8.2-a"
+   "0x41:0xd42=cortex-a78ae,2,armv8.2-a"
+   "0x41:0xd4b=cortex-a78c,2,armv8.2-a"
+   "0x41:0xd44=cortex-x1,3,armv8.2-a"
+   "0x41:0xd4c=cortex-x1c,3,armv8.2-a"
+   # Armv9.0
+   "0x41:0xd46=cortex-a510,1,armv9-a"
+   "0x41:0xd47=cortex-a710,2,armv9-a"
+   "0x41:0xd4d=cortex-a715,2,armv9-a"
+   "0x41:0xd48=cortex-x2,3,armv9-a"
+   "0x41:0xd4e=cortex-x3,3,armv9-a"
+   # Armv9.2
+   "0x41:0xd8f=cortex-a320,1,armv9.2-a"
+   "0x41:0xd80=cortex-a520,1,armv9.2-a"
+   "0x41:0xd88=cortex-a520ae,1,armv9.2-a"
+   "0x41:0xd81=cortex-a720,2,armv9.2-a"
+   "0x41:0xd89=cortex-a720ae,2,armv9.2-a"
+   "0x41:0xd87=cortex-a725,2,armv9.2-a"
+   "0x41:0xd82=cortex-x4,3,armv9.2-a"
+   "0x41:0xd85=cortex-x925,3,armv9.2-a"
+   # Armv9.3
+   "0x41:0xd8a=c1-nano,1,armv9.3-a"
+   "0x41:0xd8b=c1-pro,2,armv9.3-a"
+   "0x41:0xd90=c1-premium,3,armv9.3-a"
+   "0x41:0xd8c=c1-ultra,3,armv9.3-a"
+   # Qualcomm Kryo
+   "0x51:0x800=cortex-a73,2,armv8-a"   # Kryo 2xx Gold
+   "0x51:0x801=cortex-a73,1,armv8-a"   # Kryo 2xx Silver
+   "0x51:0x802=cortex-a75,2,armv8.2-a" # Kryo 3xx Gold
+   "0x51:0x803=cortex-a75,1,armv8.2-a" # Kryo 3xx Silver
+   "0x51:0x804=cortex-a76,2,armv8.2-a" # Kryo 4xx Gold
+   "0x51:0x805=cortex-a76,1,armv8.2-a" # Kryo 4xx/5xx Silver
+)
+# architecture levels in ascending order
+set(_ARM_ARCH_LEVELS "armv8-a" "armv8.2-a" "armv9-a" "armv9.2-a" "armv9.3-a")
+
+
+# Looks up `_key` (either `<implementer>:<part>` or a -mcpu name) in
+# _ARM_CORE_TABLE and sets `_arm_entry_name`, `_arm_entry_tier` and
+# `_arm_entry_march` (empty if not found).
+macro(_ArmCoreLookup _key)
+   set(_arm_entry_name)
+   set(_arm_entry_tier)
+   set(_arm_entry_march)
+   foreach(_entry IN LISTS _ARM_CORE_TABLE)
+      string(REGEX MATCH "^([^=]+)=([^,]+),([0-9]),(.+)$" _ "${_entry}")
+      if("${_key}" STREQUAL "${CMAKE_MATCH_1}" OR "${_key}" STREQUAL "${CMAKE_MATCH_2}")
+         set(_arm_entry_name "${CMAKE_MATCH_2}")
+         set(_arm_entry_tier "${CMAKE_MATCH_3}")
+         set(_arm_entry_march "${CMAKE_MATCH_4}")
+         break()
+      endif()
+   endforeach()
+endmacro()
+
+
+# Maps `_cpu_cores` (list of `<implementer>:<part>`) to `TARGET_ARCHITECTURE`.
+# On big.LITTLE systems the biggest core among the ones with the lowest
+# architecture level is chosen, so the code runs on all of them.
+macro(_DetectArmArchitectureFromParts)
+   set(_best_name)
+   set(_best_tier 0)
+   set(_best_level 99)
+   set(_levels_differ FALSE)
+   set(_unknown_cores)
+   foreach(_core IN LISTS _cpu_cores)
+      _ArmCoreLookup("${_core}")
+      if(NOT _arm_entry_name)
+         list(APPEND _unknown_cores "${_core}")
+         continue()
+      endif()
+      list(FIND _ARM_ARCH_LEVELS "${_arm_entry_march}" _level)
+      if(_best_name AND NOT _level EQUAL _best_level)
+         set(_levels_differ TRUE)
+      endif()
+      if(_level LESS _best_level OR
+            (_level EQUAL _best_level AND _arm_entry_tier GREATER _best_tier))
+         set(_best_name "${_arm_entry_name}")
+         set(_best_tier "${_arm_entry_tier}")
+         set(_best_level "${_level}")
+      endif()
+   endforeach()
+
+   if(_unknown_cores)
+      message(STATUS "Unknown ARM core(s) ${_unknown_cores}, using the generic settings")
+   elseif(_best_name)
+      if(_levels_differ)
+         message(WARNING "The cores ${_cpu_cores} implement different architecture levels, using the lowest one (${_best_name})")
+      endif()
+      set(TARGET_ARCHITECTURE "${_best_name}")
+   endif()
+endmacro()
+
+
+# Sets `_arm_features` from the hwcaps (`Features` line of /proc/cpuinfo).
+# Each feature becomes a `USE_<FEATURE>` define.
+macro(_ArmFeaturesFromHwcaps)
+   set(_arm_features)
+   set(_hwcaps " ${_cpu_flags} ")
+   foreach(_pair
+         "neon=asimd" "crc=crc32" "aes=aes pmull" "sha2=sha1 sha2"
+         "sha3=sha3 sha512" "sm4=sm3 sm4" "lse=atomics" "rdm=asimdrdm"
+         "fp16=fphp asimdhp" "dotprod=asimddp" "fp16fml=asimdfhm" "rcpc=lrcpc"
+         "i8mm=i8mm" "bf16=bf16" "sve=sve" "sve2=sve2" "sme=sme" "sme2=sme2")
+      string(REGEX MATCH "^([^=]+)=(.+)$" _ "${_pair}")
+      set(_feature "${CMAKE_MATCH_1}")
+      string(REPLACE " " ";" _needed "${CMAKE_MATCH_2}")
+      set(_has TRUE)
+      foreach(_hwcap IN LISTS _needed)
+         if(NOT _hwcaps MATCHES " ${_hwcap} ")
+            set(_has FALSE)
+         endif()
+      endforeach()
+      if(_has)
+         list(APPEND _arm_features "${_feature}")
+      endif()
+   endforeach()
+endmacro()
+
+
+# Sets `_arm_mcpu` (-mcpu= value incl. modifiers), `_arm_march` (-march= value
+# incl. modifiers, used if the compiler does not know the core) and
+# `_arm_features` for a Cortex/C1 `TARGET_ARCHITECTURE`. It may carry its own
+# modifiers, e.g. `cortex-a72+nocrypto`.
+#
+# Extensions that are optional for a core (crypto, CRC on Armv8.0) or that
+# vendors disable (SVE, SME) are set explicitly from the hwcaps, if known.
+# This matters as e.g. LLVM enables crypto by default for -mcpu=cortex-a72,
+# while the Raspberry Pi 4 does not have it.
+macro(_ArmArchitectureFlags)
+   string(REGEX MATCH "^([^+]+)(.*)$" _ "${TARGET_ARCHITECTURE}")
+   set(_core "${CMAKE_MATCH_1}")
+   set(_user_modifiers "${CMAKE_MATCH_2}")
+   _ArmCoreLookup("${_core}")
+   if(NOT _arm_entry_name)
+      message(FATAL_ERROR "Unknown target architecture: \"${TARGET_ARCHITECTURE}\". Please set TARGET_ARCHITECTURE to a supported value.")
+   endif()
+
+   set(_modifiers)
+   if(_arm_hwcaps_known)
+      if(_arm_entry_march STREQUAL "armv8-a")
+         # CRC is only mandatory from Armv8.1 on
+         list(FIND _arm_features "crc" _i)
+         if(_i EQUAL -1)
+            string(APPEND _modifiers "+nocrc")
+         else()
+            string(APPEND _modifiers "+crc")
+         endif()
+      endif()
+
+      list(FIND _arm_features "aes" _has_aes)
+      list(FIND _arm_features "sha2" _has_sha2)
+      if(_has_aes EQUAL -1 OR _has_sha2 EQUAL -1)
+         string(APPEND _modifiers "+nocrypto")
+      endif()
+      foreach(_ext aes sha2 sha3 sm4)
+         list(FIND _arm_features "${_ext}" _i)
+         if(NOT _i EQUAL -1)
+            string(APPEND _modifiers "+${_ext}")
+         endif()
+      endforeach()
+
+      if(_arm_entry_march MATCHES "^armv9")
+         list(FIND _arm_features "sve" _i)
+         if(_i EQUAL -1)
+            # e.g. disabled on the Snapdragon 8 Gen 1
+            string(APPEND _modifiers "+nosve")
+         endif()
+      endif()
+      if(_arm_entry_march STREQUAL "armv9.3-a")
+         list(FIND _arm_features "sme" _i)
+         if(_i EQUAL -1)
+            string(APPEND _modifiers "+nosme")
+         endif()
+      endif()
+   else()
+      # no hwcaps: only what the architecture level guarantees
+      set(_arm_features "neon" "crc")
+      list(FIND _ARM_ARCH_LEVELS "${_arm_entry_march}" _level)
+      if(_level GREATER_EQUAL 1) # Armv8.2
+         list(APPEND _arm_features "lse" "rdm" "fp16" "dotprod" "rcpc")
+      endif()
+      if(_level GREATER_EQUAL 2) # Armv9.0
+         list(APPEND _arm_features "sve" "sve2" "i8mm" "bf16")
+      endif()
+      if(_level GREATER_EQUAL 4) # Armv9.3
+         list(APPEND _arm_features "fp16fml" "sme" "sme2")
+      endif()
+   endif()
+   string(APPEND _modifiers "${_user_modifiers}")
+
+   set(_arm_mcpu "${_arm_entry_name}${_modifiers}")
+   set(_arm_march "${_arm_entry_march}${_modifiers}")
+   set(_arm_march_base "${_arm_entry_march}")
+endmacro()
+
 macro(AutodetectHostArchitectureRiscv64)
    set(TARGET_ARCHITECTURE "generic")
    set(Vc_ARCHITECTURE_FLAGS)
@@ -672,7 +953,7 @@ macro(AutodetectHostArchitectureRiscv64)
    set(_cpu_features)
 
    if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-      file(READ "/proc/cpuinfo" _cpuinfo)
+      file(READ "${CPUINFO_FILE}" _cpuinfo)
       string(REGEX REPLACE ".*vendor_id[ \t]*:[ \t]+([a-zA-Z0-9_-]+).*" "\\1" _vendor_id "${_cpuinfo}")
       string(REGEX REPLACE ".*cpu family[ \t]*:[ \t]+([a-zA-Z0-9_-]+).*" "\\1" _cpu_family "${_cpuinfo}")
       string(REGEX REPLACE ".*model[ \t]*:[ \t]+([a-zA-Z0-9_-]+).*" "\\1" _cpu_model "${_cpuinfo}")
@@ -717,6 +998,12 @@ Setting the value to \"auto\" will try to optimize for the architecture where cm
 Supported Apple values are: \"apple-a7\" ... \"apple-a19\", \"apple-m1\" ... \"apple-m5\", \"apple-s4\" ... \"apple-s10\".")
    string(TOLOWER "${TARGET_ARCHITECTURE}" TARGET_ARCHITECTURE)
    set(_available_vector_units_list)
+   set(_enable_vector_unit_list)
+   set(_arm_features)
+   set(_arm_hwcaps_known FALSE)
+   set(_arm_mcpu)
+   set(_arm_march)
+   set(_arm_cpu_flag)
 
    if(TARGET_ARCHITECTURE STREQUAL "auto")
       AutodetectHostArchitectureARM64()
@@ -726,6 +1013,36 @@ Supported Apple values are: \"apple-a7\" ... \"apple-a19\", \"apple-m1\" ... \"a
    if(TARGET_ARCHITECTURE MATCHES "^apple-")
       _AppleArchitectureFlags()
       message(STATUS "Apple CPU base architecture: ${_apple_march}")
+      set(_arm_mcpu "${TARGET_ARCHITECTURE}")
+      set(_arm_march "${_apple_march}")
+   elseif(TARGET_ARCHITECTURE MATCHES "^(cortex-|c1-)")
+      _ArmArchitectureFlags()
+      message(STATUS "ARM CPU base architecture: ${_arm_march_base}")
+      set(_enable_vector_unit_list "arch=${_arm_march_base}")
+   elseif(NOT TARGET_ARCHITECTURE MATCHES "^(generic|none)$")
+      message(FATAL_ERROR "Unknown target architecture: \"${TARGET_ARCHITECTURE}\". Please set TARGET_ARCHITECTURE to a supported value.")
+   endif()
+   if(NOT TARGET_ARCHITECTURE STREQUAL "none")
+      list(APPEND _enable_vector_unit_list ${_arm_features})
+   endif()
+
+   # -mcpu=<core> sets the ISA and tunes for the core. Older compilers do not
+   # know newer cores, then the architecture level is used instead.
+   if(_arm_mcpu AND CMAKE_OSX_ARCHITECTURES MATCHES ";")
+      message(STATUS "Not adding -mcpu, because of the multi-architecture build (${CMAKE_OSX_ARCHITECTURES})")
+   elseif(_arm_mcpu)
+      _compiler_supports_flag("-mcpu=${_arm_mcpu}" _supported)
+      if(_supported)
+         set(_arm_cpu_flag "-mcpu=${_arm_mcpu}")
+      else()
+         _compiler_supports_flag("-march=${_arm_march}" _supported)
+         if(_supported)
+            message(STATUS "The compiler does not know -mcpu=${_arm_mcpu}, using -march=${_arm_march}")
+            set(_arm_cpu_flag "-march=${_arm_march}")
+         else()
+            message(WARNING "The compiler knows neither -mcpu=${_arm_mcpu} nor -march=${_arm_march}, not adding any of them.")
+         endif()
+      endif()
    endif()
 endmacro()
 
@@ -1191,32 +1508,8 @@ Other supported values are: \"none\", \"generic\", \"core\", \"merom\" (65nm Cor
       endif()
 
       # Only flags the compiler understands are added, e.g. `-msha512` needs
-      # GCC 14. The results are cached per flag (HOST_HAVE_C_FLAG_m...).
-      include(CheckCCompilerFlag)
-      include(CheckCXXCompilerFlag)
-      get_property(_enabled_languages GLOBAL PROPERTY ENABLED_LANGUAGES)
+      # GCC 14.
       set(_unsupported_vector_unit_list)
-      macro(_compiler_supports_flag _flag _ret)
-         set(${_ret} TRUE)
-         string(MAKE_C_IDENTIFIER "${_flag}" _flag_id)
-         set(_old_required_quiet "${CMAKE_REQUIRED_QUIET}")
-         set(CMAKE_REQUIRED_QUIET ON)
-         list(FIND _enabled_languages "C" _lang_index)
-         if(NOT _lang_index EQUAL -1)
-            check_c_compiler_flag("${_flag}" HOST_HAVE_C_FLAG${_flag_id})
-            if(NOT HOST_HAVE_C_FLAG${_flag_id})
-               set(${_ret} FALSE)
-            endif()
-         endif()
-         list(FIND _enabled_languages "CXX" _lang_index)
-         if(NOT _lang_index EQUAL -1)
-            check_cxx_compiler_flag("${_flag}" HOST_HAVE_CXX_FLAG${_flag_id})
-            if(NOT HOST_HAVE_CXX_FLAG${_flag_id})
-               set(${_ret} FALSE)
-            endif()
-         endif()
-         set(CMAKE_REQUIRED_QUIET "${_old_required_quiet}")
-      endmacro()
 
       macro(_enable_or_disable _name _flag _documentation _broken)
          if(${_broken})
@@ -1315,6 +1608,12 @@ if(NOT ${CMAKE_HOST_DO_NOT_ADD_TO_FLAGS})
         set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DUSE_${FLAGU}")
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DUSE_${FLAGU}")
     ENDFOREACH()
+
+    if("${CMAKE_SYSTEM_PROCESSOR}" MATCHES "^(arm64|ARM64|aarch64)" AND _arm_cpu_flag)
+        message(STATUS "Adding compiler flag: ${_arm_cpu_flag}")
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${_arm_cpu_flag}")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${_arm_cpu_flag}")
+    endif()
 
     # NOTE: only on ARM Macs. Before, `USE_NEON` was also set on Intel Macs
     # 	(x86_64), where `arm_neon.h`/`arm_acle.h` do not compile.
