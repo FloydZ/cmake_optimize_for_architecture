@@ -147,6 +147,26 @@ Tigerlake
 Rocketlake
 AlderLake
 RaptorLake
+Comet Lake
+Cascade Lake / Cooper Lake
+Lakefield
+Meteor Lake
+Arrow Lake / Arrow Lake-S
+Lunar Lake
+Panther Lake
+Wildcat Lake
+Nova Lake
+Sapphire Rapids / Emerald Rapids
+Granite Rapids / Granite Rapids-D
+Diamond Rapids
+Bonnell / Saltwell / Airmont / Goldmont Plus / Tremont
+Gracemont / Sierra Forest / Grand Ridge / Clearwater Forest
+Knights Mill
+AMD K8 / K10 / Bobcat / Bulldozer / Piledriver / Steamroller / Excavator
+AMD Jaguar / Puma
+AMD Zen / Zen+ / Zen 2 / Zen 3 / Zen 4 / Zen 5 / Zen 6
+Hygon Dhyana / c86-4g
+Zhaoxin Lujiazui / Yongfeng / Shijidadao
 ```
 The identified architecture will be written into the 
 ```

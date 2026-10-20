@@ -78,7 +78,8 @@ macro(AutodetectHostArchitectureX86)
 
 	  # apparently flags and features are the same. On my `ryzen` its called `flags`
 	  # and on my small arm machine its called `Features`. Note the capitalization.
-      string(REGEX REPLACE ".*flags[ \t]*:[ \t]+([^\n]+).*" "\\1" _cpu_flags "${_cpuinfo}")
+      # NOTE: anchored at the line start, otherwise `vmx flags` matches on Intel
+      string(REGEX REPLACE ".*\nflags[ \t]*:[ \t]+([^\n]+).*" "\\1" _cpu_flags "${_cpuinfo}")
 	  # TODO how is it called string(REGEX REPLACE ".*Features[ \t]*:[ \t]+([^\n]+).*" "\\1" _cpu_flags "${_cpuinfo}")
 	  message(STATUS "detected vendor id: ${_vendor_id}")
 	  message(STATUS "detected cpu family: ${_cpu_family}")
@@ -103,250 +104,336 @@ macro(AutodetectHostArchitectureX86)
       string(REGEX REPLACE ".* Family ([0-9]+) .*" "\\1" _cpu_family "${_cpu_id}")
       string(REGEX REPLACE ".* Model ([0-9]+) .*" "\\1" _cpu_model "${_cpu_id}")
    endif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+   string(STRIP "${_vendor_id}" _vendor_id)
+   _DetectX86Architecture()
+endmacro()
 
 
+# Maps `_vendor_id`, `_cpu_family`, `_cpu_model` (both decimal, as reported by
+# /proc/cpuinfo, sysctl and the Windows registry) and `_cpu_flags` to
+# `TARGET_ARCHITECTURE`. Every model number is annotated with its hex value.
+#
+# Sources (cross-checked against each other):
+# - Linux:  arch/x86/include/asm/intel-family.h
+# - Linux:  arch/x86/kernel/cpu/amd.c (Zen generations)
+# - LLVM:   llvm/lib/TargetParser/Host.cpp
+# - GCC:    gcc/common/config/i386/cpuinfo.h
+macro(_DetectX86Architecture)
    if(_vendor_id STREQUAL "GenuineIntel")
       if(_cpu_family EQUAL 6)
-         # taken from the Intel ORM
-         # http://www.intel.com/content/www/us/en/processors/architectures-software-developer-manuals.html
-         # CPUID Signature Values of Of Recent Intel Microarchitectures
-		 # and https://en.wikichip.org/wiki/intel/cpuid
-         # 4E 5E       | Skylake microarchitecture
-		 #		4E client 
-		 #		5E server 
-         # 3D 47 56    | Broadwell microarchitecture
-         # 3C 45 46 3F | Haswell microarchitecture
-         # 3A 3E       | Ivy Bridge microarchitecture
-         # 2A 2D       | Sandy Bridge microarchitecture
-         # 25 2C 2F    | Intel microarchitecture Westmere
-         # 1A 1E 1F 2E | Intel microarchitecture Nehalem
-         # 17 1D       | Enhanced Intel Core microarchitecture
-         # 0F          | Intel Core microarchitecture
-         #
-         # Intel SDM Vol. 3C 35-1 / December 2016:
-         # 57          | Xeon Phi 3200, 5200, 7200  [Knights Landing]
-		 # 85          | [Knights Mill]
-		 # 8E 9E       | 7th gen. Core              [Kaby Lake]/[Coffee Lake]/[Whiskey Lake]
-		 # 		9E 
-         # 55          | Future Xeon                [Skylake w/ AVX512] aka skylake-server
-         # 4E 5E       | 6th gen. Core / E3 v5      [Skylake w/o AVX512]
-         # 56          | Xeon D-1500                [Broadwell]
-         # 4F          | Xeon E5 v4, E7 v4, i7-69xx [Broadwell]
-         # 47          | 5th gen. Core / Xeon E3 v4 [Broadwell]
-         # 3D          | M-5xxx / 5th gen.          [Broadwell]
-         # 3F          | Xeon E5 v3, E7 v3, i7-59xx [Haswell-E]
-         # 3C 45 46    | 4th gen. Core, Xeon E3 v3  [Haswell]
-         # 3E          | Xeon E5 v2, E7 v2, i7-49xx [Ivy Bridge-E]
-         # 3A          | 3rd gen. Core, Xeon E3 v2  [Ivy Bridge]
-         # 2D          | Xeon E5, i7-39xx           [Sandy Bridge]
-         # 2F          | Xeon E7
-         # 2A          | Xeon E3, 2nd gen. Core     [Sandy Bridge]
-         # 2E          | Xeon 7500, 6500 series
-         # 25 2C       | Xeon 3600, 5600 series, Core i7, i5 and i3
-         #
-		 # Values from the Intel SDE: and WikiChip
-		 # 9E 8E  		| Kaby Kake akaCoffee Lake aka Kaby Lake
-         # 5C 			| Goldmont
-         # 5A 			| Silvermont
-         # 57 			| Knights Landing
-         # 66 			| Cannonlake
-         # 55 			| Skylake Server
-         # 4E 			| Skylake Client
-         # 3C 			| Broadwell (likely a bug in the SDE)
-         # 3C 			| Haswell
-		 # 7E 			| Icelake client
-		 # 6C 6A 		| Icelake server
-		 # 8D 8C 		| Tigerlake
-		 # A7 			| Rocketlake
-		 # 97 			| AlderLake
-		 # B7 BA 		| raptorlake
-         if(_cpu_model EQUAL 87) # 57
+         # Xeon Phi
+         if(_cpu_model EQUAL 87) # 0x57
             set(TARGET_ARCHITECTURE "knl")  # Knights Landing
-         elseif(_cpu_model EQUAL 133)
-            set(TARGET_ARCHITECTURE "knm")
+         elseif(_cpu_model EQUAL 133) # 0x85
+            set(TARGET_ARCHITECTURE "knm")  # Knights Mill
 
-		 #small cores
-	 	 elseif(_cpu_model EQUAL 156 OR _cpu_model EQUAL 150 OR _cpu_model EQUAL 138)
+         # small cores (Atom/E-core only)
+         elseif(_cpu_model EQUAL 221) # 0xDD
+            # Clearwater Forest (Darkmont)
+            set(TARGET_ARCHITECTURE "clearwaterforest")
+         elseif(_cpu_model EQUAL 175) # 0xAF
+            # Sierra Forest (Crestmont)
+            set(TARGET_ARCHITECTURE "sierraforest")
+         elseif(_cpu_model EQUAL 182) # 0xB6
+            # Grand Ridge (Crestmont)
+            set(TARGET_ARCHITECTURE "grandridge")
+         elseif(_cpu_model EQUAL 190) # 0xBE
+            # Alder Lake-N, e.g. N97/N100 (Gracemont)
+            set(TARGET_ARCHITECTURE "gracemont")
+         elseif(_cpu_model EQUAL 134 OR _cpu_model EQUAL 150 OR _cpu_model EQUAL 156) # 0x86 0x96 0x9C
+            # 0x86: Jacobsville, 0x96: Elkhart Lake, 0x9C: Jasper Lake
             set(TARGET_ARCHITECTURE "tremont")
-         elseif(_cpu_model EQUAL 122)
+         elseif(_cpu_model EQUAL 122) # 0x7A
+            # Gemini Lake
             set(TARGET_ARCHITECTURE "goldmontplus")
-         elseif(_cpu_model EQUAL 92)
+         elseif(_cpu_model EQUAL 92 OR _cpu_model EQUAL 95) # 0x5C 0x5F
+            # 0x5C: Apollo Lake, 0x5F: Denverton
             set(TARGET_ARCHITECTURE "goldmont")
-         elseif(_cpu_model EQUAL 74)
+         elseif(_cpu_model EQUAL 76 OR _cpu_model EQUAL 117) # 0x4C 0x75
+            # 0x4C: Cherry Trail/Braswell, 0x75: Lightning Mountain
             set(TARGET_ARCHITECTURE "airmont")
-         elseif(_cpu_model EQUAL 90 OR _cpu_model EQUAL 76 OR _cpu_model EQUAL 93 OR _cpu_model EQUAL 77 OR _cpu_model EQUAL 55)
+         elseif(_cpu_model EQUAL 55 OR _cpu_model EQUAL 74 OR _cpu_model EQUAL 77 OR _cpu_model EQUAL 90 OR _cpu_model EQUAL 93) # 0x37 0x4A 0x4D 0x5A 0x5D
+            # 0x37: Bay Trail, 0x4A: Merrifield, 0x4D: Avoton/Rangeley,
+            # 0x5A: Moorefield/Anniedale, 0x5D: SoFIA
             set(TARGET_ARCHITECTURE "silvermont")
-		 elseif(_cpu_model EQUAL 53 OR _cpu_model EQUAL 52 OR _cpu_model EQUAL 39)
+         elseif(_cpu_model EQUAL 39 OR _cpu_model EQUAL 53 OR _cpu_model EQUAL 54) # 0x27 0x35 0x36
+            # 0x27: Penwell, 0x35: Cloverview, 0x36: Cedarview
             set(TARGET_ARCHITECTURE "saltwell")
-		 elseif(_cpu_model EQUAL 38 OR _cpu_model EQUAL 28)
+         elseif(_cpu_model EQUAL 28 OR _cpu_model EQUAL 38) # 0x1C 0x26
+            # 0x1C: Diamondville/Pineview, 0x26: Silverthorne/Lincroft
             set(TARGET_ARCHITECTURE "bonnwell")
 
-		 # server cores
-		 #elseif(_cpu_model EQUAL XXX) # TODO not published
-         #    set(TARGET_ARCHITECTURE "diamond-rapids-server")
-		 #elseif(_cpu_model EQUAL XXX) # TODO not published
-         #    set(TARGET_ARCHITECTURE "granite-rapids-server")
-	 	 elseif(_cpu_model EQUAL 207)
-             set(TARGET_ARCHITECTURE "emerald-rapids-server")
-	 	 elseif(_cpu_model EQUAL 143)
-             set(TARGET_ARCHITECTURE "sapphire-rapids-server")
-	 	 elseif(_cpu_model EQUAL 106 OR _cpu_model EQUAL 108) # 6A 6C
-             set(TARGET_ARCHITECTURE "icelake-server")
-		 elseif(_cpu_model EQUAL 85) # 0x55/85 aka cascade lake aka cooper lake
-             set(TARGET_ARCHITECTURE "skylake-server")
-		 elseif(_cpu_model EQUAL 79 OR _cpu_model EQUAL 86)
-             set(TARGET_ARCHITECTURE "broadwell-server")
-		 elseif(_cpu_model EQUAL 63)
-             set(TARGET_ARCHITECTURE "haswell-server")
-		 elseif(_cpu_model EQUAL 62)
-             set(TARGET_ARCHITECTURE "ivybridge-server")
-		 elseif(_cpu_model EQUAL 45)
-             set(TARGET_ARCHITECTURE "sandybridge-server")
-		 elseif(_cpu_model EQUAL 44 OR _cpu_model EQUAL 47)
-             set(TARGET_ARCHITECTURE "westmere-server")
-		 elseif(_cpu_model EQUAL 46 OR _cpu_model EQUAL 30 OR _cpu_model EQUAL 26)
-             set(TARGET_ARCHITECTURE "nehalem-server")
-		 elseif(_cpu_model EQUAL 20 OR _cpu_model EQUAL 23)
-            set(TARGET_ARCHITECTURE "penryn-server")
+         # server cores
+         elseif(_cpu_model EQUAL 174) # 0xAE
+            set(TARGET_ARCHITECTURE "granite-rapids-d-server")
+         elseif(_cpu_model EQUAL 173) # 0xAD
+            set(TARGET_ARCHITECTURE "granite-rapids-server")
+         elseif(_cpu_model EQUAL 207) # 0xCF
+            set(TARGET_ARCHITECTURE "emerald-rapids-server")
+         elseif(_cpu_model EQUAL 143) # 0x8F
+            set(TARGET_ARCHITECTURE "sapphire-rapids-server")
+         elseif(_cpu_model EQUAL 106 OR _cpu_model EQUAL 108) # 0x6A 0x6C
+            # 0x6A: Ice Lake-SP, 0x6C: Ice Lake-D
+            set(TARGET_ARCHITECTURE "icelake-server")
+         elseif(_cpu_model EQUAL 85) # 0x55
+            # Skylake-SP, Cascade Lake and Cooper Lake share the model number,
+            # they can only be distinguished by their feature flags.
+            if(_cpu_flags MATCHES "avx512_?bf16")
+               set(TARGET_ARCHITECTURE "cooperlake-server")
+            elseif(_cpu_flags MATCHES "avx512_?vnni")
+               set(TARGET_ARCHITECTURE "cascadelake-server")
+            else()
+               set(TARGET_ARCHITECTURE "skylake-server")
+            endif()
+         elseif(_cpu_model EQUAL 79 OR _cpu_model EQUAL 86) # 0x4F 0x56
+            # 0x4F: Broadwell-EP/EX, 0x56: Broadwell-DE
+            set(TARGET_ARCHITECTURE "broadwell-server")
+         elseif(_cpu_model EQUAL 63) # 0x3F
+            # Haswell-EP/EX, i7-59xx
+            set(TARGET_ARCHITECTURE "haswell-server")
+         elseif(_cpu_model EQUAL 62) # 0x3E
+            # Ivy Bridge-EP/EX, i7-49xx
+            set(TARGET_ARCHITECTURE "ivybridge-server")
+         elseif(_cpu_model EQUAL 45) # 0x2D
+            # Sandy Bridge-EP, i7-39xx
+            set(TARGET_ARCHITECTURE "sandybridge-server")
+         elseif(_cpu_model EQUAL 44 OR _cpu_model EQUAL 47) # 0x2C 0x2F
+            # 0x2C: Westmere-EP (Gulftown), 0x2F: Westmere-EX
+            set(TARGET_ARCHITECTURE "westmere-server")
+         elseif(_cpu_model EQUAL 26 OR _cpu_model EQUAL 46) # 0x1A 0x2E
+            # 0x1A: Nehalem-EP (Bloomfield/Gainestown), 0x2E: Nehalem-EX
+            set(TARGET_ARCHITECTURE "nehalem-server")
 
-		 # client cores
-		 elseif(_cpu_model EQUAL 190)
-			# N97: alderlake-n
-            set(TARGET_ARCHITECTURE "alderlake")
-            elseif(_cpu_model EQUAL 186) # raptor-lake-H
-            set(TARGET_ARCHITECTURE "raptorlake") # 13 gen i9 CPU
-		 elseif(_cpu_model EQUAL 183 OR _cpu_model EQUAL 187)
+         # client cores
+         elseif(_cpu_model EQUAL 204 OR _cpu_model EQUAL 229) # 0xCC 0xE5
+            # 0xCC: Panther Lake, 0xE5: Panther Lake-R
+            set(TARGET_ARCHITECTURE "pantherlake")
+         elseif(_cpu_model EQUAL 213) # 0xD5
+            set(TARGET_ARCHITECTURE "wildcatlake")
+         elseif(_cpu_model EQUAL 189) # 0xBD
+            set(TARGET_ARCHITECTURE "lunarlake")
+         elseif(_cpu_model EQUAL 198) # 0xC6
+            # Arrow Lake-S
+            set(TARGET_ARCHITECTURE "arrowlake-s")
+         elseif(_cpu_model EQUAL 181 OR _cpu_model EQUAL 197) # 0xB5 0xC5
+            # 0xB5: Arrow Lake-U, 0xC5: Arrow Lake-H
+            set(TARGET_ARCHITECTURE "arrowlake")
+         elseif(_cpu_model EQUAL 170 OR _cpu_model EQUAL 172) # 0xAA 0xAC
+            # 0xAA: Meteor Lake-H/U, 0xAC: Meteor Lake
+            set(TARGET_ARCHITECTURE "meteorlake")
+         elseif(_cpu_model EQUAL 183 OR _cpu_model EQUAL 186 OR _cpu_model EQUAL 191 OR _cpu_model EQUAL 215) # 0xB7 0xBA 0xBF 0xD7
+            # 0xB7: Raptor Lake-S/HX, 0xBA: Raptor Lake-P/H/U,
+            # 0xBF: Raptor Lake-S, 0xD7: Bartlett Lake (P-cores only)
             set(TARGET_ARCHITECTURE "raptorlake")
-         elseif(_cpu_model EQUAL 151 OR _cpu_model EQUAL 154)
-            # 151: AlderLake-P, 154: AlderLake-S
+         elseif(_cpu_model EQUAL 151 OR _cpu_model EQUAL 154) # 0x97 0x9A
+            # 0x97: Alder Lake-S, 0x9A: Alder Lake-P/H/U
             set(TARGET_ARCHITECTURE "alderlake")
-         elseif(_cpu_model EQUAL 138)
+         elseif(_cpu_model EQUAL 138) # 0x8A
+            # Sunny Cove + Tremont hybrid, AVX is disabled
             set(TARGET_ARCHITECTURE "lakefield")
-         elseif(_cpu_model EQUAL 167)
+         elseif(_cpu_model EQUAL 167) # 0xA7
             set(TARGET_ARCHITECTURE "rocketlake")
-         elseif(_cpu_model EQUAL 140 OR _cpu_model EQUAL 141 OR _cpu_model EQUAL 143)
-            #141: TigerLake-H (Mobile), XXX: TigerLake-B (Desktop), 140: TigerLake-U
+         elseif(_cpu_model EQUAL 140 OR _cpu_model EQUAL 141) # 0x8C 0x8D
+            # 0x8C: Tiger Lake-U, 0x8D: Tiger Lake-H
             set(TARGET_ARCHITECTURE "tigerlake")
-		 elseif(_cpu_model EQUAL 126 OR _cpu_model EQUAL 125) # 7E
-            # 126: IceLake-U: desktop, 125: IceLake-Y: desktop
+         elseif(_cpu_model EQUAL 125 OR _cpu_model EQUAL 126 OR _cpu_model EQUAL 157) # 0x7D 0x7E 0x9D
+            # 0x7D: Ice Lake-Y, 0x7E: Ice Lake-U, 0x9D: Ice Lake NNP-I
             set(TARGET_ARCHITECTURE "icelake")
-         elseif(_cpu_model EQUAL 102 OR _cpu_model EQUAL 103) # 66, 67?
+         elseif(_cpu_model EQUAL 102) # 0x66
             set(TARGET_ARCHITECTURE "cannonlake")
-         elseif(_cpu_model EQUAL 142 OR _cpu_model EQUAL 158) # 8E, 9E
-            # 
-            set(TARGET_ARCHITECTURE "kabylake") # aka coffee-lake aka whiskey-lake
-         elseif(_cpu_model EQUAL 78 OR _cpu_model EQUAL 94) # 4E, 5E
-            # 78 = Skylake-U/Y (overclockable), 94 = Skylake-S/H (BGA packing)
+         elseif(_cpu_model EQUAL 165 OR _cpu_model EQUAL 166) # 0xA5 0xA6
+            # 0xA5: Comet Lake-S/H, 0xA6: Comet Lake-U
+            set(TARGET_ARCHITECTURE "cometlake")
+         elseif(_cpu_model EQUAL 142 OR _cpu_model EQUAL 158) # 0x8E 0x9E
+            # 0x8E: Kaby/Amber/Coffee/Whiskey Lake mobile, 0x9E: Kaby/Coffee Lake desktop
+            set(TARGET_ARCHITECTURE "kabylake")
+         elseif(_cpu_model EQUAL 78 OR _cpu_model EQUAL 94) # 0x4E 0x5E
+            # 0x4E: Skylake-U/Y, 0x5E: Skylake-S/H
             set(TARGET_ARCHITECTURE "skylake")
-         elseif(_cpu_model EQUAL 61 OR _cpu_model EQUAL 71 OR _cpu_model EQUAL 79 OR _cpu_model EQUAL 86) # 3D, 47, 4F, 56
-            # 61 = Broadwell-DT (Desktop: LGA 1150), 71 = Broadwell-H (HM86, HM87, QM87), 79 = Broadwell-EP (LGA 2011-v3 server), 86 = Broadwell-DE 
+         elseif(_cpu_model EQUAL 61 OR _cpu_model EQUAL 71) # 0x3D 0x47
+            # 0x3D: Broadwell-U/Y/M, 0x47: Broadwell-H (Iris Pro)
             set(TARGET_ARCHITECTURE "broadwell")
-         elseif(_cpu_model EQUAL 60 OR _cpu_model EQUAL 69 OR _cpu_model EQUAL 70 OR _cpu_model EQUAL 63)
-            # 60 = Haswell-DT (Desktop), 63 = Haswell-EP (Server), 69 = Haswell-UL (UltraBook) 70 = Haswell-ULX (UltraBook)
+         elseif(_cpu_model EQUAL 60 OR _cpu_model EQUAL 69 OR _cpu_model EQUAL 70) # 0x3C 0x45 0x46
+            # 0x3C: Haswell-S, 0x45: Haswell-ULT, 0x46: Haswell-GT3e
             set(TARGET_ARCHITECTURE "haswell")
-         elseif(_cpu_model EQUAL 58 OR _cpu_model EQUAL 62)
+         elseif(_cpu_model EQUAL 58) # 0x3A
             set(TARGET_ARCHITECTURE "ivy-bridge")
-         elseif(_cpu_model EQUAL 42 OR _cpu_model EQUAL 45)
+         elseif(_cpu_model EQUAL 42) # 0x2A
             set(TARGET_ARCHITECTURE "sandy-bridge")
-         elseif(_cpu_model EQUAL 37 OR _cpu_model EQUAL 44 OR _cpu_model EQUAL 47)
+         elseif(_cpu_model EQUAL 37) # 0x25
+            # Arrandale/Clarkdale
             set(TARGET_ARCHITECTURE "westmere")
-         elseif(_cpu_model EQUAL 26 OR _cpu_model EQUAL 30 OR _cpu_model EQUAL 31 OR _cpu_model EQUAL 46)
+         elseif(_cpu_model EQUAL 30 OR _cpu_model EQUAL 31) # 0x1E 0x1F
+            # 0x1E: Lynnfield/Clarksfield, 0x1F: Auburndale/Havendale
             set(TARGET_ARCHITECTURE "nehalem")
-         elseif(_cpu_model EQUAL 23 OR _cpu_model EQUAL 29)
+         elseif(_cpu_model EQUAL 23 OR _cpu_model EQUAL 29) # 0x17 0x1D
+            # 0x17: Penryn/Wolfdale/Yorkfield, 0x1D: Dunnington
             set(TARGET_ARCHITECTURE "penryn")
-         elseif(_cpu_model EQUAL 15)
+         elseif(_cpu_model EQUAL 15 OR _cpu_model EQUAL 22) # 0x0F 0x16
+            # 0x0F: Merom/Conroe, 0x16: Merom-L
             set(TARGET_ARCHITECTURE "merom")
-         elseif(_cpu_model EQUAL 28)
-            set(TARGET_ARCHITECTURE "atom")
-         elseif(_cpu_model EQUAL 14)
+         elseif(_cpu_model EQUAL 14) # 0x0E
+            # Yonah
             set(TARGET_ARCHITECTURE "core")
-         elseif(_cpu_model LESS 14)
+         elseif(_cpu_model LESS 14) # 0x0E
             message(WARNING "Your CPU (family ${_cpu_family}, model ${_cpu_model}) is not known. Auto-detection of optimization flags failed and will use the generic CPU settings with SSE2.")
             set(TARGET_ARCHITECTURE "generic")
          else()
             message(WARNING "Your CPU (family ${_cpu_family}, model ${_cpu_model}) is not known. Auto-detection of optimization flags failed and will use the 65nm Core 2 CPU settings.")
             set(TARGET_ARCHITECTURE "merom")
          endif()
+      elseif(_cpu_family EQUAL 18) # 0x12
+         if(_cpu_model EQUAL 1 OR _cpu_model EQUAL 3) # 0x01 0x03
+            set(TARGET_ARCHITECTURE "novalake")
+         else()
+            message(WARNING "No idea what Intel model in family 12h this is")
+         endif()
+      elseif(_cpu_family EQUAL 19) # 0x13
+         if(_cpu_model EQUAL 1) # 0x01
+            set(TARGET_ARCHITECTURE "diamond-rapids-server")
+         else()
+            message(WARNING "No idea what Intel model in family 13h this is")
+         endif()
       elseif(_cpu_family EQUAL 7) # Itanium (not supported)
          message(WARNING "Your CPU (Itanium: family ${_cpu_family}, model ${_cpu_model}) is not supported by OptimizeForArchitecture.cmake.")
       elseif(_cpu_family EQUAL 15) # NetBurst
          list(APPEND _available_vector_units_list "sse" "sse2")
-         if(_cpu_model GREATER 2) # Not sure whether this must be 3 or even 4 instead
+         if(_cpu_model GREATER 2) # Prescott (0x03) and later have SSE3
             list(APPEND _available_vector_units_list "sse" "sse2" "sse3")
          endif(_cpu_model GREATER 2)
-	  else() # unknown cpu family 
-		message(WARNING "Unknown intel cpu family")
+      else() # unknown cpu family
+         message(WARNING "Unknown intel cpu family")
       endif(_cpu_family EQUAL 6)
    elseif(_vendor_id STREQUAL "AuthenticAMD")
-	   # Source: https://en.wikichip.org/wiki/amd/cpuid
-      if(_cpu_family EQUAL 25) # 19h
-		 if(_cpu_model EQUAL 0 OR _cpu_model EQUAL 1 OR _cpu_model EQUAL 8)
+      if(_cpu_family EQUAL 26) # 1Ah
+         if(_cpu_model LESS_EQUAL 79 OR
+               (_cpu_model GREATER_EQUAL 96 AND _cpu_model LESS_EQUAL 127) OR
+               (_cpu_model GREATER_EQUAL 208 AND _cpu_model LESS_EQUAL 215)) # 0x00-0x4F 0x60-0x7F 0xD0-0xD7
+            # 00h-0Fh: Breithorn, 10h-1Fh: Breithorn-Dense, 20h-2Fh: Strix 1,
+            # 30h-37h: Strix 2, 38h-3Fh: Strix 3, 40h-4Fh: Granite Ridge,
+            # 60h-6Fh: Krackan 1, 70h-77h: Sarlak, D0h-D7h: Annapurna
+            set(TARGET_ARCHITECTURE "zen5")
+         elseif((_cpu_model GREATER_EQUAL 80 AND _cpu_model LESS_EQUAL 95) OR
+               (_cpu_model GREATER_EQUAL 128 AND _cpu_model LESS_EQUAL 207) OR
+               (_cpu_model GREATER_EQUAL 216 AND _cpu_model LESS_EQUAL 239)) # 0x50-0x5F 0x80-0xCF 0xD8-0xEF
+            set(TARGET_ARCHITECTURE "zen6")
+         else()
+            message(WARNING "No idea what AMD model in family 1Ah this is")
+         endif()
+      elseif(_cpu_family EQUAL 25) # 19h
+         if(_cpu_model LESS_EQUAL 15 OR
+               (_cpu_model GREATER_EQUAL 32 AND _cpu_model LESS_EQUAL 95)) # 0x00-0x0F 0x20-0x5F
+            # 00h-0Fh: Genesis/Chagall, 20h-2Fh: Vermeer, 30h-3Fh: Badami,
+            # 40h-4Fh: Rembrandt (Zen 3+), 50h-5Fh: Cezanne
             set(TARGET_ARCHITECTURE "zen3")
-		 elseif(_cpu_model EQUAL 33) # vermeer
-            set(TARGET_ARCHITECTURE "zen3")
-		 elseif(_cpu_model EQUAL 16) # enineering sample
+         elseif((_cpu_model GREATER_EQUAL 16 AND _cpu_model LESS_EQUAL 31) OR
+               (_cpu_model GREATER_EQUAL 96 AND _cpu_model LESS_EQUAL 175)) # 0x10-0x1F 0x60-0xAF
+            # 10h-1Fh: Stones/Storm Peak, 60h-6Fh: Raphael,
+            # 70h-7Fh: Phoenix/Hawk Point, A0h-AFh: Stones-Dense
             set(TARGET_ARCHITECTURE "zen4")
-		elseif(_cpu_model EQUAL 80 OR _cpu_model EQUAL 64 OR _cpu_model EQUAL 65) # cezanne
-            set(TARGET_ARCHITECTURE "zen3")
-		elseif(_cpu_model EQUAL 112 OR _cpu_model EQUAL 97) # phoenix
-            set(TARGET_ARCHITECTURE "zen4")
-	     else()
-		    message(WARNING "No idea what AMD model in family 19h this is")
-		 endif()
-	  elseif(_cpu_family EQUAL 24) # 18h (only in china)
-		 if(_cpu_model EQUAL 0)
-            set(TARGET_ARCHITECTURE "zen_china")
-	     else()
-		    message(WARNING "No idea what AMD model in family 18h this is")
-		 endif()
-      elseif(_cpu_family EQUAL 23) # 17h the first zen generation
-		  # NOTE: zen and zen+ do share the model number 24. Probably an error
-		 if(_cpu_model EQUAL 0 OR _cpu_model EQUAL 17 OR _cpu_model EQUAL 24 OR _cpu_model EQUAL 32)
-            set(TARGET_ARCHITECTURE "zen")
-		 elseif(_cpu_model EQUAL 8 OR _cpu_model EQUAL 24)
+         else()
+            message(WARNING "No idea what AMD model in family 19h this is")
+         endif()
+      elseif(_cpu_family EQUAL 23) # 17h
+         if(_cpu_model EQUAL 8 OR _cpu_model EQUAL 24) # 0x08 0x18
+            # 08h: Pinnacle Ridge/Colfax, 18h: Picasso (12nm)
             set(TARGET_ARCHITECTURE "zenplus")
-		 elseif(_cpu_model EQUAL 49 OR _cpu_model EQUAL 96 OR _cpu_model EQUAL 71 OR _cpu_model EQUAL 104 OR _cpu_model EQUAL 144 OR _cpu_model EQUAL 113 OR _cpu_model EQUAL 160)
+         elseif(_cpu_model LESS_EQUAL 47 OR
+               (_cpu_model GREATER_EQUAL 80 AND _cpu_model LESS_EQUAL 95)) # 0x00-0x2F 0x50-0x5F
+            # 01h: Summit Ridge/Naples, 11h: Raven Ridge, 20h: Dali/Pollock
+            set(TARGET_ARCHITECTURE "zen")
+         elseif((_cpu_model GREATER_EQUAL 48 AND _cpu_model LESS_EQUAL 79) OR
+               (_cpu_model GREATER_EQUAL 96 AND _cpu_model LESS_EQUAL 127) OR
+               (_cpu_model GREATER_EQUAL 132 AND _cpu_model LESS_EQUAL 135) OR
+               (_cpu_model GREATER_EQUAL 144 AND _cpu_model LESS_EQUAL 175)) # 0x30-0x4F 0x60-0x7F 0x84-0x87 0x90-0xAF
+            # 30h-3Fh: Rome/Castle Peak, 47h: Cardinal, 60h-67h: Renoir,
+            # 68h-6Fh: Lucienne, 70h-7Fh: Matisse, 84h-87h: ProjectX,
+            # 90h-97h: Van Gogh, 98h-9Fh: Mero, A0h-AFh: Mendocino
             set(TARGET_ARCHITECTURE "zen2")
-	     else()
-			message(WARNING "No idea what AMD model in family 17h (zen/zen+/zen2) this is")
-		 endif()
+         else()
+            message(WARNING "No idea what AMD model in family 17h (zen/zen+/zen2) this is")
+         endif()
       elseif(_cpu_family EQUAL 22) # 16h
-		  # puma/jaguar
-		 if(_cpu_model EQUAL 0)
-            set(TARGET_ARCHITECTURE "jaguar")
-         elseif(_cpu_model EQUAL 48)
+         # all of them are btver2
+         if(_cpu_model GREATER_EQUAL 48 AND _cpu_model LESS_EQUAL 63) # 0x30-0x3F
+            # Beema/Mullins
             set(TARGET_ARCHITECTURE "puma")
-	     else()
-		    message(WARNING "No idea what AMD model in family 16h this is")
-		 endif()
+         else()
+            # 00h-0Fh: Kabini/Temash
+            set(TARGET_ARCHITECTURE "jaguar")
+         endif()
       elseif(_cpu_family EQUAL 21) # 15h
-		 if(_cpu_model EQUAL 1)
+         if(_cpu_model EQUAL 2 OR
+               (_cpu_model GREATER_EQUAL 16 AND _cpu_model LESS_EQUAL 31)) # 0x02 0x10-0x1F
+            # 02h: Vishera/Abu Dhabi, 10h-1Fh: Trinity/Richland
+            set(TARGET_ARCHITECTURE "piledriver")
+         elseif(_cpu_model LESS_EQUAL 15) # 0x00-0x0F
+            # Zambezi/Interlagos
             set(TARGET_ARCHITECTURE "bulldozer")
-         elseif(_cpu_model EQUAL 2)
-            set(TARGET_ARCHITECTURE "piledriver")
-		 elseif(_cpu_model EQUAL 2 OR _cpu_model EQUAL 16 OR _cpu_model EQUAL 19)
-            set(TARGET_ARCHITECTURE "piledriver")
-         elseif(_cpu_model EQUAL 48 OR _cpu_model EQUAL 56)
+         elseif(_cpu_model GREATER_EQUAL 48 AND _cpu_model LESS_EQUAL 63) # 0x30-0x3F
+            # Kaveri/Godavari
             set(TARGET_ARCHITECTURE "steamroller")
-         elseif(_cpu_model EQUAL 96 OR _cpu_model EQUAL 101 OR _cpu_model EQUAL 112)
-            set(TARGET_ARCHITECTURE "piledriver")
-	     else()
-		    message(WARNING "No idea what AMD model in family 15h this is")
+         elseif(_cpu_model GREATER_EQUAL 96 AND _cpu_model LESS_EQUAL 127) # 0x60-0x7F
+            # 60h: Carrizo, 65h: Bristol Ridge, 70h: Stoney Ridge
+            set(TARGET_ARCHITECTURE "excavator")
+         else()
+            message(WARNING "No idea what AMD model in family 15h this is")
          endif()
       elseif(_cpu_family EQUAL 20) # 14h
+         # Bobcat
          set(TARGET_ARCHITECTURE "AMD 14h")
       elseif(_cpu_family EQUAL 18) # 12h
-      elseif(_cpu_family EQUAL 16) # 10h
+         # Llano, a K10 derivative
          set(TARGET_ARCHITECTURE "barcelona")
-      elseif(_cpu_family EQUAL 15)
-         set(TARGET_ARCHITECTURE "k8")
-         if(_cpu_model GREATER 64) 
-			 # I don't know the right number to put here. This is just a guess
-			 # from the hardware I have access to
+      elseif(_cpu_family EQUAL 17) # 11h
+         # Griffin (Turion X2 Ultra), a K8 derivative
+         set(TARGET_ARCHITECTURE "k8-sse3")
+      elseif(_cpu_family EQUAL 16) # 10h
+         if(_cpu_model EQUAL 8) # 0x08
+            set(TARGET_ARCHITECTURE "istanbul")
+         elseif(_cpu_model EQUAL 9) # 0x09
+            set(TARGET_ARCHITECTURE "magny-cours")
+         else()
+            # 02h: Barcelona, 04h: Shanghai/Deneb, 05h: Propus, 06h: Regor, 0Ah: Thuban
+            set(TARGET_ARCHITECTURE "barcelona")
+         endif()
+      elseif(_cpu_family EQUAL 15) # 0Fh
+         if(_cpu_model GREATER_EQUAL 32) # 0x20
+            # Revision E (20h) and later have SSE3
             set(TARGET_ARCHITECTURE "k8-sse3")
-         endif(_cpu_model GREATER 64)
-	  else()
-		  message(WARNING "No idea what AMD family this is")
+         else()
+            set(TARGET_ARCHITECTURE "k8")
+         endif()
+      else()
+         message(WARNING "No idea what AMD family this is")
+      endif()
+   elseif(_vendor_id STREQUAL "HygonGenuine")
+      if(_cpu_family EQUAL 24) # 18h
+         if(_cpu_model EQUAL 7 OR _cpu_model EQUAL 8) # 0x07 0x08
+            # c86-4g-m7/m8, with AVX-512
+            set(TARGET_ARCHITECTURE "c86-4g-m7")
+         else()
+            # Dhyana and c86-4g-m4/m6 (04h/06h), all of them are Zen 1 based
+            if(_cpu_model GREATER 8) # 0x08
+               message(WARNING "No idea what Hygon model in family 18h this is, falling back to Zen 1")
+            endif()
+            set(TARGET_ARCHITECTURE "zen_china")
+         endif()
+      else()
+         message(WARNING "No idea what Hygon family this is")
+      endif()
+   elseif(_vendor_id STREQUAL "Shanghai" OR _vendor_id STREQUAL "CentaurHauls")
+      if(_cpu_family EQUAL 7) # Zhaoxin
+         if(_cpu_model EQUAL 59) # 0x3B
+            # AVX is disabled
+            set(TARGET_ARCHITECTURE "lujiazui")
+         elseif(_cpu_model EQUAL 91) # 0x5B
+            set(TARGET_ARCHITECTURE "yongfeng")
+         elseif(_cpu_model GREATER_EQUAL 107) # 0x6B
+            set(TARGET_ARCHITECTURE "shijidadao")
+         else()
+            message(WARNING "No idea what Zhaoxin model in family 7 this is")
+         endif()
       endif()
    endif(_vendor_id STREQUAL "GenuineIntel")
 endmacro()
@@ -494,14 +581,21 @@ Using an incorrect setting here can result in crashes of the resulting binary be
 Setting the value to \"auto\" will try to optimize for the architecture where cmake is called. \
 Other supported values are: \"none\", \"generic\", \"core\", \"merom\" (65nm Core2), \
 \"penryn\" (45nm Core2), \"nehalem\", \"westmere\", \"sandy-bridge\", \"ivy-bridge\", \
-\"tremont\", \"goldmontplus\", \"airmont\", \"saltwell\", \"bonnwell\" \
-\"haswell\", \"broadwell\", \"haswell-server\", \"broadwell-server\", \"skylake\", \"skylake-server\", \"raptorlake\", \"kabylake\", \"cannonlake\", \"silvermont\", \
-\"goldmont\", \"knl\" (Knights Landing), \"atom\", \
-\"alderlake\", \"lakefield\", \"rocketlake\", \"tigerlake\", \"icelake\", \"kabylake\", \"cannonlake\", \
-\"emerald-rapids-server\", \"sapphire-rapids-server\"
+\"nehalem-server\", \"westmere-server\", \"sandybridge-server\", \"ivybridge-server\", \
+\"bonnwell\", \"saltwell\", \"silvermont\", \"airmont\", \"goldmont\", \"goldmontplus\", \"tremont\", \
+\"gracemont\", \"sierraforest\", \"grandridge\", \"clearwaterforest\", \"atom\", \
+\"haswell\", \"broadwell\", \"haswell-server\", \"broadwell-server\", \"skylake\", \"skylake-server\", \
+\"cascadelake-server\", \"cooperlake-server\", \"kabylake\", \"cometlake\", \"cannonlake\", \
+\"icelake\", \"icelake-server\", \"lakefield\", \"tigerlake\", \"rocketlake\", \
+\"alderlake\", \"raptorlake\", \"meteorlake\", \"arrowlake\", \"arrowlake-s\", \"lunarlake\", \
+\"pantherlake\", \"wildcatlake\", \"novalake\", \
+\"sapphire-rapids-server\", \"emerald-rapids-server\", \"granite-rapids-server\", \
+\"granite-rapids-d-server\", \"diamond-rapids-server\", \"knl\" (Knights Landing), \"knm\" (Knights Mill), \
 \"k8\", \"k8-sse3\", \"barcelona\", \
-\"istanbul\", \"magny-cours\", \"bulldozer\", \"interlagos\", \"piledriver\", \
-\"AMD 14h\", \"AMD 16h\", \"zen\" , \"zen2\" , \"zen3\" , \"zen4\" , \"zen5\" , \"zen6\".")
+\"istanbul\", \"magny-cours\", \"bulldozer\", \"interlagos\", \"piledriver\", \"steamroller\", \"excavator\", \
+\"AMD 14h\", \"AMD 16h\", \"jaguar\", \"puma\", \
+\"zen\", \"zenplus\", \"zen2\", \"zen3\", \"zen4\", \"zen5\", \"zen6\", \
+\"zen_china\" (Hygon Dhyana), \"c86-4g-m7\" (Hygon), \"lujiazui\", \"yongfeng\", \"shijidadao\" (Zhaoxin).")
    set(_force)
    if(NOT _last_target_arch STREQUAL "${TARGET_ARCHITECTURE}")
       message(STATUS "target changed from \"${_last_target_arch}\" to \"${TARGET_ARCHITECTURE}\"")
@@ -558,24 +652,26 @@ Other supported values are: \"none\", \"generic\", \"core\", \"merom\" (65nm Cor
       _broadwell()
    endmacro()
    macro(_goldmontplus)
-      list(APPEND _march_flag_list "goldmontplus")
-      _westmere()
+      list(APPEND _march_flag_list "goldmont-plus")
+      _goldmont()
    endmacro()
    macro(_tremont)
       list(APPEND _march_flag_list "tremont")
-      _westmere()
+      _goldmontplus()
+      list(APPEND _available_vector_units_list "gfni")
    endmacro()
    macro(_airmont)
       list(APPEND _march_flag_list "airmont")
-      _westmere()
+      _silvermont()
    endmacro()
    macro(_saltwell)
       list(APPEND _march_flag_list "saltwell")
-      _westmere()
+      _bonnwell()
    endmacro()
    macro(_bonnwell)
-      list(APPEND _march_flag_list "bonnwell")
-      _westmere()
+      # no SSE4.1/SSE4.2
+      list(APPEND _march_flag_list "bonnell")
+      list(APPEND _available_vector_units_list "sse" "sse2" "sse3" "ssse3")
    endmacro()
    macro(_skylake)
       list(APPEND _march_flag_list "skylake")
@@ -585,6 +681,17 @@ Other supported values are: \"none\", \"generic\", \"core\", \"merom\" (65nm Cor
       list(APPEND _march_flag_list "skylake-server")
       _skylake()
       list(APPEND _available_vector_units_list "avx512f" "avx512cd" "avx512dq" "avx512bw" "avx512vl")
+   endmacro()
+   macro(_cascadelake_server)
+      list(APPEND _march_flag_list "cascadelake")
+      _skylake_server()
+      list(APPEND _available_vector_units_list "avx512vnni")
+   endmacro()
+   macro(_alderlake)
+      # no AVX-512
+      list(APPEND _march_flag_list "alderlake")
+      _skylake()
+      list(APPEND _available_vector_units_list "vaes" "vpclmulqdq" "gfni")
    endmacro()
    macro(_cannonlake)
       list(APPEND _march_flag_list "cannonlake")
@@ -604,6 +711,11 @@ Other supported values are: \"none\", \"generic\", \"core\", \"merom\" (65nm Cor
    macro(_goldmont)
       list(APPEND _march_flag_list "goldmont")
       _silvermont()
+   endmacro()
+   macro(_knightsmill)
+      list(APPEND _march_flag_list "knm")
+      _knightslanding()
+      list(APPEND _available_vector_units_list "avx512vpopcntdq")
    endmacro()
    macro(_zen)
       list(APPEND _march_flag_list "zen1")
@@ -643,18 +755,71 @@ Other supported values are: \"none\", \"generic\", \"core\", \"merom\" (65nm Cor
       else()
          message(STATUS "SSE4.1: disabled (auto-detected from this computer's CPU flags)")
       endif()
+   elseif(TARGET_ARCHITECTURE STREQUAL "diamond-rapids-server")
+      list(APPEND _march_flag_list "diamondrapids")
+      _sapphire_rapids_server()
+   elseif(TARGET_ARCHITECTURE STREQUAL "granite-rapids-d-server")
+      list(APPEND _march_flag_list "graniterapids-d")
+      _sapphire_rapids_server()
+   elseif(TARGET_ARCHITECTURE STREQUAL "granite-rapids-server")
+      list(APPEND _march_flag_list "graniterapids")
+      _sapphire_rapids_server()
    elseif(TARGET_ARCHITECTURE STREQUAL "sapphire-rapids-server")
 	  _sapphire_rapids_server()
    elseif(TARGET_ARCHITECTURE STREQUAL "emerald-rapids-server")
-      _zen4()
+      list(APPEND _march_flag_list "emeraldrapids")
+      _sapphire_rapids_server()
    elseif(TARGET_ARCHITECTURE STREQUAL "icelake-server")
 	  _zen4()
+   elseif(TARGET_ARCHITECTURE STREQUAL "cooperlake-server")
+      list(APPEND _march_flag_list "cooperlake")
+      _cascadelake_server()
+   elseif(TARGET_ARCHITECTURE STREQUAL "cascadelake-server")
+      _cascadelake_server()
+   elseif(TARGET_ARCHITECTURE STREQUAL "knm")
+      _knightsmill()
    elseif(TARGET_ARCHITECTURE STREQUAL "knl")
       _knightslanding()
+   elseif(TARGET_ARCHITECTURE STREQUAL "novalake")
+      # AVX10.2 with 512 bit vectors, but no AMX
+      list(APPEND _march_flag_list "novalake")
+      _zen4()
+   elseif(TARGET_ARCHITECTURE STREQUAL "pantherlake")
+      list(APPEND _march_flag_list "pantherlake")
+      _alderlake()
+   elseif(TARGET_ARCHITECTURE STREQUAL "wildcatlake")
+      list(APPEND _march_flag_list "wildcatlake")
+      _alderlake()
+   elseif(TARGET_ARCHITECTURE STREQUAL "lunarlake")
+      list(APPEND _march_flag_list "lunarlake")
+      _alderlake()
+   elseif(TARGET_ARCHITECTURE STREQUAL "arrowlake-s")
+      list(APPEND _march_flag_list "arrowlake-s")
+      _alderlake()
+   elseif(TARGET_ARCHITECTURE STREQUAL "arrowlake")
+      list(APPEND _march_flag_list "arrowlake")
+      _alderlake()
+   elseif(TARGET_ARCHITECTURE STREQUAL "meteorlake")
+      list(APPEND _march_flag_list "meteorlake")
+      _alderlake()
    elseif(TARGET_ARCHITECTURE STREQUAL "alderlake")
-      _skylake()
+      _alderlake()
+   elseif(TARGET_ARCHITECTURE STREQUAL "clearwaterforest")
+      list(APPEND _march_flag_list "clearwaterforest")
+      _alderlake()
+   elseif(TARGET_ARCHITECTURE STREQUAL "sierraforest")
+      list(APPEND _march_flag_list "sierraforest")
+      _alderlake()
+   elseif(TARGET_ARCHITECTURE STREQUAL "grandridge")
+      list(APPEND _march_flag_list "grandridge")
+      _alderlake()
+   elseif(TARGET_ARCHITECTURE STREQUAL "gracemont")
+      list(APPEND _march_flag_list "gracemont")
+      _alderlake()
    elseif(TARGET_ARCHITECTURE STREQUAL "lakefield")
-      _cannonlake()
+      # the Sunny Cove core has AVX disabled, so it is a Tremont
+      list(APPEND _march_flag_list "lakefield")
+      _tremont()
    elseif(TARGET_ARCHITECTURE STREQUAL "tigerlake")
       _cannonlake()
    elseif(TARGET_ARCHITECTURE STREQUAL "rocketlake")
@@ -664,6 +829,9 @@ Other supported values are: \"none\", \"generic\", \"core\", \"merom\" (65nm Cor
    elseif(TARGET_ARCHITECTURE STREQUAL "cannonlake")
       _cannonlake()
    elseif(TARGET_ARCHITECTURE STREQUAL "raptorlake")
+      list(APPEND _march_flag_list "raptorlake")
+      _alderlake()
+   elseif(TARGET_ARCHITECTURE STREQUAL "cometlake")
       _skylake()
    elseif(TARGET_ARCHITECTURE STREQUAL "kabylake")
       _skylake()
@@ -689,13 +857,13 @@ Other supported values are: \"none\", \"generic\", \"core\", \"merom\" (65nm Cor
       _broadwell_server()
    elseif(TARGET_ARCHITECTURE STREQUAL "haswell-server")
       _haswell_server()
-   elseif(TARGET_ARCHITECTURE STREQUAL "ivy-bridge")
+   elseif(TARGET_ARCHITECTURE STREQUAL "ivy-bridge" OR TARGET_ARCHITECTURE STREQUAL "ivybridge-server")
       _ivybridge()
-   elseif(TARGET_ARCHITECTURE STREQUAL "sandy-bridge")
+   elseif(TARGET_ARCHITECTURE STREQUAL "sandy-bridge" OR TARGET_ARCHITECTURE STREQUAL "sandybridge-server")
       _sandybridge()
-   elseif(TARGET_ARCHITECTURE STREQUAL "westmere")
+   elseif(TARGET_ARCHITECTURE STREQUAL "westmere" OR TARGET_ARCHITECTURE STREQUAL "westmere-server")
       _westmere()
-   elseif(TARGET_ARCHITECTURE STREQUAL "nehalem")
+   elseif(TARGET_ARCHITECTURE STREQUAL "nehalem" OR TARGET_ARCHITECTURE STREQUAL "nehalem-server")
       _nehalem()
    elseif(TARGET_ARCHITECTURE STREQUAL "goldmont")
       _goldmont()
@@ -711,19 +879,29 @@ Other supported values are: \"none\", \"generic\", \"core\", \"merom\" (65nm Cor
    elseif(TARGET_ARCHITECTURE STREQUAL "k8-sse3")
       list(APPEND _march_flag_list "k8-sse3")
       list(APPEND _march_flag_list "k8")
+      list(APPEND _available_vector_units_list "sse" "sse2" "sse3")
  elseif(TARGET_ARCHITECTURE STREQUAL "puma")
       list(APPEND _march_flag_list "puma")
       list(APPEND _available_vector_units_list "sse" "sse2" "sse3" "ssse3" "sse4a" "sse4.1" "sse4.2" "avx" "f16c" "bmi")
-   elseif(TARGET_ARCHITECTURE STREQUAL "AMD 16h")
+   elseif(TARGET_ARCHITECTURE STREQUAL "AMD 16h" OR TARGET_ARCHITECTURE STREQUAL "jaguar")
       list(APPEND _march_flag_list "btver2")
       list(APPEND _march_flag_list "btver1")
       list(APPEND _available_vector_units_list "sse" "sse2" "sse3" "ssse3" "sse4a" "sse4.1" "sse4.2" "avx" "f16c")
    elseif(TARGET_ARCHITECTURE STREQUAL "AMD 14h")
       list(APPEND _march_flag_list "btver1")
       list(APPEND _available_vector_units_list "sse" "sse2" "sse3" "ssse3" "sse4a")
-   elseif(TARGET_ARCHITECTURE STREQUAL "zen")
+   elseif(TARGET_ARCHITECTURE STREQUAL "zen" OR TARGET_ARCHITECTURE STREQUAL "zenplus")
       list(APPEND _march_flag_list "znver1")
       _zen()
+      list(APPEND _available_vector_units_list "sse4a")
+   elseif(TARGET_ARCHITECTURE STREQUAL "zen_china")
+      # Hygon Dhyana, a Zen 1
+      list(APPEND _march_flag_list "znver1")
+      _zen()
+      list(APPEND _available_vector_units_list "sse4a")
+   elseif(TARGET_ARCHITECTURE STREQUAL "c86-4g-m7")
+      list(APPEND _march_flag_list "c86-4g-m7")
+      _zen4()
       list(APPEND _available_vector_units_list "sse4a")
    elseif(TARGET_ARCHITECTURE STREQUAL "zen2")
       list(APPEND _march_flag_list "znver2")
@@ -740,9 +918,16 @@ Other supported values are: \"none\", \"generic\", \"core\", \"merom\" (65nm Cor
    elseif(TARGET_ARCHITECTURE STREQUAL "zen5")
       list(APPEND _march_flag_list "znver5")
 	  _zen4()
+      list(APPEND _available_vector_units_list "sse4a")
    elseif(TARGET_ARCHITECTURE STREQUAL "zen6")
       list(APPEND _march_flag_list "znver6")
 	  _zen6()
+   elseif(TARGET_ARCHITECTURE STREQUAL "excavator")
+      list(APPEND _march_flag_list "bdver4")
+      list(APPEND _available_vector_units_list "sse" "sse2" "sse3" "ssse3" "sse4a" "sse4.1" "sse4.2" "pclmul" "avx" "xop" "fma4" "fma" "f16c" "bmi" "avx2" "bmi2")
+   elseif(TARGET_ARCHITECTURE STREQUAL "steamroller")
+      list(APPEND _march_flag_list "bdver3")
+      list(APPEND _available_vector_units_list "sse" "sse2" "sse3" "ssse3" "sse4a" "sse4.1" "sse4.2" "pclmul" "avx" "xop" "fma4" "fma" "f16c" "bmi")
    elseif(TARGET_ARCHITECTURE STREQUAL "piledriver")
       list(APPEND _march_flag_list "bdver2")
       list(APPEND _march_flag_list "bdver1")
@@ -774,6 +959,14 @@ Other supported values are: \"none\", \"generic\", \"core\", \"merom\" (65nm Cor
       list(APPEND _march_flag_list "barcelona")
       list(APPEND _march_flag_list "core2")
       list(APPEND _available_vector_units_list "sse" "sse2" "sse3" "sse4a")
+   elseif(TARGET_ARCHITECTURE STREQUAL "yongfeng" OR TARGET_ARCHITECTURE STREQUAL "shijidadao")
+      list(APPEND _march_flag_list "${TARGET_ARCHITECTURE}")
+      _haswell()
+   elseif(TARGET_ARCHITECTURE STREQUAL "lujiazui")
+      # AVX is disabled
+      list(APPEND _march_flag_list "lujiazui")
+      _westmere()
+      list(APPEND _available_vector_units_list "bmi" "bmi2")
    elseif(TARGET_ARCHITECTURE STREQUAL "generic")
       list(APPEND _march_flag_list "generic")
    elseif(TARGET_ARCHITECTURE STREQUAL "none")
